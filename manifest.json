@@ -1,0 +1,42 @@
+{
+  "name": "Ruang Tumbuh — Kokurikuler Kelas 9.10 SMPN 1 Baubau",
+  "short_name": "Ruang Tumbuh 9.10",
+  "description": "Aplikasi Proyek Kokurikuler Tanaman Hidroponik Sederhana Kelas 9.10 SMP Negeri 1 Baubau",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f7f8f2",
+  "theme_color": "#164d39",
+  "lang": "id",
+  "categories": [
+    "education",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

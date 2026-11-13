@@ -3,7 +3,16 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tanaman Hidroponik Sederhana — Kelas 9.10 | SMP Negeri 1 Baubau</title>
+    <title>Tanaman Hidroponik Sederhana — Kelas 9.10 | SMP Negeri 1 Baubau</title>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#164d39">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ruang Tumbuh 9.10">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Outfit:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
@@ -87,7 +96,7 @@
      <div><label for="role">Peran tampilan</label><select id="role" class="canva-dropdown"><option value="siswa">Siswa</option><option value="guru">Guru / Pembimbing 🔒</option></select>
      </div>
      <div><label for="group">Kode kelompok</label><input id="group" class="canva-input" placeholder="Contoh: K01" maxlength="30" autocomplete="off">
-     </div><button id="open-group" class="button canva-button" type="button">Buka kelompok</button>
+     </div><button id="open-group" class="button canva-button" type="button">Buka kelompok</button><button id="install-pwa-btn" class="button accent hidden" type="button" title="Pasang ke layar utama HP"><i data-lucide="smartphone"></i> Instal Aplikasi</button>
     </div>
    </div>
   </header>
@@ -2177,6 +2186,47 @@ setInterval(() => {
   window.cloudConfig.refresh().catch(()=>{});
  }
 }, 20000);
+
+
+/* ==========================================================================
+   REGISTRASI PWA SERVICE WORKER & TOMBOL INSTAL APLIKASI
+   ========================================================================== */
+let deferredInstallPrompt = null;
+window.addEventListener("beforeinstallprompt", (e) => {
+ e.preventDefault();
+ deferredInstallPrompt = e;
+ const btn = $("install-pwa-btn");
+ if(btn) btn.classList.remove("hidden");
+});
+
+if($("install-pwa-btn")){
+ $("install-pwa-btn").onclick = async () => {
+  if(!deferredInstallPrompt){
+   message("Buka menu browser (⋮) lalu pilih 'Tambahkan ke layar utama' untuk memasang aplikasi.");
+   return;
+  }
+  deferredInstallPrompt.prompt();
+  const choice = await deferredInstallPrompt.userChoice;
+  if(choice && choice.outcome === "accepted"){
+   message("Aplikasi Ruang Tumbuh 9.10 sedang dipasang ke perangkat Anda.");
+  }
+  deferredInstallPrompt = null;
+  $("install-pwa-btn").classList.add("hidden");
+ };
+}
+
+window.addEventListener("appinstalled", () => {
+ deferredInstallPrompt = null;
+ const btn = $("install-pwa-btn");
+ if(btn) btn.classList.add("hidden");
+ message("Aplikasi Ruang Tumbuh 9.10 berhasil terpasang!");
+});
+
+if("serviceWorker" in navigator){
+ window.addEventListener("load", () => {
+  navigator.serviceWorker.register("./sw.js").catch(() => {});
+ });
+}
 
 applyLogosToDom();
 render();
