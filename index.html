@@ -303,23 +303,23 @@ function getSchoolMeta(){
  try {
   const raw = JSON.parse(localStorage.getItem(LS_META_KEY) || "{}");
   return {
-   pembina1Name: raw.pembina1Name || raw.waliName || "Guru Pembina 1 (Wali Kelas 9.10)",
-   pembina1Nip: raw.pembina1Nip || raw.waliNip || "........................................",
-   pembina2Name: raw.pembina2Name || "Guru Pembina 2",
+   pembina1Name: raw.pembina1Name || raw.waliName || "INDRATRISNAWATI, S.Pd",
+   pembina1Nip: raw.pembina1Nip || raw.waliNip || "19870725 201903 2 025",
+   pembina2Name: raw.pembina2Name || "Guru Pembina 2 (Kelas 9.10)",
    pembina2Nip: raw.pembina2Nip || "........................................",
-   kepsekName: raw.kepsekName || "Kepala SMP Negeri 1 Baubau",
-   kepsekNip: raw.kepsekNip || "........................................",
+   kepsekName: raw.kepsekName || "WA ODE WAHYUNI, S.Pd",
+   kepsekNip: raw.kepsekNip || "197601012002122 006",
    logoSchool: raw.logoSchool || "",
    logoClass: raw.logoClass || ""
   };
  } catch {
   return {
-   pembina1Name: "Guru Pembina 1 (Wali Kelas 9.10)",
-   pembina1Nip: "........................................",
-   pembina2Name: "Guru Pembina 2",
+   pembina1Name: "INDRATRISNAWATI, S.Pd",
+   pembina1Nip: "19870725 201903 2 025",
+   pembina2Name: "Guru Pembina 2 (Kelas 9.10)",
    pembina2Nip: "........................................",
-   kepsekName: "Kepala SMP Negeri 1 Baubau",
-   kepsekNip: "........................................",
+   kepsekName: "WA ODE WAHYUNI, S.Pd",
+   kepsekNip: "197601012002122 006",
    logoSchool: "",
    logoClass: ""
   };
@@ -551,9 +551,25 @@ const docStages=["Perencanaan","Persemaian","Instalasi","Perawatan","Hasil / pan
 const reportFields=["Judul","Anggota dan pembagian tugas","Tujuan","Alat dan bahan","Prosedur","Hasil / data / foto / panen bila ada","Kendala","Solusi","Kesimpulan","Refleksi"];
 const questions=["Apa hal baru yang saya pelajari tentang hidroponik?","Apa tugas saya dalam kelompok dan bagaimana saya melaksanakannya?","Masalah apa yang paling menantang?","Bagaimana kelompok saya menyelesaikan masalah tersebut?","Kebiasaan baik apa yang saya kembangkan melalui proyek ini?","Apa yang akan saya perbaiki jika melakukan proyek hidroponik lagi?"];
 const aspects=[["Pengetahuan",20],["Keterampilan",30],["Kolaborasi",20],["Produk",20],["Presentasi & refleksi",10]];
+const rubricCriteria=[
+ {key:"r0",aspectIdx:0,title:"Perencanaan",desc:"Kejelasan rancangan instalasi wick, pemilihan tanaman, dan peta konsep.",levels:{4:"Rencana sangat jelas dan realistis",3:"Rencana jelas",2:"Rencana masih umum",1:"Belum memiliki rencana"}},
+ {key:"r1",aspectIdx:1,title:"Keterampilan",desc:"Ketepatan menyemai, merakit sumbu wick, pindah tanam, dan takaran nutrisi AB Mix.",levels:{4:"Mandiri, tepat, dan rapi",3:"Cukup mandiri dan tepat",2:"Masih perlu arahan",1:"Banyak perlu bantuan"}},
+ {key:"r2",aspectIdx:2,title:"Kolaborasi",desc:"Pembagian tugas, komunikasi kelompok, tanggung jawab, dan kebersihan area kerja.",levels:{4:"Semua anggota aktif dan bertanggung jawab",3:"Sebagian besar aktif",2:"Aktivitas belum merata",1:"Kerja sama belum terlihat"}},
+ {key:"r3",aspectIdx:3,title:"Perawatan & Produk",desc:"Rutinitas pemeliharaan instalasi wick, kelengkapan jurnal pertumbuhan, dan kondisi tanaman.",levels:{4:"Rutin dan terdokumentasi",3:"Cukup rutin",2:"Tidak konsisten",1:"Jarang dilakukan"}},
+ {key:"r4",aspectIdx:4,title:"Presentasi & Refleksi",desc:"Penyampaian proses, data pengamatan, kendala, solusi, dan refleksi pembelajaran.",levels:{4:"Sangat jelas, berbasis data, percaya diri",3:"Jelas dan cukup terstruktur",2:"Masih terbatas",1:"Belum mampu menjelaskan"}}
+];
+
+function getPredicate(score){
+ if(score===null || score===undefined || Number.isNaN(Number(score))) return {code:"—",label:"Belum Lengkap"};
+ const n=Number(score);
+ if(n>=85) return {code:"A",label:"Sangat Baik"};
+ if(n>=75) return {code:"B",label:"Baik"};
+ if(n>=65) return {code:"C",label:"Cukup"};
+ return {code:"D",label:"Perlu Bimbingan"};
+}
 
 let backendRecords=[],ready=false,active="Beranda",group="",week=0,editingJournal=null,editingIssue=null,editingReflection=null,editingDaily=null,dailyPhotos=[],dailyFilters={group:"",date:"",status:""};
-let guruAuthenticated=false,rekapGroupFilter="ALL",rekapSubTab="ringkasan",msgTimer=null;
+let guruAuthenticated=false,rekapGroupFilter="ALL",rekapSubTab="ringkasan",gradeStatusFilter="ALL",gradeMemberDrafts=null,msgTimer=null;
 
 const $=id=>document.getElementById(id), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function isGuru(){return $("role").value==="guru" && guruAuthenticated}
@@ -629,10 +645,22 @@ function selectField(id,label,options,value="",required=false){
 function val(id){return $(id).value.trim()}
 function formValid(id){return $(id).reportValidity()}
 function showTab(name){active=name;render()}
+function countUngradedGroups(){
+ const groups=allGroupCodes();
+ return groups.filter(g=>{
+  const gr=data(oneForGroup(g,"grade","main")||{});
+  return !aspects.every((_,i)=>gr["s"+i]!==undefined && gr["s"+i]!=="");
+ }).length;
+}
 function nav(){
  const list=getTabs();
  if(!list.includes(active)) active="Beranda";
- $("tabs").innerHTML=list.map(t=>`<button type="button" class="canva-button ${t===active?"active":""} ${(t==="Rekap & Export"||t==="Format Penilaian")?"guru-tab":""}" data-tab="${esc(t)}" aria-current="${t===active?"page":"false"}"><i data-lucide="${tabIcons[t]||"circle"}"></i><span>${esc(t)}</span></button>`).join("");
+ const ungraded=isGuru()?countUngradedGroups():0;
+ $("tabs").innerHTML=list.map(t=>{
+  const isGuruSub=(t==="Rekap & Export"||t==="Format Penilaian");
+  const badgeHtml=(t==="Format Penilaian" && ungraded>0)?`<span style="background:#bd7434;color:#fff;border-radius:99px;padding:1px 7px;font-size:11px;font-weight:800">${ungraded}</span>`:"";
+  return `<button type="button" class="canva-button ${t===active?"active":""} ${isGuruSub?"guru-tab":""}" data-tab="${esc(t)}" aria-current="${t===active?"page":"false"}"><i data-lucide="${tabIcons[t]||"circle"}"></i><span>${esc(t)}</span>${badgeHtml}</button>`;
+ }).join("");
  $("tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
 }
 function render(){
@@ -723,6 +751,30 @@ function home(){
  "Menyemai, merakit instalasi wick, merawat, mengamati, dan mendokumentasikan pertumbuhan.",
  "Menganalisis masalah, menentukan perbaikan, bekerja sama, menjaga kebersihan, dan mempresentasikan hasil."
  ].map((s,i)=>`<article class="card canva-card"><span class="badge">0${i+1}</span><p>${s}</p></article>`).join("")}</div></section>
+
+ ${(()=>{
+  if(!group) return "";
+  const gr=data(one("grade","main")||{});
+  const allScored=aspects.every((_,i)=>gr["s"+i]!==undefined && gr["s"+i]!=="");
+  if(!allScored || gr.publishStatus!=="Dirilis ke Siswa") return "";
+  const tot=aspects.reduce((sum,a,i)=>sum+Number(gr["s"+i])*a[1]/4,0);
+  const pred=getPredicate(tot);
+  return `<section class="section"><div class="panel" style="border-left:5px solid #287455;background:#f4faf5">
+   <div class="section-head">
+    <div>
+     <span class="badge">Hasil Penilaian Proyek Dirilis · Kelompok ${esc(group)} (Kelas 9.10)</span>
+     <h2 style="margin-top:8px">Nilai Akhir: ${tot.toFixed(1)} / 100 · Predikat ${esc(pred.code)} (${esc(pred.label)})</h2>
+     ${gr.harvestStatus?`<p class="muted" style="margin:2px 0 0">Status Pertemuan Akhir: <strong>${esc(gr.harvestStatus)}</strong></p>`:""}
+    </div>
+   </div>
+   <div class="grid three" style="margin-top:10px">${aspects.map((a,i)=>{
+    const sc=Number(gr["s"+i]||0);
+    const nv=(sc*a[1]/4).toFixed(1);
+    return `<div class="card" style="padding:13px"><span class="muted">${esc(a[0])} (${a[1]}%)</span><strong style="display:block;font-size:18px;color:var(--green);margin-top:4px">${nv} / ${a[1]} <span class="muted" style="font-weight:500">(Skor ${sc}/4)</span></strong></div>`;
+   }).join("")}</div>
+   ${gr.feedback?`<div class="notice safe" style="margin-top:12px;margin-bottom:0"><strong>Umpan Balik Guru Pembimbing:</strong> ${esc(gr.feedback)}</div>`:""}
+  </div></section>`;
+ })()}
 
  <section class="section"><h2>Peta perjalanan</h2><p class="intro">Enam tahap pemantauan; tim guru pembina dapat menyesuaikannya dengan lima pertemuan pada modul.</p><div class="checklist">${weeks.map((w,i)=>`<div class="check ${data(one("week",i+1)||{}).status==="Selesai"?"done":""}">M${i+1} · ${esc(w.title)}<br><span class="muted">${esc(data(one("week",i+1)||{}).status||"Belum dimulai")}</span></div>`).join("")}</div></section>
  <div class="notice safe">Keselamatan utama: gunakan alat pemotong hanya dengan pengawasan guru pembina, jangan mencicipi larutan, dan selalu ikuti label nutrisi AB Mix serta instruksi guru.</div>`;
@@ -899,68 +951,186 @@ function grading(){
  if(!isGuru()){
   return `<section class="section"><div class="panel" style="border-left:5px solid var(--orange)">
    <span class="badge warn">Menu Khusus Guru / Pembimbing Kokurikuler</span>
-   <h2 style="margin-top:8px">Akses Format Penilaian Terbatas</h2>
-   <p>Format penilaian berada di dalam menu Guru / Pembimbing Kokurikuler. Silakan pilih peran <strong>Guru / Pembimbing 🔒</strong> di bagian kanan atas dan masukkan password pembina.</p>
+   <h2 style="margin-top:8px">Akses Sub-Tab Penilaian Terbatas</h2>
+   <p>Sub-tab penilaian berada di dalam Mode Guru / Pembimbing Kokurikuler Kelas 9.10. Silakan pilih peran <strong>Guru / Pembimbing 🔒</strong> di bagian kanan atas dan masukkan password pembina.</p>
   </div></section>`;
  }
  const groups=allGroupCodes();
  if(!group && groups.length) group=groups[0];
  let d=data(one("grade","main")||{}),all=aspects.every((_,i)=>d["s"+i]!==undefined&&d["s"+i]!==""),total=all?aspects.reduce((sum,a,i)=>sum+Number(d["s"+i])*a[1]/4,0):null;
+ const pred=getPredicate(total);
  const meta=getSchoolMeta();
- const summaries=groups.map(computeGroupSummary);
+ const allSummaries=groups.map(computeGroupSummary);
+ const ungradedCount=allSummaries.filter(s=>s.totalScore==="Belum lengkap").length;
+ const gradedCount=allSummaries.length-ungradedCount;
+ const filteredSummaries=allSummaries.filter(s=>{
+  if(gradeStatusFilter==="UNGRADED") return s.totalScore==="Belum lengkap";
+  if(gradeStatusFilter==="GRADED") return s.totalScore!=="Belum lengkap";
+  return true;
+ });
+ const activeSummary=group?computeGroupSummary(group):null;
+ if(gradeMemberDrafts===null){
+  gradeMemberDrafts=Array.isArray(d.members)?d.members.map(m=>({...m})):[];
+ }
  return `<section class="section">
   <div class="section-head">
    <div>
-    <span class="badge warn">Menu Guru / Pembimbing Kokurikuler</span>
-    <h2 style="margin-top:8px">Format Penilaian Proyek ${group?"· Kelompok "+esc(group):""}</h2>
-    <p class="intro" style="margin-bottom:0">Tim Pembina Kokurikuler (${esc(meta.pembina1Name)} &amp; ${esc(meta.pembina2Name)}) mengisi skor 1–4 berdasarkan bukti proyek setiap kelompok.</p>
+    <span class="badge warn">Mode Guru · Sub-Tab Penilaian Kokurikuler Kelas 9.10</span>
+    <h2 style="margin-top:8px">Format Penilaian &amp; Rubrik Proyek ${group?"· Kelompok "+esc(group):""}</h2>
+    <p class="intro" style="margin-bottom:0">SMP Negeri 1 Baubau · Kelas 9.10 · Pembina: <strong>${esc(meta.pembina1Name)}</strong> &amp; <strong>${esc(meta.pembina2Name)}</strong></p>
    </div>
    <div class="actions">
-    <button type="button" id="grade-go-rekap" class="button secondary"><i data-lucide="file-spreadsheet"></i> Ke Rekap &amp; Export</button>
+    <button type="button" id="grade-go-rekap" class="button secondary"><i data-lucide="file-spreadsheet"></i> Sub-Tab Rekap &amp; Export</button>
+    <button type="button" id="grade-export-xlsx" class="button"><i data-lucide="download"></i> Export Excel (.xlsx)</button>
    </div>
+  </div>
+
+  <div class="grid three" style="margin-bottom:18px">
+   <article class="card"><span class="muted">Total Kelompok Kelas 9.10</span><div class="stat">${allSummaries.length}</div><p class="muted">Terdaftar dalam proyek hidroponik</p></article>
+   <article class="card"><span class="muted">Sudah Dinilai Lengkap</span><div class="stat" style="color:#287455">${gradedCount}</div><p class="muted">${allSummaries.filter(s=>s.gr.publishStatus==="Dirilis ke Siswa").length} nilai dirilis ke siswa</p></article>
+   <article class="card"><span class="muted">Perlu Dinilai</span><div class="stat" style="color:${ungradedCount>0?"#bd7434":"#287455"}">${ungradedCount}</div><p class="muted">Menunggu skor 5 aspek</p></article>
   </div>
 
   <div class="panel" style="margin-bottom:18px">
-   <div class="form-grid" style="align-items:end">
+   <div class="grid three" style="align-items:end">
     <div class="field" style="margin-bottom:0">
-     <label for="grade-group-select">Pilih Kelompok yang Dinilai</label>
-     <select id="grade-group-select">
-      ${groups.length?groups.map(g=>`<option value="${esc(g)}" ${group===g?"selected":""}>Kelompok ${esc(g)}</option>`).join(""):`<option value="">Belum ada kelompok terdata</option>`}
+     <label for="grade-status-filter">Filter Status Penilaian</label>
+     <select id="grade-status-filter">
+      <option value="ALL" ${gradeStatusFilter==="ALL"?"selected":""}>Semua Kelompok (${allSummaries.length})</option>
+      <option value="UNGRADED" ${gradeStatusFilter==="UNGRADED"?"selected":""}>Perlu Dinilai (${ungradedCount})</option>
+      <option value="GRADED" ${gradeStatusFilter==="GRADED"?"selected":""}>Sudah Dinilai (${gradedCount})</option>
      </select>
     </div>
     <div class="field" style="margin-bottom:0">
-     <label>Atau Klik Cepat Kode Kelompok</label>
-     <div class="quick-groups" style="margin-top:0">
-      ${groups.length?groups.map(g=>`<button type="button" class="quick-grp-btn ${group===g?"active":""}" data-grade-grp="${esc(g)}">${esc(g)}</button>`).join(""):`<span class="muted">Masukkan kode kelompok di bagian atas (contoh: K01).</span>`}
+     <label for="grade-group-select">Pilih Kelompok Kelas 9.10</label>
+     <select id="grade-group-select">
+      ${groups.length?groups.map(g=>{
+       const sm=computeGroupSummary(g);
+       const st=sm.totalScore==="Belum lengkap"?"Perlu Dinilai":"Nilai: "+sm.totalScore;
+       return `<option value="${esc(g)}" ${group===g?"selected":""}>Kelompok ${esc(g)} (${st})</option>`;
+      }).join(""):`<option value="">Belum ada kelompok terdata</option>`}
+     </select>
+    </div>
+    <div class="field" style="margin-bottom:0">
+     <label for="grade-new-grp">Buka / Tambah Kode Kelompok Baru</label>
+     <div style="display:flex;gap:7px">
+      <input id="grade-new-grp" type="text" placeholder="Contoh: K01" maxlength="20" style="flex:1">
+      <button type="button" id="grade-add-grp-btn" class="button secondary">Buka</button>
      </div>
     </div>
    </div>
+   ${groups.length?`<div class="quick-groups" style="margin-top:12px">
+    ${groups.map(g=>{
+     const sm=computeGroupSummary(g);
+     const done=sm.totalScore!=="Belum lengkap";
+     return `<button type="button" class="quick-grp-btn ${group===g?"active":""}" data-grade-grp="${esc(g)}">${esc(g)} ${done?"✓":"•"}</button>`;
+    }).join("")}
+   </div>`:""}
   </div>
+
+  ${activeSummary?`<div class="panel" style="margin-bottom:18px;border-left:5px solid #287455;background:#f8fbf8">
+   <div class="section-head" style="margin-bottom:10px">
+    <div>
+     <span class="badge">Bukti Kerja Kelompok ${esc(group)} · Kelas 9.10</span>
+     <h3 style="margin-top:6px;margin-bottom:0">Kelengkapan Tagihan Sebelum Penilaian</h3>
+    </div>
+    <div class="actions">
+     <button type="button" class="small-btn grade-jump-tab" data-goto="Tugas Mingguan">Tugas (${activeSummary.wDone}/6)</button>
+     <button type="button" class="small-btn grade-jump-tab" data-goto="Minggu 4">Minggu 4 (${activeSummary.dSent})</button>
+     <button type="button" class="small-btn grade-jump-tab" data-goto="Jurnal Pertumbuhan">Jurnal (${activeSummary.jCount})</button>
+     <button type="button" class="small-btn grade-jump-tab" data-goto="Dokumentasi">Foto (${activeSummary.docCount}/6)</button>
+     <button type="button" class="small-btn grade-jump-tab" data-goto="Laporan Akhir">Laporan (${activeSummary.hasReport?"Ada":"Belum"})</button>
+    </div>
+   </div>
+   <div class="checklist">
+    <div class="check ${activeSummary.wDone>=4?"done":""}">Tugas Mingguan: ${activeSummary.wDone} / 6 Selesai</div>
+    <div class="check ${activeSummary.dSent>0?"done":""}">Minggu 4 Harian: ${activeSummary.dSent} Terkirim (${activeSummary.dAll} total)</div>
+    <div class="check ${activeSummary.jCount>0?"done":""}">Jurnal Pertumbuhan: ${activeSummary.jCount} Entri</div>
+    <div class="check ${activeSummary.docCount>0?"done":""}">Dokumentasi Tahap: ${activeSummary.docCount} / 6 Tahap</div>
+    <div class="check ${activeSummary.iCount>0?"done":""}">Analisis Masalah: ${activeSummary.iCount} Kasus</div>
+    <div class="check ${activeSummary.hasReport?"done":""}">Laporan Akhir &amp; Refleksi: ${activeSummary.hasReport?"Laporan Ada":"Belum"} · ${activeSummary.refCount} Refleksi</div>
+   </div>
+  </div>`:""}
 
   <div class="grid">
    <form id="grade-form" class="panel canva-panel">
-    <h3>Input Skor Per Aspek ${group?"("+esc(group)+")":""}</h3>
+    <h3>Input Skor Penilaian ${group?"· Kelompok "+esc(group):""}</h3>
     ${aspects.map((a,i)=>selectField("score-"+i,`${a[0]} · bobot ${a[1]}%`,["","1","2","3","4"],d["s"+i]??"")).join("")}
+    <div class="form-grid">
+     ${selectField("grade-harvest","Kesiapan Panen Pertemuan ke-5 (Catatan Modul)",["Siap Panen (Memenuhi Kriteria)","Belum Siap Panen (Dinilai via Kondisi, Jurnal & Proses)"],d.harvestStatus||"Siap Panen (Memenuhi Kriteria)")}
+     ${selectField("grade-publish","Status Publikasi Nilai",["Draft Penilaian","Dirilis ke Siswa"],d.publishStatus||"Dirilis ke Siswa")}
+    </div>
     ${field("grade-feedback","Catatan / Umpan Balik Pembimbing Kokurikuler",d.feedback||"","textarea",false,'placeholder="Tuliskan catatan apresiasi atau saran perbaikan untuk kelompok ini…"')}
-    <button class="button canva-button" type="submit" ${!group?"disabled":""}><i data-lucide="check-circle-2"></i> Simpan Penilaian Kelompok ${esc(group||"")}</button>
+
+    <div style="margin:14px 0;padding:13px;border:1px solid var(--line);border-radius:12px;background:#f9fbf9">
+     <div class="section-head" style="margin-bottom:8px">
+      <div>
+       <strong style="color:var(--green);font-size:13px">Penilaian &amp; Catatan Individu Anggota (Opsional)</strong>
+       <p class="muted" style="margin:2px 0 0">Catat penyesuaian nilai individu (-10 s.d. +10) atau keaktifan anggota Kelas 9.10.</p>
+      </div>
+      <button type="button" id="add-grade-member" class="small-btn"><i data-lucide="user-plus" style="width:14px;height:14px"></i> Tambah Anggota</button>
+     </div>
+     <div id="grade-members-list">
+      ${gradeMemberDrafts.length?gradeMemberDrafts.map((m,idx)=>`<div class="daily-photo" style="padding:10px;margin:8px 0" data-gm-idx="${idx}">
+       <div class="form-grid">
+        ${field("gm-name-"+idx,"Nama / Inisial Siswa",m.name||"","text",false,'placeholder="Nama siswa Kelas 9.10"')}
+        ${field("gm-adj-"+idx,"Penyesuaian Skor (-10 s.d. +10)",m.adj??"0","number",false,'min="-10" max="10" step="0.5"')}
+       </div>
+       ${field("gm-note-"+idx,"Peran & Catatan Keaktifan",m.note||"","text",false,'placeholder="Contoh: Ketua kelompok, aktif merakit wick & presentasi"')}
+       <button type="button" class="small-btn remove-grade-member" data-gm-idx="${idx}">Hapus Anggota</button>
+      </div>`).join(""):'<p class="muted" style="margin:4px 0 0">Belum ada catatan individu ditambahkan. Secara default semua anggota menerima nilai kelompok.</p>'}
+     </div>
+    </div>
+
+    <div class="actions">
+     <button class="button canva-button" type="submit" ${!group?"disabled":""}><i data-lucide="check-circle-2"></i> Simpan Penilaian Kelompok ${esc(group||"")}</button>
+    </div>
    </form>
+
    <article class="card canva-card">
-    <h3>Hasil Nilai Berbobot ${group?"· "+esc(group):""}</h3>
+    <div class="section-head">
+     <h3 style="margin:0">Hasil Nilai Berbobot ${group?"· "+esc(group):""}</h3>
+     <span class="badge ${d.publishStatus==="Dirilis ke Siswa"?"":"warn"}">${esc(d.publishStatus||"Belum Disimpan")}</span>
+    </div>
     <div class="score">${total===null?"Belum lengkap":total.toFixed(1)+" / 100"}</div>
-    <p>Rumus: skor tiap aspek ÷ 4 × bobot aspek. Total tampil setelah seluruh aspek diisi.</p>
+    <p><strong>Predikat:</strong> ${esc(pred.code)} (${esc(pred.label)}) · Rumus: skor ÷ 4 × bobot aspek.</p>
     <div class="table-scroll"><table class="canva-table"><thead><tr><th>Aspek Penilaian</th><th>Bobot</th><th>Skor (1–4)</th><th>Nilai</th></tr></thead><tbody>${aspects.map((a,i)=>{const sc=d["s"+i];const nv=(sc!==undefined&&sc!=="")?(Number(sc)*a[1]/4).toFixed(1):"—";return `<tr><td>${a[0]}</td><td>${a[1]}%</td><td>${sc||"Belum diisi"}</td><td><strong>${nv}</strong></td></tr>`}).join("")}</tbody></table></div>
+    ${d.harvestStatus?`<p class="muted" style="margin-top:10px"><strong>Status Panen Pertemuan 5:</strong> ${esc(d.harvestStatus)}</p>`:""}
     ${d.feedback?`<div class="notice safe" style="margin-top:12px"><strong>Catatan Pembimbing:</strong> ${esc(d.feedback)}</div>`:""}
    </article>
   </div>
 
   <div class="panel canva-panel section">
    <div class="section-head">
-    <h3>Daftar Rekap Nilai Seluruh Kelompok Kelas 9.10</h3>
-    <span class="badge">${summaries.length} Kelompok</span>
+    <div>
+     <h3 style="margin:0">Rubrik Pengamatan Proyek Interaktif (Skala 1–4)</h3>
+     <p class="muted" style="margin:4px 0 0">Klik pilihan skala 1–4 pada tiap kriteria modul di bawah, lalu terapkan ke form penilaian di atas.</p>
+    </div>
+    <button type="button" id="apply-rubric-btn" class="button secondary" ${!group?"disabled":""}><i data-lucide="wand-2"></i> Terapkan Skor Rubrik ke Aspek</button>
    </div>
-   ${summaries.length?`<div class="table-scroll"><table class="canva-table">
-    <thead><tr><th>Kelompok</th><th>Pengetahuan (20%)</th><th>Keterampilan (30%)</th><th>Kolaborasi (20%)</th><th>Produk (20%)</th><th>Presentasi (10%)</th><th>Total Nilai</th><th>Aksi</th></tr></thead>
-    <tbody>${summaries.map(s=>`<tr ${s.grp===group?'style="background:#f1f8f2"':""}>
+   <div class="table-scroll"><table class="canva-table"><thead><tr><th>Kriteria &amp; Indikator</th><th>4 · Sangat Baik</th><th>3 · Baik</th><th>2 · Cukup</th><th>1 · Perlu Bimbingan</th></tr></thead><tbody>
+   ${rubricCriteria.map(rc=>{
+    const curVal=String(d[rc.key] ?? d["s"+rc.aspectIdx] ?? "");
+    return `<tr>
+     <td><strong>${esc(rc.title)}</strong><br><span class="muted">${esc(rc.desc)}</span></td>
+     ${[4,3,2,1].map(lv=>`<td><label style="display:flex;gap:7px;align-items:flex-start;cursor:pointer;font-weight:${curVal===String(lv)?"700":"400"}">
+      <input type="radio" name="rubric-${rc.key}" value="${lv}" ${curVal===String(lv)?"checked":""} style="margin-top:3px">
+      <span>${esc(rc.levels[lv])}</span>
+     </label></td>`).join("")}
+    </tr>`;
+   }).join("")}
+   </tbody></table></div>
+   <p class="muted">Rubrik sesuai Bagian G Modul Kokurikuler Tanaman Hidroponik Sederhana SMP Negeri 1 Baubau.</p>
+  </div>
+
+  <div class="panel canva-panel section">
+   <div class="section-head">
+    <h3>Daftar Rekap Nilai Kelompok Kelas 9.10</h3>
+    <span class="badge">${filteredSummaries.length} Kelompok Ditampilkan</span>
+   </div>
+   ${filteredSummaries.length?`<div class="table-scroll"><table class="canva-table">
+    <thead><tr><th>Kelompok</th><th>Pengetahuan (20%)</th><th>Keterampilan (30%)</th><th>Kolaborasi (20%)</th><th>Produk (20%)</th><th>Presentasi (10%)</th><th>Total Nilai</th><th>Status</th><th>Aksi</th></tr></thead>
+    <tbody>${filteredSummaries.map(s=>`<tr ${s.grp===group?'style="background:#f1f8f2"':""}>
      <td><strong>${esc(s.grp)}</strong></td>
      <td>${esc(s.gr.s0||"—")}</td>
      <td>${esc(s.gr.s1||"—")}</td>
@@ -968,18 +1138,11 @@ function grading(){
      <td>${esc(s.gr.s3||"—")}</td>
      <td>${esc(s.gr.s4||"—")}</td>
      <td><strong>${esc(s.totalScore)}</strong></td>
+     <td><span class="badge ${s.totalScore!=="Belum lengkap"?"":"warn"}">${esc(s.gr.publishStatus||(s.totalScore!=="Belum lengkap"?"Tersimpan":"Perlu Dinilai"))}</span></td>
      <td><button type="button" class="small-btn" data-grade-grp="${esc(s.grp)}">Isi / Edit Nilai</button></td>
     </tr>`).join("")}</tbody>
-   </table></div>`:`<div class="empty">Belum ada data kelompok.</div>`}
+   </table></div>`:`<div class="empty">Tidak ada kelompok yang sesuai dengan filter penilaian.</div>`}
   </div>
-
-  <div class="panel canva-panel section"><h3>Panduan rubrik skala 1–4</h3><div class="table-scroll"><table class="canva-table"><thead><tr><th>Kriteria</th><th>4 · Sangat baik</th><th>3 · Baik</th><th>2 · Cukup</th><th>1 · Perlu bimbingan</th></tr></thead><tbody>
-  <tr><td>Perencanaan</td><td>Sangat jelas dan realistis</td><td>Jelas</td><td>Masih umum</td><td>Belum memiliki rencana</td></tr>
-  <tr><td>Keterampilan</td><td>Mandiri, tepat, rapi</td><td>Cukup mandiri dan tepat</td><td>Masih perlu arahan</td><td>Banyak perlu bantuan</td></tr>
-  <tr><td>Kolaborasi</td><td>Semua aktif dan bertanggung jawab</td><td>Sebagian besar aktif</td><td>Belum merata</td><td>Belum terlihat</td></tr>
-  <tr><td>Perawatan</td><td>Rutin dan terdokumentasi</td><td>Cukup rutin</td><td>Tidak konsisten</td><td>Jarang dilakukan</td></tr>
-  <tr><td>Presentasi</td><td>Jelas, berbasis data, percaya diri</td><td>Jelas dan terstruktur</td><td>Masih terbatas</td><td>Belum mampu menjelaskan</td></tr>
-  </tbody></table></div><p class="muted">Rubrik adalah panduan pengamatan; tim guru pembina menetapkan skor aspek berbobot dengan mempertimbangkan bukti yang relevan.</p></div>
  </section>`;
 }
 
@@ -1253,14 +1416,16 @@ function exportToXlsx(){
   .filter(r => r.record_type === type && (rekapGroupFilter === "ALL" || r.group_code === rekapGroupFilter))
   .sort((a,b) => a.group_code.localeCompare(b.group_code) || String(a.record_key).localeCompare(String(b.record_key)));
 
- const s1Header = ["Kode Kelompok","Tugas Mingguan Selesai","Minggu 4 Terkirim","Total Minggu 4","Jurnal Pertumbuhan","Dokumentasi Tahap","Analisis Masalah","Laporan Akhir","Refleksi Siswa","Skor Pengetahuan (20%)","Skor Keterampilan (30%)","Skor Kolaborasi (20%)","Skor Produk (20%)","Skor Presentasi (10%)","Total Nilai Berbobot","Catatan Pembimbing"];
+ const s1Header = ["Kode Kelompok","Tugas Mingguan Selesai","Minggu 4 Terkirim","Total Minggu 4","Jurnal Pertumbuhan","Dokumentasi Tahap","Analisis Masalah","Laporan Akhir","Refleksi Siswa","Skor Pengetahuan (20%)","Skor Keterampilan (30%)","Skor Kolaborasi (20%)","Skor Produk (20%)","Skor Presentasi (10%)","Total Nilai Berbobot","Predikat","Status Panen Pertemuan 5","Status Publikasi","Catatan Pembimbing"];
  const s1Rows = groups.map(g => {
   const s = computeGroupSummary(g);
+  const pred = s.totalScore !== "Belum lengkap" ? getPredicate(Number(s.totalScore)) : {code:"-",label:"-"};
   return [
    s.grp, `${s.wDone}/6`, s.dSent, s.dAll, s.jCount, `${s.docCount}/6`, s.iCount,
    s.hasReport ? "Sudah" : "Belum", s.refCount,
    s.gr.s0 || "-", s.gr.s1 || "-", s.gr.s2 || "-", s.gr.s3 || "-", s.gr.s4 || "-",
-   s.totalScore, s.gr.feedback || "-"
+   s.totalScore, pred.code !== "-" ? `${pred.code} (${pred.label})` : "-",
+   s.gr.harvestStatus || "-", s.gr.publishStatus || "-", s.gr.feedback || "-"
   ];
  });
  const footerRows = [
@@ -1335,6 +1500,24 @@ function exportToXlsx(){
  const ws7 = XLSX.utils.aoa_to_sheet([s7Header, ...s7Rows]);
  ws7["!cols"] = s7Header.map(()=>({wch:24}));
  XLSX.utils.book_append_sheet(wb, ws7, "Refleksi Individu");
+
+ const s8Header = ["Kode Kelompok","Nama / Inisial Anggota","Nilai Kelompok","Penyesuaian Skor","Nilai Akhir Individu","Peran & Catatan Keaktifan"];
+ const s8Rows = [];
+ groups.forEach(g => {
+  const s = computeGroupSummary(g);
+  const baseVal = s.totalScore !== "Belum lengkap" ? Number(s.totalScore) : null;
+  const members = Array.isArray(s.gr.members) ? s.gr.members : [];
+  members.forEach(m => {
+   const adj = Number(m.adj || 0);
+   const finalIndiv = baseVal !== null ? Math.max(0, Math.min(100, baseVal + adj)).toFixed(1) : "Belum lengkap";
+   s8Rows.push([g, m.name || "-", baseVal !== null ? baseVal.toFixed(1) : "Belum lengkap", adj, finalIndiv, m.note || "-"]);
+  });
+ });
+ if(s8Rows.length){
+  const ws8 = XLSX.utils.aoa_to_sheet([s8Header, ...s8Rows]);
+  ws8["!cols"] = s8Header.map(()=>({wch:22}));
+  XLSX.utils.book_append_sheet(wb, ws8, "Nilai Individu Anggota");
+ }
 
  const dateTag = new Date().toISOString().slice(0,10);
  const scopeTag = rekapGroupFilter === "ALL" ? "Semua_Kelompok" : `Kelompok_${rekapGroupFilter}`;
@@ -1571,6 +1754,7 @@ function openGroupCode(code){
  $("group").value = next;
  try { localStorage.setItem(LS_GROUP_KEY, next); } catch {}
  editingJournal = editingIssue = editingReflection = editingDaily = null;
+ gradeMemberDrafts = null;
  dailyPhotos = [];
  dailyFilters = {group:"",date:"",status:""};
  message("Menampilkan data kelompok " + group + ".");
@@ -1593,20 +1777,81 @@ function bind(){
   message("Data terbaru berhasil dimuat.");
  };
 
- // Bindings Halaman Format Penilaian (Menu Guru / Pembimbing)
+ // Bindings Halaman Format Penilaian (Sub-Tab Penilaian Guru / Pembimbing Kelas 9.10)
+ if($("grade-export-xlsx")) $("grade-export-xlsx").onclick = exportToXlsx;
+ if($("grade-status-filter")) $("grade-status-filter").onchange = () => {
+  gradeStatusFilter = $("grade-status-filter").value;
+  render();
+ };
  if($("grade-group-select")) $("grade-group-select").onchange = () => {
   group = $("grade-group-select").value;
   $("group").value = group;
+  gradeMemberDrafts = null;
   try { localStorage.setItem(LS_GROUP_KEY, group); } catch {}
+  render();
+ };
+ if($("grade-add-grp-btn")) $("grade-add-grp-btn").onclick = () => {
+  const code = val("grade-new-grp").toUpperCase();
+  if(!code){
+   message("Masukkan kode kelompok baru terlebih dahulu (contoh: K01).", true);
+   $("grade-new-grp").focus();
+   return;
+  }
+  group = code;
+  $("group").value = group;
+  gradeMemberDrafts = null;
+  try { localStorage.setItem(LS_GROUP_KEY, group); } catch {}
+  message("Membuka form penilaian untuk kelompok " + group + ".");
   render();
  };
  document.querySelectorAll("[data-grade-grp]").forEach(b => b.onclick = () => {
   group = b.dataset.gradeGrp;
   $("group").value = group;
+  gradeMemberDrafts = null;
   try { localStorage.setItem(LS_GROUP_KEY, group); } catch {}
   render();
   const gfEl = $("grade-form");
   if(gfEl) gfEl.scrollIntoView({behavior:"smooth"});
+ });
+ document.querySelectorAll(".grade-jump-tab").forEach(b => b.onclick = () => {
+  showTab(b.dataset.goto);
+ });
+ if($("apply-rubric-btn")) $("apply-rubric-btn").onclick = () => {
+  let applied = 0;
+  rubricCriteria.forEach(rc => {
+   const checked = document.querySelector(`input[name="rubric-${rc.key}"]:checked`);
+   if(checked && $("score-" + rc.aspectIdx)){
+    $("score-" + rc.aspectIdx).value = checked.value;
+    applied++;
+   }
+  });
+  if(applied > 0){
+   message(`${applied} skor rubrik berhasil diterapkan ke form aspek penilaian. Klik Simpan Penilaian untuk menyimpan.`);
+   const gfEl = $("grade-form");
+   if(gfEl) gfEl.scrollIntoView({behavior:"smooth"});
+  } else {
+   message("Pilih minimal satu skala rubrik (1–4) terlebih dahulu.", true);
+  }
+ };
+ const collectGradeMembers = () => {
+  if(!Array.isArray(gradeMemberDrafts)) return [];
+  return gradeMemberDrafts.map((_, idx) => ({
+   name: $("gm-name-" + idx) ? val("gm-name-" + idx) : "",
+   adj: $("gm-adj-" + idx) ? val("gm-adj-" + idx) : "0",
+   note: $("gm-note-" + idx) ? val("gm-note-" + idx) : ""
+  }));
+ };
+ if($("add-grade-member")) $("add-grade-member").onclick = () => {
+  gradeMemberDrafts = collectGradeMembers();
+  gradeMemberDrafts.push({name:"", adj:"0", note:""});
+  render();
+ };
+ document.querySelectorAll(".remove-grade-member").forEach(btn => {
+  btn.onclick = () => {
+   gradeMemberDrafts = collectGradeMembers();
+   gradeMemberDrafts.splice(Number(btn.dataset.gmIdx), 1);
+   render();
+  };
  });
 
  // Bindings Halaman Rekap & Export Guru
@@ -1812,7 +2057,26 @@ function bind(){
  const inf=$("issue-form");if(inf)inf.onsubmit=async e=>{e.preventDefault();if(!formValid("issue-form"))return;let ok=await save("issue",editingIssue||("i-"+Date.now()+"-"+Math.random().toString(36).slice(2,7)),{problem:val("i-problem"),evidence:val("i-evidence"),cause:val("i-cause"),solution:val("i-solution"),owner:val("i-owner"),status:val("i-status")},e.submitter);if(ok){editingIssue=null;render()}};
  document.querySelectorAll(".edit-i").forEach(b=>b.onclick=()=>{editingIssue=b.dataset.key;render();$("issue-form").scrollIntoView({behavior:"smooth"})});
  if($("cancel-issue"))$("cancel-issue").onclick=()=>{editingIssue=null;render()};
- const gf=$("grade-form");if(gf)gf.onsubmit=async e=>{e.preventDefault();if(!isGuru())return;let d={feedback:val("grade-feedback")};aspects.forEach((_,i)=>d["s"+i]=val("score-"+i));if(await save("grade","main",d,e.submitter))render()};
+ const gf=$("grade-form");if(gf)gf.onsubmit=async e=>{
+  e.preventDefault();
+  if(!isGuru())return;
+  const members=collectGradeMembers().filter(m=>m.name||m.note||Number(m.adj||0)!==0);
+  let d={
+   feedback:val("grade-feedback"),
+   harvestStatus:val("grade-harvest"),
+   publishStatus:val("grade-publish"),
+   members
+  };
+  aspects.forEach((_,i)=>d["s"+i]=val("score-"+i));
+  rubricCriteria.forEach(rc=>{
+   const checked=document.querySelector(`input[name="rubric-${rc.key}"]:checked`);
+   if(checked) d[rc.key]=checked.value;
+  });
+  if(await save("grade","main",d,e.submitter)){
+   gradeMemberDrafts=null;
+   render();
+  }
+ };
  const rf=$("report-form");if(rf)rf.onsubmit=async e=>{e.preventDefault();if(!formValid("report-form"))return;let d={};reportFields.forEach((_,i)=>d["f"+i]=val("r-"+i));await save("report","main",d,e.submitter)};
  const ref=$("reflection-form");if(ref)ref.onsubmit=async e=>{e.preventDefault();if(!formValid("reflection-form"))return;let name=val("ref-name"),duplicate=records("reflection").find(r=>data(r).name.toLowerCase()===name.toLowerCase()&&r.record_key!==editingReflection);if(duplicate){message("Inisial tersebut sudah dipakai. Buka entri lama untuk memperbaruinya atau gunakan inisial berbeda.",true);return}let d={name};questions.forEach((_,i)=>d["q"+i]=val("ref-"+i));let ok=await save("reflection",editingReflection||("r-"+Date.now()+"-"+Math.random().toString(36).slice(2,7)),d,e.submitter);if(ok){editingReflection=null;render()}};
  document.querySelectorAll(".edit-r").forEach(b=>b.onclick=()=>{editingReflection=b.dataset.key;render();$("reflection-form").scrollIntoView({behavior:"smooth"})});
