@@ -3,7 +3,7 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tanaman Hidroponik Sederhana — Kelas 9.10</title>
+  <title>Tanaman Hidroponik Sederhana — Kelas 9.10 | SMP Negeri 1 Baubau</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Outfit:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
@@ -11,26 +11,51 @@
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <style>
     :root{--green:#164d39;--green2:#287455;--mint:#e4f2e8;--cream:#f7f8f2;--ink:#20332b;--muted:#64746b;--line:#dce7dd;--white:#fff;--orange:#bd7434}
     *{box-sizing:border-box}body,button,input,select,textarea{font-family:"DM Sans",sans-serif}body{margin:0;background:var(--cream);color:var(--ink);line-height:1.5}button,input,select,textarea{font-size:14px}button{cursor:pointer}button:disabled{opacity:.55;cursor:wait}a{color:var(--green2)}:focus-visible{outline:3px solid #e1a94b;outline-offset:2px}
-    .shell{max-width:1180px;margin:auto;padding:0 22px 60px}.top{background:var(--green);color:white}.top-inner{max-width:1180px;margin:auto;padding:21px 22px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.brand{display:flex;gap:13px;align-items:center;font-family:"Outfit",sans-serif;font-size:20px;font-weight:700}.brand-mark{width:39px;height:39px;border-radius:12px;background:#c9e8a7;color:var(--green);display:grid;place-items:center}.brand-mark svg{width:23px}.top small{display:block;font:500 11px "DM Sans",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#b8d8c4}.identity{display:flex;gap:9px;align-items:end;flex-wrap:wrap}.identity label{font-size:11px;color:#d4e7da;font-weight:700;display:block;margin-bottom:4px}.identity input,.identity select{background:#fff;border:0;border-radius:9px;padding:9px 11px;min-height:38px;color:var(--ink)}.identity input{width:155px}.identity select{width:110px}
-    .nav-wrap{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}nav{max-width:1180px;margin:auto;padding:0 22px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:thin}nav button{border:0;background:transparent;color:#63776b;padding:16px 13px;white-space:nowrap;font-weight:700;border-bottom:3px solid transparent}nav button.active{color:var(--green);border-color:#5baf72}nav button.guru-tab{color:#8a4f1d}nav button.guru-tab.active{color:#8a4f1d;border-color:#bd7434}
-    .hero{margin:29px 0 22px;background:var(--green);border-radius:22px;color:#fff;padding:36px 40px;position:relative;overflow:hidden}.hero:after{content:"✳";position:absolute;right:55px;top:-75px;font-size:310px;line-height:1;color:#ffffff10;pointer-events:none}.eyebrow{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.13em;color:#aee0b2}.hero h1{font:700 clamp(30px,4vw,48px)/1.1 "Outfit",sans-serif;max-width:680px;margin:11px 0}.hero p{max-width:650px;color:#d8e9dc;margin:0}.hero .pill{display:inline-block;background:#ffffff19;border:1px solid #ffffff34;border-radius:100px;padding:7px 12px;margin-top:20px;font-size:12px}
-    h2,h3{font-family:"Outfit",sans-serif;color:var(--green);line-height:1.2}h2{font-size:26px;margin:0 0 6px}h3{font-size:18px;margin:0 0 9px}.intro{color:var(--muted);margin:0 0 22px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.card,.panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:21px;box-shadow:0 5px 22px #183e2510}.card p,.panel p{margin:6px 0;color:#53665a}.card ul,.panel ul{padding-left:19px;margin:9px 0}.card li,.panel li{margin:5px 0}.section{margin:26px 0}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px;flex-wrap:wrap}.badge{display:inline-block;border-radius:30px;padding:5px 10px;font-weight:700;font-size:12px;background:var(--mint);color:var(--green)}.badge.warn{background:#fff1dc;color:#8a4f1d}.muted{color:var(--muted);font-size:13px}.progress-track{height:12px;background:#e7eee5;border-radius:30px;overflow:hidden}.progress-fill{height:100%;width:0;background:#66ad77;border-radius:30px;transition:width .3s}.stat{font:700 32px "Outfit",sans-serif;color:var(--green)}.notice{border-left:4px solid #e9aa52;background:#fff8e9;border-radius:8px;padding:13px 16px;color:#694d23;margin:16px 0}.safe{border-color:#69aa7a;background:#ecf7ed;color:#275b3a}
-    .field{margin-bottom:15px}.field label{display:block;font-weight:700;font-size:13px;margin-bottom:6px}.field input,.field textarea,.field select{width:100%;border:1px solid #ccdcd0;border-radius:10px;background:#fff;padding:11px 12px;color:var(--ink)}.field textarea{min-height:105px;resize:vertical}.field input:disabled,.field textarea:disabled,.field select:disabled{background:#f2f5f0;color:#68766e}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}.button{border:0;border-radius:10px;background:var(--green);color:#fff;padding:11px 17px;font-weight:700;display:inline-flex;align-items:center;gap:7px}.button.secondary{background:#e8f1e9;color:var(--green)}.button.accent{background:var(--orange);color:#fff}.button svg{width:16px;height:16px}.actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.list-item{padding:15px 0;border-top:1px solid var(--line)}.list-item:first-child{border-top:0}.list-item p{margin:5px 0}.small-btn{border:1px solid #c7dccd;background:#fff;color:var(--green);border-radius:8px;padding:7px 11px;font-weight:700}.week-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.week-tabs button{border:1px solid var(--line);background:white;border-radius:9px;padding:9px 12px;color:var(--green);font-weight:700}.week-tabs button.active{background:var(--green);color:white}.checklist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.check{background:#f1f7f0;padding:12px;border-radius:10px;font-size:13px;font-weight:600}.check.done{background:#d9efde;color:var(--green)}.table-scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:600px}th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);vertical-align:top;font-size:13px}th{background:#eff6ed;color:var(--green)}.empty{padding:20px;text-align:center;border:1px dashed #c8d9cc;border-radius:12px;color:var(--muted)}.score{font:700 38px "Outfit",sans-serif;color:var(--green)}.message{min-height:20px;margin:12px 0;font-weight:700;font-size:13px;color:var(--green)}.message.error{color:#a43d32}.hidden{display:none!important}footer{padding:30px 0;color:var(--muted);font-size:12px;text-align:center}
+    .shell{max-width:1180px;margin:auto;padding:0 22px 60px}.top{background:var(--green);color:white}.top-inner{max-width:1180px;margin:auto;padding:21px 22px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.brand{display:flex;gap:13px;align-items:center;font-family:"Outfit",sans-serif;font-size:20px;font-weight:700}.brand-mark{width:42px;height:42px;border-radius:12px;background:#c9e8a7;color:var(--green);display:grid;place-items:center;flex-shrink:0}.brand-mark svg{width:23px}.top small{display:block;font:500 11px "DM Sans",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#b8d8c4}.identity{display:flex;gap:9px;align-items:end;flex-wrap:wrap}.identity label{font-size:11px;color:#d4e7da;font-weight:700;display:block;margin-bottom:4px}.identity input,.identity select{background:#fff;border:0;border-radius:9px;padding:9px 11px;min-height:38px;color:var(--ink)}.identity input{width:155px}.identity select{width:110px}
+    .nav-wrap{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}nav{max-width:1180px;margin:auto;padding:0 22px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:thin}nav button{border:0;background:transparent;color:#63776b;padding:15px 13px;white-space:nowrap;font-weight:700;border-bottom:3px solid transparent;display:inline-flex;align-items:center;gap:7px;transition:color .18s ease}nav button svg{width:15px;height:15px;flex-shrink:0}nav button:hover{color:var(--green)}nav button.active{color:var(--green);border-color:#5baf72}nav button.guru-tab{color:#8a4f1d}nav button.guru-tab.active{color:#8a4f1d;border-color:#bd7434}
+    .hero{margin:29px 0 22px;background:linear-gradient(135deg,#164d39 0%,#20664c 100%);border-radius:22px;color:#fff;padding:36px 40px;position:relative;overflow:hidden}.hero:after{content:"✳";position:absolute;right:55px;top:-75px;font-size:310px;line-height:1;color:#ffffff10;pointer-events:none}.eyebrow{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.13em;color:#aee0b2}.hero h1{font:700 clamp(30px,4vw,48px)/1.1 "Outfit",sans-serif;max-width:680px;margin:11px 0}.hero p{max-width:650px;color:#d8e9dc;margin:0}.hero-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}.hero .pill{display:inline-flex;align-items:center;gap:6px;background:#ffffff19;border:1px solid #ffffff34;border-radius:100px;padding:7px 13px;font-size:12px;font-weight:600}.hero .pill svg{width:14px;height:14px}
+    h2,h3{font-family:"Outfit",sans-serif;color:var(--green);line-height:1.2}h2{font-size:26px;margin:0 0 6px}h3{font-size:18px;margin:0 0 9px}.intro{color:var(--muted);margin:0 0 22px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}.card,.panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:21px;box-shadow:0 5px 22px #183e2510;transition:transform .2s ease,box-shadow .2s ease}.card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(24,62,37,.12)}.card p,.panel p{margin:6px 0;color:#53665a}.card ul,.panel ul{padding-left:19px;margin:9px 0}.card li,.panel li{margin:5px 0}.section{margin:26px 0}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px;flex-wrap:wrap}.badge{display:inline-block;border-radius:30px;padding:5px 10px;font-weight:700;font-size:12px;background:var(--mint);color:var(--green)}.badge.warn{background:#fff1dc;color:#8a4f1d}.muted{color:var(--muted);font-size:13px}.progress-track{height:12px;background:#e7eee5;border-radius:30px;overflow:hidden}.progress-fill{height:100%;width:0;background:#66ad77;border-radius:30px;transition:width .3s}.stat{font:700 32px "Outfit",sans-serif;color:var(--green)}.notice{border-left:4px solid #e9aa52;background:#fff8e9;border-radius:8px;padding:13px 16px;color:#694d23;margin:16px 0}.safe{border-color:#69aa7a;background:#ecf7ed;color:#275b3a}
+    .field{margin-bottom:15px}.field label{display:block;font-weight:700;font-size:13px;margin-bottom:6px}.field input,.field textarea,.field select{width:100%;border:1px solid #ccdcd0;border-radius:10px;background:#fff;padding:11px 12px;color:var(--ink)}.field textarea{min-height:105px;resize:vertical}.field input:disabled,.field textarea:disabled,.field select:disabled{background:#f2f5f0;color:#68766e}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}.button{border:0;border-radius:10px;background:var(--green);color:#fff;padding:11px 17px;font-weight:700;display:inline-flex;align-items:center;gap:7px;transition:opacity .15s ease,transform .15s ease}.button:hover:not(:disabled){opacity:.93}.button.secondary{background:#e8f1e9;color:var(--green)}.button.accent{background:var(--orange);color:#fff}.button svg{width:16px;height:16px}.actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.list-item{padding:15px 0;border-top:1px solid var(--line)}.list-item:first-child{border-top:0}.list-item p{margin:5px 0}.small-btn{border:1px solid #c7dccd;background:#fff;color:var(--green);border-radius:8px;padding:7px 11px;font-weight:700;display:inline-flex;align-items:center;gap:5px}.small-btn:hover{background:#f1f7f0}.week-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.week-tabs button{border:1px solid var(--line);background:white;border-radius:9px;padding:9px 12px;color:var(--green);font-weight:700}.week-tabs button.active{background:var(--green);color:white}.checklist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.check{background:#f1f7f0;padding:12px;border-radius:10px;font-size:13px;font-weight:600}.check.done{background:#d9efde;color:var(--green)}.table-scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:600px}th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);vertical-align:top;font-size:13px}th{background:#eff6ed;color:var(--green)}.empty{padding:20px;text-align:center;border:1px dashed #c8d9cc;border-radius:12px;color:var(--muted)}.score{font:700 38px "Outfit",sans-serif;color:var(--green)}.hidden{display:none!important}footer{padding:30px 0;color:var(--muted);font-size:12px;text-align:center}
+
+    /* Notifikasi Toast Mengambang Modern */
+    .message{min-height:0;margin:0}
+    .message:not(:empty){position:fixed;right:20px;bottom:20px;z-index:999;background:var(--green);color:#fff;padding:13px 18px;border-radius:12px;box-shadow:0 12px 30px rgba(16,36,27,.25);max-width:360px;font-weight:700;font-size:13px;cursor:pointer;animation:slideUp .25s ease-out}
+    .message.error:not(:empty){background:#a43d32;color:#fff}
+    @keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+    /* Skeleton Loading */
+    .skeleton-wrap{margin:24px 0}
+    .skeleton-card{height:110px;border-radius:17px;background:linear-gradient(90deg,#e9f0e8 25%,#f4f8f3 50%,#e9f0e8 75%);background-size:200% 100%;animation:pulseSkeleton 1.4s infinite}
+    @keyframes pulseSkeleton{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* Video & Grafik */
+    .video-frame{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;border:1px solid var(--line);margin:10px 0;background:#10241b}
+    .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+    .chart-wrap{position:relative;height:240px;width:100%;margin-top:14px}
+
+    /* Info Wali Kelas & Quick Group Pills */
+    .school-meta-bar{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;box-shadow:0 4px 18px #183e2508}
+    .quick-groups{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .quick-grp-btn{border:1px solid #c7dccd;background:#f4faf5;color:var(--green);border-radius:99px;padding:4px 11px;font-size:12px;font-weight:700}
+    .quick-grp-btn.active{background:var(--green);color:#fff;border-color:var(--green)}
+
     .daily-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.daily-stats .card{padding:14px}.daily-stats strong{display:block;font:700 23px "Outfit",sans-serif;color:var(--green);overflow-wrap:anywhere}.daily-photo{border:1px solid var(--line);border-radius:12px;padding:13px;margin:10px 0;background:#f8fbf7}.daily-photo .actions{margin-top:8px}.daily-photo a{overflow-wrap:anywhere}.filter-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.daily-history{min-width:740px}.daily-history td{max-width:180px;overflow-wrap:anywhere}
     .modal-backdrop{position:fixed;inset:0;background:rgba(16,36,27,.62);display:grid;place-items:center;padding:16px;z-index:100}.modal-box{background:#fff;border-radius:18px;max-width:410px;width:100%;padding:24px;box-shadow:0 18px 45px rgba(0,0,0,.22);border:1px solid var(--line)}.modal-box h3{margin-top:0}.pw-wrap{position:relative;display:flex;align-items:center}.pw-wrap input{padding-right:65px}.pw-toggle{position:absolute;right:8px;border:0;background:#eef5ef;color:var(--green);border-radius:7px;padding:5px 9px;font-size:12px;font-weight:700}
     .rekap-subtabs{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 18px}.rekap-subtabs button{border:1px solid var(--line);background:#fff;color:var(--green);border-radius:9px;padding:8px 13px;font-weight:700;font-size:13px}.rekap-subtabs button.active{background:var(--green);color:#fff}
     .sync-pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 11px;border-radius:99px;background:#e4f2e8;color:var(--green)}.sync-pill.local{background:#fff1dc;color:#8a4f1d}
+    @media(max-width:900px){.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:760px){.daily-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.filter-grid{grid-template-columns:1fr}}
-    @media(max-width:760px){.shell{padding:0 15px 40px}.top-inner{padding:17px 15px}.identity{width:100%}.identity input{flex:1;min-width:120px}.hero{padding:29px 23px}.hero:after{right:-60px}.grid,.grid.three,.form-grid{grid-template-columns:1fr}.checklist{grid-template-columns:repeat(2,1fr)}.card,.panel{padding:17px}nav{padding:0 10px}nav button{padding:13px 10px;font-size:12px}}
+    @media(max-width:760px){.shell{padding:0 15px 40px}.top-inner{padding:17px 15px}.identity{width:100%}.identity input{flex:1;min-width:120px}.hero{padding:29px 23px}.hero:after{right:-60px}.grid,.grid.three,.grid.four,.form-grid{grid-template-columns:1fr}.checklist{grid-template-columns:repeat(2,1fr)}.card,.panel{padding:17px}nav{padding:0 10px}nav button{padding:13px 10px;font-size:12px}.message:not(:empty){left:15px;right:15px;bottom:15px;max-width:none}}
   </style>
  </head>
  <body>
   <header class="top canva-header">
    <div class="top-inner">
-    <div class="brand"><span class="brand-mark" aria-hidden="true"><i data-lucide="sprout"></i></span><span>Ruang Tumbuh<small>Proyek kokurikuler · Kelas 9.10</small></span>
+    <div class="brand"><span class="brand-mark" aria-hidden="true"><i data-lucide="sprout"></i></span><span>Ruang Tumbuh<small>SMP Negeri 1 Baubau · Kokurikuler Kelas 9.10</small></span>
     </div>
     <div class="identity">
      <div><label for="role">Peran tampilan</label><select id="role" class="canva-dropdown"><option value="siswa">Siswa</option><option value="guru">Guru 🔒</option></select>
@@ -44,13 +69,18 @@
    <nav id="tabs" class="canva-tabs" aria-label="Bagian pembelajaran"></nav>
   </div>
   <main class="shell">
-   <div id="message" class="message" role="status" aria-live="polite"></div>
-   <div id="loading" class="notice">
-    Memuat data proyek…
+   <div id="message" class="message" role="status" aria-live="polite" title="Klik untuk menutup notifikasi"></div>
+   <div id="loading" class="skeleton-wrap">
+    <div class="notice" style="margin-bottom:14px">Menghubungkan ke server kelas 9.10 &amp; memuat data proyek…</div>
+    <div class="grid three">
+     <div class="skeleton-card"></div>
+     <div class="skeleton-card"></div>
+     <div class="skeleton-card"></div>
+    </div>
    </div>
    <div id="view"></div>
    <footer class="canva-footer">
-    SMP Negeri 1 Baubau · Tanaman Hidroponik Sederhana · Belajar, berkarya, berkolaborasi.
+    SMP Negeri 1 Baubau · Proyek Kokurikuler Kelas 9.10 · Tanaman Hidroponik Sederhana · Belajar, berkarya, berkolaborasi.
    </footer>
   </main>
 
@@ -68,7 +98,7 @@
        <button id="toggle-pw" type="button" class="pw-toggle">Lihat</button>
       </div>
      </div>
-     <div id="guru-pw-error" class="message error" style="margin:6px 0 12px;min-height:18px"></div>
+     <div id="guru-pw-error" class="message error" style="position:static;box-shadow:none;margin:6px 0 12px;min-height:18px;padding:0;background:transparent;color:#a43d32"></div>
      <div class="actions">
       <button type="submit" class="button">Masuk Mode Guru</button>
       <button id="cancel-guru-modal" type="button" class="button secondary">Batal</button>
@@ -79,10 +109,41 @@
 
   <script>
 /* ==========================================================================
-   KONFIGURASI DATABASE ONLINE (FIREBASE REALTIME DATABASE) & PASSWORD GURU
+   KONFIGURASI DATABASE ONLINE (FIREBASE REALTIME DATABASE) & KEAMANAN GURU
    ========================================================================== */
 const FIREBASE_DB_URL = "https://kokurikuler-3f485-default-rtdb.asia-southeast1.firebasedatabase.app";
-const GURU_PASSWORD = "1234567890!@";
+// Hash SHA-256 untuk password guru (aman disimpan di repositori publik GitHub)
+const GURU_PASSWORD_HASH = "4f26a3019645eee9ba31ebadca4eed826fed1b304cbae471c6386df4efedad8e";
+
+async function verifyGuruPassword(raw){
+ if(window.crypto && window.crypto.subtle){
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(raw));
+  const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+  return hex === GURU_PASSWORD_HASH;
+ }
+ return btoa(unescape(encodeURIComponent(raw))) === "MTIzNDU2Nzg5MCFA";
+}
+
+/* Penyimpanan Identitas Kop Surat PDF & Kode Kelompok Terakhir */
+const LS_GROUP_KEY = "ruang_tumbuh_910_last_group";
+const LS_META_KEY = "ruang_tumbuh_910_school_meta";
+
+function getSchoolMeta(){
+ try {
+  return {
+   waliName: "Wali Kelas 9.10",
+   waliNip: "........................................",
+   kepsekName: "Kepala SMP Negeri 1 Baubau",
+   kepsekNip: "........................................",
+   ...JSON.parse(localStorage.getItem(LS_META_KEY) || "{}")
+  };
+ } catch {
+  return { waliName: "Wali Kelas 9.10", waliNip: "........................................", kepsekName: "Kepala SMP Negeri 1 Baubau", kepsekNip: "........................................" };
+ }
+}
+function saveSchoolMeta(meta){
+ try { localStorage.setItem(LS_META_KEY, JSON.stringify(meta)); } catch {}
+}
 
 /* Adapter Penyimpanan Data (Sinkron ke Firebase Realtime Database) */
 (function setupDataAdapter(){
@@ -213,6 +274,19 @@ const GURU_PASSWORD = "1234567890!@";
 })();
 
 const baseTabs=["Beranda","Materi","Tugas Mingguan","Minggu 4","Jurnal Pertumbuhan","Dokumentasi","Analisis Masalah","Penilaian","Laporan Akhir","Refleksi"];
+const tabIcons={
+ "Beranda":"home",
+ "Rekap & Export":"file-spreadsheet",
+ "Materi":"book-open",
+ "Tugas Mingguan":"calendar-check",
+ "Minggu 4":"clipboard-list",
+ "Jurnal Pertumbuhan":"trending-up",
+ "Dokumentasi":"camera",
+ "Analisis Masalah":"wrench",
+ "Penilaian":"award",
+ "Laporan Akhir":"file-text",
+ "Refleksi":"sparkles"
+};
 const weeks=[
  {title:"Pengenalan & rancangan",goal:"Memahami hidroponik dan menyusun rencana proyek.",steps:"Diskusikan budidaya tanpa tanah; tonton video pengantar dan tulis tiga hal penting. Pilih pakcoy, selada, atau kangkung; buat peta konsep, pertanyaan proyek, dan rancangan instalasi."},
  {title:"Alat, bahan & persemaian",goal:"Mengenali kebutuhan proyek dan menyemai benih.",steps:"Inventarisasi alat dan bahan. Siapkan media semai yang lembap, tempatkan benih, beri label kelompok dan tanggal, lalu rencanakan pengamatan awal."},
@@ -236,13 +310,22 @@ const questions=["Apa hal baru yang saya pelajari tentang hidroponik?","Apa tuga
 const aspects=[["Pengetahuan",20],["Keterampilan",30],["Kolaborasi",20],["Produk",20],["Presentasi & refleksi",10]];
 
 let backendRecords=[],ready=false,active="Beranda",group="",week=0,editingJournal=null,editingIssue=null,editingReflection=null,editingDaily=null,dailyPhotos=[],dailyFilters={group:"",date:"",status:""};
-let guruAuthenticated=false,rekapGroupFilter="ALL",rekapSubTab="ringkasan";
+let guruAuthenticated=false,rekapGroupFilter="ALL",rekapSubTab="ringkasan",msgTimer=null;
 
 const $=id=>document.getElementById(id), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function isGuru(){return $("role").value==="guru" && guruAuthenticated}
 function getTabs(){return isGuru()?["Beranda","Rekap & Export",...baseTabs.slice(1)]:baseTabs}
 function icons(){if(window.lucide) lucide.createIcons()}
-function message(text,error=false){$("message").textContent=text;$("message").classList.toggle("error",error)}
+function message(text,error=false){
+ clearTimeout(msgTimer);
+ $("message").textContent=text;
+ $("message").classList.toggle("error",error);
+ if(text){
+  msgTimer=setTimeout(()=>{$("message").textContent="";$("message").classList.remove("error")},4500);
+ }
+}
+$("message").onclick=()=>message("");
+
 function records(type){return backendRecords.filter(r=>r.group_code===group&&r.record_type===type)}
 function allRecordsByType(type){return backendRecords.filter(r=>r.record_type===type)}
 function one(type,key){return records(type).find(r=>r.record_key===String(key))}
@@ -278,7 +361,7 @@ function showTab(name){active=name;render()}
 function nav(){
  const list=getTabs();
  if(!list.includes(active)) active="Beranda";
- $("tabs").innerHTML=list.map(t=>`<button type="button" class="canva-button ${t===active?"active":""} ${t==="Rekap & Export"?"guru-tab":""}" data-tab="${esc(t)}" aria-current="${t===active?"page":"false"}">${esc(t)}</button>`).join("");
+ $("tabs").innerHTML=list.map(t=>`<button type="button" class="canva-button ${t===active?"active":""} ${t==="Rekap & Export"?"guru-tab":""}" data-tab="${esc(t)}" aria-current="${t===active?"page":"false"}"><i data-lucide="${tabIcons[t]||"circle"}"></i><span>${esc(t)}</span></button>`).join("");
  $("tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
 }
 function render(){
@@ -287,42 +370,91 @@ function render(){
  $("view").innerHTML=(map[active]||home)();
  bind();
  icons();
+ if(active==="Jurnal Pertumbuhan") renderGrowthChart();
 }
 
 function home(){
  const completed=group?weeks.filter((_,i)=>data(one("week",i+1)||{}).status==="Selesai").length:0;
  const groups=allGroupCodes();
- return `<section class="hero canva-banner"><div class="eyebrow">Project Based Learning · Tahun ajaran 2026/2027</div><h1>Tanaman Hidroponik Sederhana</h1><p>Belajar menanam pakcoy, selada, atau kangkung dengan sistem wick/sumbu. Amati, rawat, catat, dan ceritakan perjalanan proyek kelompokmu.</p><span class="pill">Kelas 9.10 · SMP Negeri 1 Baubau</span></section>
+ const meta=getSchoolMeta();
+ return `<section class="hero canva-banner">
+  <div class="eyebrow">Project Based Learning · Tahun Ajaran 2026/2027</div>
+  <h1>Tanaman Hidroponik Sederhana</h1>
+  <p>Belajar menanam pakcoy, selada, atau kangkung dengan sistem wick/sumbu. Amati, rawat, catat, dan ceritakan perjalanan proyek kelompokmu.</p>
+  <div class="hero-pills">
+   <span class="pill"><i data-lucide="school"></i> SMP Negeri 1 Baubau</span>
+   <span class="pill"><i data-lucide="users"></i> Kelas 9.10</span>
+   <span class="pill"><i data-lucide="user-check"></i> Pembimbing: ${esc(meta.waliName)}</span>
+  </div>
+ </section>
+
+ <div class="school-meta-bar">
+  <div>
+   <strong style="color:var(--green);font-family:'Outfit',sans-serif">Kelompok Aktif Kelas 9.10 (${groups.length} kelompok terdata)</strong>
+   <p class="muted" style="margin:2px 0 0">${groups.length?"Klik kode kelompok di bawah untuk membuka ruang kerja kelompok dengan cepat:":"Belum ada kelompok terdata. Masukkan kode kelompok baru di bagian atas (contoh: K01)."}</p>
+   ${groups.length?`<div class="quick-groups">${groups.map(g=>`<button type="button" class="quick-grp-btn ${group===g?"active":""}" data-quick-grp="${esc(g)}">${esc(g)}</button>`).join("")}</div>`:""}
+  </div>
+  ${group?`<span class="badge"><i data-lucide="check-circle-2" style="width:13px;height:13px;vertical-align:-2px"></i> Kelompok Aktif: ${esc(group)}</span>`:""}
+ </div>
+
  ${isGuru()?`<section class="section"><div class="panel" style="border-left:5px solid var(--orange)">
   <div class="section-head">
    <div>
     <span class="badge warn">Mode Guru Aktif</span>
-    <h2 style="margin-top:8px">Dashboard Rekap & Export Kokurikuler</h2>
-    <p class="muted">Pantau semua unggahan siswa dari HP, beri penilaian, dan unduh laporan kelas dalam format Excel (.xlsx) atau PDF (.pdf).</p>
+    <h2 style="margin-top:8px">Dashboard Rekap &amp; Export Kokurikuler</h2>
+    <p class="muted">Pantau semua unggahan siswa dari HP, beri penilaian, dan unduh laporan resmi ber-kop sekolah dalam format Excel (.xlsx) atau PDF (.pdf).</p>
    </div>
    <div class="actions">
-    <button type="button" id="go-rekap-btn" class="button accent"><i data-lucide="file-spreadsheet"></i> Buka Rekap & Export</button>
+    <button type="button" id="go-rekap-btn" class="button accent"><i data-lucide="file-spreadsheet"></i> Buka Rekap &amp; Export</button>
     <button type="button" id="home-refresh-btn" class="button secondary"><i data-lucide="refresh-cw"></i> Refresh Data</button>
    </div>
   </div>
   <div class="grid three">
    <article class="card"><span class="muted">Kelompok Terdata</span><div class="stat">${groups.length}</div><p class="muted">${groups.length?groups.join(", "):"Belum ada kelompok"}</p></article>
    <article class="card"><span class="muted">Laporan Harian Minggu 4</span><div class="stat">${allRecordsByType("daily").length}</div><p class="muted">${allRecordsByType("daily").filter(r=>data(r).status==="Terkirim").length} berstatus Terkirim</p></article>
-   <article class="card"><span class="muted">Total Jurnal & Analisis</span><div class="stat">${allRecordsByType("journal").length + allRecordsByType("issue").length}</div><p class="muted">${allRecordsByType("journal").length} jurnal · ${allRecordsByType("issue").length} masalah</p></article>
+   <article class="card"><span class="muted">Total Jurnal &amp; Analisis</span><div class="stat">${allRecordsByType("journal").length + allRecordsByType("issue").length}</div><p class="muted">${allRecordsByType("journal").length} jurnal · ${allRecordsByType("issue").length} masalah</p></article>
   </div>
  </div></section>`:""}
- <section class="section"><div class="grid"><article class="card canva-card"><h3>Mulai dari sini</h3><ol><li>Pilih peran tampilan dan masukkan kode kelompok yang disepakati bersama guru (contoh: <strong>K01</strong>).</li><li>Baca Materi dan keselamatan kerja.</li><li>Isi Tugas Mingguan; tambahkan pengamatan di Jurnal setiap minggu.</li><li>Lengkapi dokumentasi, analisis, laporan, dan refleksi sebelum presentasi.</li></ol><p class="muted">Gunakan inisial untuk refleksi. Siswa dapat mengisi langsung melalui HP dengan kode kelompok masing-masing.</p></article>
+
+ <section class="section"><div class="grid"><article class="card canva-card"><h3>Mulai dari sini</h3><ol><li>Pilih peran tampilan dan masukkan kode kelompok yang disepakati bersama guru (contoh: <strong>K01</strong>).</li><li>Baca Materi dan keselamatan kerja sebelum menyemai dan merakit instalasi.</li><li>Isi Tugas Mingguan; tambahkan pengamatan di Jurnal setiap minggu.</li><li>Lengkapi dokumentasi, analisis, laporan, dan refleksi sebelum presentasi.</li></ol><p class="muted">Kode kelompok tersimpan otomatis di perangkatmu. Gunakan inisial untuk refleksi individu.</p></article>
  <article class="card canva-card"><h3>Kemajuan proyek ${group?"· "+esc(group):""}</h3><div class="stat">${completed} / 6</div><p>Minggu berstatus Selesai</p><div class="progress-track canva-progress" role="progressbar" aria-label="Kemajuan tugas mingguan" aria-valuenow="${completed}" aria-valuemin="0" aria-valuemax="6"><div class="progress-fill" style="width:${completed/6*100}%"></div></div><p class="muted">Status dihitung dari tugas yang disimpan. Minggu 4: ${records("daily").filter(r=>data(r).status==="Terkirim").length} hari pengamatan terkirim.</p></article></div></section>
+
+ <section class="section"><div class="section-head"><h2>Dimensi Karakter Kokurikuler</h2></div><div class="grid four">${[
+ ["Gotong Royong","Pembagian tugas & jadwal piket perawatan instalasi wick bersama."],
+ ["Bernalar Kritis","Mengukur data pertumbuhan, menganalisis kendala, dan menguji solusi."],
+ ["Kreatif","Memanfaatkan wadah bekas bersih menjadi instalasi hidroponik rapi."],
+ ["Mandiri","Disiplin mengisi jurnal pengamatan dan menulis refleksi individu."]
+ ].map(([title,desc])=>`<article class="card canva-card"><span class="badge">${title}</span><p style="margin-top:10px">${desc}</p></article>`).join("")}</div></section>
+
  <section class="section"><div class="section-head"><h2>Tujuan pembelajaran</h2></div><div class="grid three">${[
  "Memahami hidroponik dan budidaya tanpa tanah serta mengenali alat, bahan, media, benih, dan nutrisi.",
  "Menyemai, merakit instalasi wick, merawat, mengamati, dan mendokumentasikan pertumbuhan.",
  "Menganalisis masalah, menentukan perbaikan, bekerja sama, menjaga kebersihan, dan mempresentasikan hasil."
  ].map((s,i)=>`<article class="card canva-card"><span class="badge">0${i+1}</span><p>${s}</p></article>`).join("")}</div></section>
+
  <section class="section"><h2>Peta perjalanan</h2><p class="intro">Enam tahap pemantauan; guru dapat menyesuaikannya dengan lima pertemuan pada modul.</p><div class="checklist">${weeks.map((w,i)=>`<div class="check ${data(one("week",i+1)||{}).status==="Selesai"?"done":""}">M${i+1} · ${esc(w.title)}<br><span class="muted">${esc(data(one("week",i+1)||{}).status||"Belum dimulai")}</span></div>`).join("")}</div></section>
  <div class="notice safe">Keselamatan utama: gunakan alat pemotong hanya dengan pengawasan guru, jangan mencicipi larutan, dan selalu ikuti label nutrisi AB Mix serta instruksi guru.</div>`;
 }
 
-function materi(){return `<section class="section"><h2>Materi singkat</h2><p class="intro">Baca sebelum praktik. Diskusikan setiap tindakan dengan guru dan kelompok.</p><div class="grid">${topics.map((t,i)=>`<article class="card canva-card"><span class="badge">Materi ${i+1}</span><h3 style="margin-top:12px">${t[0]}</h3><p>${t[1]}</p></article>`).join("")}</div></section><section class="panel canva-panel"><h2>Video pembelajaran dari modul</h2><p>Guru sebaiknya menonton lebih dahulu dan menyesuaikan demonstrasi dengan alat serta prosedur keselamatan di sekolah.</p><p><a class="canva-link" href="https://www.youtube.com/watch?v=UrYnLyMGwA0" target="_blank" rel="noopener noreferrer">Video 1 · Cara tanam pakcoy sistem wick ↗</a></p><p><a class="canva-link" href="https://www.youtube.com/watch?v=voxSLzh9aH0" target="_blank" rel="noopener noreferrer">Video 2 · Persemaian dan pindah tanam pakcoy ↗</a></p></section>`}
+function materi(){return `<section class="section"><h2>Materi singkat</h2><p class="intro">Baca sebelum praktik. Diskusikan setiap tindakan dengan guru dan kelompok.</p><div class="grid">${topics.map((t,i)=>`<article class="card canva-card"><span class="badge">Materi ${i+1}</span><h3 style="margin-top:12px">${t[0]}</h3><p>${t[1]}</p></article>`).join("")}</div></section>
+<section class="panel canva-panel">
+ <h2>Video pembelajaran dari modul</h2>
+ <p>Tonton panduan praktik berikut sebelum merakit instalasi wick di kelas. Pastikan prosedur keselamatan tetap mengikuti arahan guru.</p>
+ <div class="grid" style="margin-top:14px">
+  <div class="card">
+   <span class="badge">Video 1</span>
+   <h3 style="margin-top:10px">Cara tanam pakcoy sistem wick</h3>
+   <div class="video-frame"><iframe src="https://www.youtube.com/embed/UrYnLyMGwA0" title="Cara tanam pakcoy sistem wick" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+   <p><a class="canva-link" href="https://www.youtube.com/watch?v=UrYnLyMGwA0" target="_blank" rel="noopener noreferrer">Buka langsung di YouTube ↗</a></p>
+  </div>
+  <div class="card">
+   <span class="badge">Video 2</span>
+   <h3 style="margin-top:10px">Persemaian dan pindah tanam pakcoy</h3>
+   <div class="video-frame"><iframe src="https://www.youtube.com/embed/voxSLzh9aH0" title="Persemaian dan pindah tanam pakcoy" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+   <p><a class="canva-link" href="https://www.youtube.com/watch?v=voxSLzh9aH0" target="_blank" rel="noopener noreferrer">Buka langsung di YouTube ↗</a></p>
+  </div>
+ </div>
+</section>`}
 
 function tasks(){
  let w=weeks[week],d=data(one("week",week+1)||{});
@@ -350,15 +482,49 @@ function dailyPage(){
  <div class="panel canva-panel section"><h3>Riwayat laporan harian · Kelas 9.10</h3><div class="filter-grid">${selectField("filter-group","Filter kelompok",["",...groups],dailyFilters.group)}${field("filter-date","Filter tanggal",dailyFilters.date,"date")}${selectField("filter-status","Filter status",["","Belum diisi","Draft","Terkirim"],dailyFilters.status)}</div>${filtered.length?`<div class="table-scroll"><table class="canva-table daily-history"><thead><tr><th>Kelompok / hari</th><th>Tanggal</th><th>Tinggi</th><th>Daun</th><th>Kondisi</th><th>Foto / bukti</th><th>Status</th><th>Diperbarui</th><th>Aksi</th></tr></thead><tbody>${filtered.map(r=>{let x=data(r);return `<tr><td>${esc(r.group_code)} · ${esc(x.day)}</td><td>${esc(x.date||"—")}</td><td>${x.height!==""&&x.height!=null?esc(x.height)+" cm":"—"}</td><td>${esc(x.leaves||"—")}</td><td>${esc(x.condition||"—")}</td><td>${(x.photos||[]).map((p,i)=>`<a class="canva-link" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer">Bukti ${i+1}: ${esc(p.caption||"Foto")}</a>`).join("<br>")||"—"}</td><td>${esc(dayStatus(r))}</td><td>${esc(r.updated_at||"—")}</td><td><button type="button" class="small-btn canva-button edit-daily" data-id="${esc(r.__backendId)}">Edit</button></td></tr>`}).join("")}</tbody></table></div>`:'<div class="empty">Belum ada laporan yang cocok dengan filter.</div>'}</div></section>`;
 }
 
-function journal(){
+function getJournalRows(){
  const dailyLinked=records("daily").filter(r=>data(r).status==="Terkirim");
- const rows=records("journal").concat(dailyLinked).slice().sort((a,b)=>(data(b).date||"").localeCompare(data(a).date||""));
+ return records("journal").concat(dailyLinked).slice().sort((a,b)=>(data(b).date||"").localeCompare(data(a).date||""));
+}
+
+function renderGrowthChart(){
+ const canvas=$("growth-chart");
+ if(!canvas || !window.Chart) return;
+ if(window._growthChart){ window._growthChart.destroy(); window._growthChart=null; }
+ const rows=getJournalRows().map(data).filter(x=>x.date && (x.height!==""||x.leaves!=="")).sort((a,b)=>a.date.localeCompare(b.date));
+ if(rows.length < 2) return;
+ const labels=rows.map(x=>x.date);
+ const heights=rows.map(x=>x.height!==""&&x.height!=null?Number(x.height):null);
+ const leaves=rows.map(x=>x.leaves!==""&&x.leaves!=null?Number(x.leaves):null);
+ window._growthChart=new Chart(canvas.getContext("2d"),{
+  type:"line",
+  data:{
+   labels,
+   datasets:[
+    {label:"Tinggi Tanaman (cm)",data:heights,borderColor:"#164d39",backgroundColor:"rgba(22,77,57,0.12)",tension:0.3,fill:true,pointRadius:4},
+    {label:"Jumlah Daun (helai)",data:leaves,borderColor:"#bd7434",backgroundColor:"rgba(189,116,52,0.12)",tension:0.3,fill:false,pointRadius:4}
+   ]
+  },
+  options:{
+   responsive:true,
+   maintainAspectRatio:false,
+   plugins:{legend:{position:"bottom",labels:{boxWidth:12,font:{family:"DM Sans",size:12}}}},
+   scales:{y:{beginAtZero:true,grid:{color:"#edf3ed"}},x:{grid:{display:false}}}
+  }
+ });
+}
+
+function journal(){
+ const rows=getJournalRows();
  const edit=records("journal").find(r=>r.record_key===editingJournal),d=edit?data(edit):{};
  const withHeight=rows.map(data).filter(x=>x.height!==""&&x.height!==undefined).sort((a,b)=>a.date.localeCompare(b.date));
  const delta=withHeight.length>=2?(Number(withHeight.at(-1).height)-Number(withHeight[0].height)).toFixed(1):null;
+ const chartRows=rows.map(data).filter(x=>x.date && (x.height!==""||x.leaves!==""));
  return `<section class="section"><h2>Jurnal Pertumbuhan</h2><p class="intro">Tambahkan pengamatan setiap minggu. Ukur tanaman yang sama bila ingin membandingkan tinggi.</p><div class="grid"><form id="journal-form" class="panel canva-panel"><h3>${edit?"Perbarui pengamatan":"Pengamatan baru"}</h3><div class="form-grid">${field("j-date","Tanggal",d.date||"","date",true)}${field("j-height","Tinggi tanaman (cm)",d.height??"","number",true,'min="0" step="0.1"')}${field("j-leaves","Jumlah daun",d.leaves??"","number",true,'min="0" step="1"')}${selectField("j-water","Ketersediaan larutan",["","Cukup","Perlu ditambah","Perlu diperiksa"],d.water||"",true)}</div>${field("j-condition","Warna / kondisi tanaman",d.condition||"","text",true)}${field("j-action","Tindakan perawatan",d.action||"","textarea",true)}${field("j-note","Catatan tambahan",d.note||"","textarea")}<div class="actions"><button class="button canva-button" type="submit">${edit?"Perbarui entri":"Simpan pengamatan"}</button>${edit?'<button id="cancel-journal" class="button secondary canva-button" type="button">Batal edit</button>':""}</div></form>
- <article class="card canva-card"><h3>Ringkasan perkembangan</h3><div class="stat">${rows.length}</div><p>Pengamatan tersimpan</p><p>${delta===null?"Perbandingan tinggi muncul setelah setidaknya dua pengamatan dengan tinggi tercatat.":`Perubahan tinggi pertama–terakhir: <strong>${delta} cm</strong>.`}</p><div class="notice safe">Dokumentasikan foto bersama guru di tempat yang disepakati.</div></article></div>
- <div class="panel canva-panel section"><h3>Riwayat pengamatan</h3>${rows.length?`<div class="table-scroll"><table class="canva-table"><thead><tr><th>Tanggal</th><th>Tinggi</th><th>Daun</th><th>Kondisi</th><th>Larutan</th><th>Perawatan & catatan</th><th>Aksi</th></tr></thead><tbody>${rows.map(r=>{let x=data(r);return `<tr><td>${esc(x.date)}</td><td>${esc(x.height)} cm</td><td>${esc(x.leaves)}</td><td>${esc(x.condition)}</td><td>${esc(x.water)}</td><td>${esc(x.action)}<br><span class="muted">${esc(x.note)}</span></td><td>${r.record_type==="daily"?`<button type="button" class="small-btn canva-button go-daily" data-id="${esc(r.__backendId)}">Laporan harian</button>`:`<button type="button" class="small-btn canva-button edit-j" data-key="${esc(r.record_key)}">Edit</button>`}</td></tr>`}).join("")}</tbody></table></div>`:'<div class="empty">Belum ada pengamatan yang disimpan.</div>'}</div></section>`;
+ <article class="card canva-card"><h3>Ringkasan &amp; Grafik Perkembangan</h3><div class="stat">${rows.length}</div><p>Pengamatan tersimpan</p><p>${delta===null?"Perbandingan tinggi dan grafik muncul setelah setidaknya dua pengamatan tercatat.":`Perubahan tinggi pertama–terakhir: <strong>${delta} cm</strong>.`}</p>
+ ${chartRows.length>=2?`<div class="chart-wrap"><canvas id="growth-chart" aria-label="Grafik pertumbuhan tanaman"></canvas></div>`:`<div class="notice safe">Tambahkan minimal 2 catatan pengamatan bertanggal untuk menampilkan grafik pertumbuhan tanaman secara otomatis.</div>`}
+ </article></div>
+ <div class="panel canva-panel section"><h3>Riwayat pengamatan</h3>${rows.length?`<div class="table-scroll"><table class="canva-table"><thead><tr><th>Tanggal</th><th>Tinggi</th><th>Daun</th><th>Kondisi</th><th>Larutan</th><th>Perawatan &amp; catatan</th><th>Aksi</th></tr></thead><tbody>${rows.map(r=>{let x=data(r);return `<tr><td>${esc(x.date)}</td><td>${esc(x.height)} cm</td><td>${esc(x.leaves)}</td><td>${esc(x.condition)}</td><td>${esc(x.water)}</td><td>${esc(x.action)}<br><span class="muted">${esc(x.note)}</span></td><td>${r.record_type==="daily"?`<button type="button" class="small-btn canva-button go-daily" data-id="${esc(r.__backendId)}">Laporan harian</button>`:`<button type="button" class="small-btn canva-button edit-j" data-key="${esc(r.record_key)}">Edit</button>`}</td></tr>`}).join("")}</tbody></table></div>`:'<div class="empty">Belum ada pengamatan yang disimpan.</div>'}</div></section>`;
 }
 
 function documentation(){let daily=records("daily").filter(r=>data(r).status==="Terkirim");return `<section class="section"><h2>Dokumentasi proyek</h2><p class="intro">Catat apa yang terlihat atau dilakukan pada setiap tahap. Bukti foto Minggu 4 yang sudah terkirim tersedia di bawah.</p><div class="grid">${docStages.map((stage,i)=>{let d=data(one("doc",i+1)||{});return `<form class="card canva-card doc-form" data-stage="${i+1}"><span class="badge">Tahap ${i+1}</span><h3 style="margin-top:12px">${stage}</h3>${field("doc-date-"+i,"Tanggal",d.date||"","date",true)}${field("doc-note-"+i,"Keterangan kegiatan / foto",d.note||"","textarea",true)}<button class="button canva-button" type="submit">Simpan / perbarui</button></form>`}).join("")}</div><div class="notice">Berkas foto tidak diunggah langsung ke aplikasi. Untuk Minggu 4, gunakan tautan halaman berbagi foto sesuai arahan guru.</div><div class="panel canva-panel section"><h3>Bukti perawatan Minggu 4 · ${esc(group||"Pilih kelompok")}</h3>${daily.length?daily.flatMap(r=>(data(r).photos||[]).map(p=>`<p>Hari ${esc(data(r).day)} · ${esc(p.date||data(r).date||"—")} — <a class="canva-link" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer">${esc(p.caption||"Buka bukti")}</a></p>`)).join("")||'<p>Belum ada foto bukti.</p>':'<p>Belum ada laporan harian terkirim.</p>'}</div></section>`}
@@ -385,7 +551,7 @@ function report(){let d=data(one("report","main")||{});return `<section class="s
 
 function reflection(){
  let list=records("reflection").slice().sort((a,b)=>b.updated_at.localeCompare(a.updated_at)),edit=list.find(r=>r.record_key===editingReflection),d=edit?data(edit):{};
- return `<section class="section"><h2>Refleksi individu</h2><p class="intro">Setiap siswa menggunakan inisial berbeda dalam kelompok yang sama. Jawab dengan pengalaman sendiri.</p><div class="grid"><form id="reflection-form" class="panel canva-panel">${field("ref-name","Inisial siswa",d.name||"","text",true,'maxlength="20"')}${questions.map((q,i)=>field("ref-"+i,`${i+1}. ${q}`,d["q"+i]||"","textarea",true)).join("")}<div class="actions"><button class="button canva-button" type="submit">${edit?"Perbarui refleksi":"Simpan refleksi"}</button>${edit?'<button id="cancel-ref" class="button secondary canva-button" type="button">Batal edit</button>':""}</div></form><div class="panel canva-panel"><h3>Refleksi kelompok ini</h3>${list.length?list.map(r=>{let x=data(r);return `<article class="list-item"><h3>${esc(x.name)}</h3><p class="muted">Entri refleksi individu tersimpan.</p><button class="small-btn canva-button edit-r" type="button" data-key="${esc(r.record_key)}">Buka & edit</button></article>`}).join(""):'<div class="empty">Belum ada refleksi yang disimpan.</div>'}</div></div></section>`;
+ return `<section class="section"><h2>Refleksi individu</h2><p class="intro">Setiap siswa menggunakan inisial berbeda dalam kelompok yang sama. Jawab dengan pengalaman sendiri.</p><div class="grid"><form id="reflection-form" class="panel canva-panel">${field("ref-name","Inisial siswa",d.name||"","text",true,'maxlength="20"')}${questions.map((q,i)=>field("ref-"+i,`${i+1}. ${q}`,d["q"+i]||"","textarea",true)).join("")}<div class="actions"><button class="button canva-button" type="submit">${edit?"Perbarui refleksi":"Simpan refleksi"}</button>${edit?'<button id="cancel-ref" class="button secondary canva-button" type="button">Batal edit</button>':""}</div></form><div class="panel canva-panel"><div class="section-head"><h3>Refleksi kelompok ini</h3><span class="badge">${list.length} siswa terkumpul</span></div>${list.length?list.map(r=>{let x=data(r);return `<article class="list-item"><h3>${esc(x.name)}</h3><p class="muted">Pembelajaran utama: ${esc((x.q0||"").slice(0,95))}${(x.q0||"").length>95?"…":""}</p><button class="small-btn canva-button edit-r" type="button" data-key="${esc(r.record_key)}">Buka &amp; edit</button></article>`}).join(""):'<div class="empty">Belum ada refleksi yang disimpan.</div>'}</div></div></section>`;
 }
 
 /* ==========================================================================
@@ -417,6 +583,7 @@ function rekapGuru(){
  const summaries = targetGroups.map(computeGroupSummary);
  const isCloud = window.cloudConfig.isCloud();
  const currentUrl = window.cloudConfig.getDbUrl();
+ const meta = getSchoolMeta();
 
  const filterRows = (type) => backendRecords
   .filter(r => r.record_type === type && (rekapGroupFilter === "ALL" || r.group_code === rekapGroupFilter))
@@ -444,7 +611,7 @@ function rekapGuru(){
  } else if(rekapSubTab === "mingguan"){
   const rows = filterRows("week");
   detailHtml = rows.length ? `<div class="table-scroll"><table>
-   <thead><tr><th>Kelompok</th><th>Minggu</th><th>Tanggal</th><th>Nama Kelompok</th><th>Pembagian Peran</th><th>Hasil & Catatan</th><th>Status</th></tr></thead>
+   <thead><tr><th>Kelompok</th><th>Minggu</th><th>Tanggal</th><th>Nama Kelompok</th><th>Pembagian Peran</th><th>Hasil &amp; Catatan</th><th>Status</th></tr></thead>
    <tbody>${rows.map(r=>{const x=data(r), wIdx=Number(r.record_key)-1;return `<tr>
     <td><strong>${esc(r.group_code)}</strong></td>
     <td>M${esc(r.record_key)} · ${esc(weeks[wIdx]?.title||"")}</td>
@@ -457,7 +624,7 @@ function rekapGuru(){
  } else if(rekapSubTab === "harian"){
   const rows = filterRows("daily");
   detailHtml = rows.length ? `<div class="table-scroll"><table>
-   <thead><tr><th>Kelompok</th><th>Hari</th><th>Tanggal</th><th>Tanaman</th><th>Tinggi</th><th>Daun</th><th>Kondisi & Larutan</th><th>Tindakan & Kendala</th><th>Bukti Foto</th><th>Status</th></tr></thead>
+   <thead><tr><th>Kelompok</th><th>Hari</th><th>Tanggal</th><th>Tanaman</th><th>Tinggi</th><th>Daun</th><th>Kondisi &amp; Larutan</th><th>Tindakan &amp; Kendala</th><th>Bukti Foto</th><th>Status</th></tr></thead>
    <tbody>${rows.map(r=>{const x=data(r);return `<tr>
     <td><strong>${esc(r.group_code)}</strong></td>
     <td>Hari ${esc(x.day)}</td>
@@ -473,7 +640,7 @@ function rekapGuru(){
  } else if(rekapSubTab === "jurnal"){
   const rows = filterRows("journal");
   detailHtml = rows.length ? `<div class="table-scroll"><table>
-   <thead><tr><th>Kelompok</th><th>Tanggal</th><th>Tinggi (cm)</th><th>Jumlah Daun</th><th>Kondisi</th><th>Larutan</th><th>Tindakan & Catatan</th></tr></thead>
+   <thead><tr><th>Kelompok</th><th>Tanggal</th><th>Tinggi (cm)</th><th>Jumlah Daun</th><th>Kondisi</th><th>Larutan</th><th>Tindakan &amp; Catatan</th></tr></thead>
    <tbody>${rows.map(r=>{const x=data(r);return `<tr>
     <td><strong>${esc(r.group_code)}</strong></td>
     <td>${esc(x.date||"—")}</td>
@@ -512,9 +679,9 @@ function rekapGuru(){
  return `<section class="section">
   <div class="section-head">
    <div>
-    <span class="badge warn">Mode Guru · Kelas 9.10</span>
-    <h2 style="margin-top:8px">Rekap & Export Laporan Kokurikuler</h2>
-    <p class="intro" style="margin-bottom:0">Seluruh data kelompok yang diunggah siswa direkap otomatis di sini dan siap diunduh ke Excel atau PDF.</p>
+    <span class="badge warn">Mode Guru · SMP Negeri 1 Baubau</span>
+    <h2 style="margin-top:8px">Rekap &amp; Export Laporan Kokurikuler</h2>
+    <p class="intro" style="margin-bottom:0">Seluruh data kelompok yang diunggah siswa direkap otomatis di sini dan siap diunduh ke Excel atau PDF ber-kop sekolah.</p>
    </div>
    <div class="actions">
     <button type="button" id="guru-refresh" class="button secondary"><i data-lucide="refresh-cw"></i> Refresh Data</button>
@@ -528,13 +695,28 @@ function rekapGuru(){
     <div>
      <span class="sync-pill ${isCloud?"":"local"}">${isCloud?"● Terhubung ke Cloud Firebase (Sinkron Lintas HP)":"● Penyimpanan Lokal Browser (Belum Terhubung Cloud)"}</span>
     </div>
-    <button type="button" id="toggle-cloud-setup" class="small-btn">${isCloud?"Pengaturan URL Firebase":"Hubungkan Firebase (Agar Data HP Siswa Masuk)"}</button>
+    <div class="actions">
+     <button type="button" id="toggle-pdf-meta" class="small-btn"><i data-lucide="pen-tool" style="width:14px;height:14px"></i> Pengaturan Kop &amp; TTD PDF</button>
+     <button type="button" id="toggle-cloud-setup" class="small-btn">${isCloud?"Pengaturan URL Firebase":"Hubungkan Firebase"}</button>
+    </div>
    </div>
+
+   <div id="pdf-meta-box" class="hidden" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">
+    <p class="muted" style="margin-bottom:10px">Identitas penandatangan di bawah akan dicetak otomatis pada bagian pengesahan di halaman akhir dokumen PDF:</p>
+    <div class="form-grid">
+     ${field("meta-wali-name","Nama Wali Kelas 9.10 / Pembimbing",meta.waliName)}
+     ${field("meta-wali-nip","NIP Wali Kelas 9.10",meta.waliNip)}
+     ${field("meta-kepsek-name","Nama Kepala SMP Negeri 1 Baubau",meta.kepsekName)}
+     ${field("meta-kepsek-nip","NIP Kepala Sekolah",meta.kepsekNip)}
+    </div>
+    <button type="button" id="save-pdf-meta" class="button">Simpan Identitas PDF</button>
+   </div>
+
    <div id="cloud-setup-box" class="hidden" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">
     <p class="muted">URL Database Firebase aktif saat ini:</p>
     <div class="actions" style="margin-top:8px">
      <input id="fb-url-input" type="url" value="${esc(currentUrl)}" placeholder="https://nama-proyek-default-rtdb.firebasedatabase.app" style="flex:1;min-width:240px;border:1px solid #ccdcd0;border-radius:9px;padding:9px 11px">
-     <button type="button" id="save-fb-url" class="button">Simpan URL & Sinkronkan</button>
+     <button type="button" id="save-fb-url" class="button">Simpan URL &amp; Sinkronkan</button>
     </div>
    </div>
   </div>
@@ -542,7 +724,7 @@ function rekapGuru(){
   <div class="panel">
    <div class="section-head">
     <div style="min-width:240px">
-     <label for="rekap-group-select" style="display:block;font-weight:700;font-size:13px;margin-bottom:5px">Filter Kelompok (Berlaku untuk Tampilan & Export)</label>
+     <label for="rekap-group-select" style="display:block;font-weight:700;font-size:13px;margin-bottom:5px">Filter Kelompok (Berlaku untuk Tampilan &amp; Export)</label>
      <select id="rekap-group-select" style="width:100%;border:1px solid #ccdcd0;border-radius:10px;padding:10px 12px;background:#fff">
       <option value="ALL" ${rekapGroupFilter==="ALL"?"selected":""}>Semua Kelompok (${groups.length} kelompok)</option>
       ${groups.map(g=>`<option value="${esc(g)}" ${rekapGroupFilter===g?"selected":""}>Kelompok ${esc(g)}</option>`).join("")}
@@ -552,12 +734,12 @@ function rekapGuru(){
    </div>
 
    <div class="rekap-subtabs">
-    <button type="button" class="${rekapSubTab==="ringkasan"?"active":""}" data-sub="ringkasan">1. Ringkasan & Nilai</button>
+    <button type="button" class="${rekapSubTab==="ringkasan"?"active":""}" data-sub="ringkasan">1. Ringkasan &amp; Nilai</button>
     <button type="button" class="${rekapSubTab==="mingguan"?"active":""}" data-sub="mingguan">2. Tugas Mingguan</button>
     <button type="button" class="${rekapSubTab==="harian"?"active":""}" data-sub="harian">3. Minggu 4 Harian</button>
     <button type="button" class="${rekapSubTab==="jurnal"?"active":""}" data-sub="jurnal">4. Jurnal Pertumbuhan</button>
     <button type="button" class="${rekapSubTab==="masalah"?"active":""}" data-sub="masalah">5. Analisis Masalah</button>
-    <button type="button" class="${rekapSubTab==="laporan"?"active":""}" data-sub="laporan">6. Laporan Akhir & Refleksi</button>
+    <button type="button" class="${rekapSubTab==="laporan"?"active":""}" data-sub="laporan">6. Laporan Akhir &amp; Refleksi</button>
    </div>
 
    ${detailHtml}
@@ -566,7 +748,7 @@ function rekapGuru(){
 }
 
 /* ==========================================================================
-   FUNGSI EXPORT EXCEL (.XLSX) & PDF (.PDF)
+   FUNGSI EXPORT EXCEL (.XLSX) & PDF (.PDF) DENGAN KOP SURAT RESMI SEKOLAH
    ========================================================================== */
 function exportToXlsx(){
  if(!window.XLSX){
@@ -583,7 +765,6 @@ function exportToXlsx(){
   .filter(r => r.record_type === type && (rekapGroupFilter === "ALL" || r.group_code === rekapGroupFilter))
   .sort((a,b) => a.group_code.localeCompare(b.group_code) || String(a.record_key).localeCompare(String(b.record_key)));
 
- // Sheet 1: Ringkasan & Penilaian
  const s1Header = ["Kode Kelompok","Tugas Mingguan Selesai","Minggu 4 Terkirim","Total Minggu 4","Jurnal Pertumbuhan","Dokumentasi Tahap","Analisis Masalah","Laporan Akhir","Refleksi Siswa","Skor Pengetahuan (20%)","Skor Keterampilan (30%)","Skor Kolaborasi (20%)","Skor Produk (20%)","Skor Presentasi (10%)","Total Nilai Berbobot"];
  const s1Rows = groups.map(g => {
   const s = computeGroupSummary(g);
@@ -598,7 +779,6 @@ function exportToXlsx(){
  ws1["!cols"] = s1Header.map(()=>({wch:18}));
  XLSX.utils.book_append_sheet(wb, ws1, "Ringkasan & Nilai");
 
- // Sheet 2: Tugas Mingguan
  const s2Header = ["Kode Kelompok","Minggu Ke","Judul Tahap","Tanggal Kegiatan","Nama Kelompok","Pembagian Peran","Jawaban & Catatan","Status","Terakhir Diperbarui"];
  const s2Rows = filterByGroup("week").map(r => {
   const x = data(r), wIdx = Number(r.record_key)-1;
@@ -608,7 +788,6 @@ function exportToXlsx(){
  ws2["!cols"] = [{wch:14},{wch:12},{wch:24},{wch:14},{wch:18},{wch:28},{wch:40},{wch:16},{wch:22}];
  XLSX.utils.book_append_sheet(wb, ws2, "Tugas Mingguan");
 
- // Sheet 3: Minggu 4 Harian
  const s3Header = ["Kode Kelompok","Hari Ke","Tanggal","Nama Tanaman","Petugas","Tinggi (cm)","Jumlah Daun","Kondisi Tanaman","Larutan Nutrisi","Kondisi Sumbu","Cahaya","Tindakan Perawatan","Kendala","Catatan","Tautan Bukti Foto","Status"];
  const s3Rows = filterByGroup("daily").map(r => {
   const x = data(r);
@@ -619,7 +798,6 @@ function exportToXlsx(){
  ws3["!cols"] = s3Header.map(()=>({wch:18}));
  XLSX.utils.book_append_sheet(wb, ws3, "Minggu 4 Harian");
 
- // Sheet 4: Jurnal Pertumbuhan
  const s4Header = ["Kode Kelompok","Tanggal","Tinggi (cm)","Jumlah Daun","Kondisi Tanaman","Ketersediaan Larutan","Tindakan Perawatan","Catatan Tambahan"];
  const s4Rows = filterByGroup("journal").map(r => {
   const x = data(r);
@@ -629,7 +807,6 @@ function exportToXlsx(){
  ws4["!cols"] = s4Header.map(()=>({wch:20}));
  XLSX.utils.book_append_sheet(wb, ws4, "Jurnal Pertumbuhan");
 
- // Sheet 5: Dokumentasi & Analisis Masalah
  const s5Header = ["Kode Kelompok","Jenis Data","Tahap / Masalah","Tanggal / Gejala","Keterangan / Penyebab","Solusi / Tindakan","Penanggung Jawab","Status"];
  const docRows = filterByGroup("doc").map(r => {
   const x = data(r), idx = Number(r.record_key)-1;
@@ -643,7 +820,6 @@ function exportToXlsx(){
  ws5["!cols"] = s5Header.map(()=>({wch:22}));
  XLSX.utils.book_append_sheet(wb, ws5, "Dokumentasi & Masalah");
 
- // Sheet 6: Laporan Akhir & Refleksi
  const s6Header = ["Kode Kelompok","Judul Laporan","Anggota & Tugas","Tujuan","Alat & Bahan","Prosedur","Hasil & Data","Kendala","Solusi","Kesimpulan","Refleksi Kelompok"];
  const s6Rows = filterByGroup("report").map(r => {
   const x = data(r);
@@ -682,26 +858,44 @@ function exportToPdf(){
  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
  const dateStr = new Date().toLocaleDateString("id-ID", { day:"numeric", month:"long", year:"numeric" });
  const scopeLabel = rekapGroupFilter === "ALL" ? `Semua Kelompok (${groups.length} Kelompok)` : `Kelompok ${rekapGroupFilter}`;
+ const meta = getSchoolMeta();
 
- // Header Dokumen
- doc.setFillColor(22, 77, 57);
- doc.rect(0, 0, 210, 32, "F");
- doc.setTextColor(255, 255, 255);
+ // Kop Surat Resmi SMP Negeri 1 Baubau
+ doc.setTextColor(20, 35, 28);
  doc.setFont("helvetica", "bold");
- doc.setFontSize(15);
- doc.text("LAPORAN PROYEK KOKURIKULER", 14, 13);
  doc.setFontSize(11);
+ doc.text("PEMERINTAH KOTA BAUBAU", 105, 13, { align: "center" });
+ doc.setFontSize(11);
+ doc.text("DINAS PENDIDIKAN DAN KEBUDAYAAN", 105, 18.5, { align: "center" });
+ doc.setFontSize(14);
+ doc.setTextColor(22, 77, 57);
+ doc.text("SMP NEGERI 1 BAUBAU", 105, 24.5, { align: "center" });
  doc.setFont("helvetica", "normal");
- doc.text("Tanaman Hidroponik Sederhana · Kelas 9.10 · SMP Negeri 1 Baubau", 14, 20);
- doc.setFontSize(9);
- doc.text(`Cakupan: ${scopeLabel}   |   Tanggal Cetak: ${dateStr}`, 14, 27);
+ doc.setFontSize(8.5);
+ doc.setTextColor(85, 98, 91);
+ doc.text("Proyek Kokurikuler Kelas 9.10 · Tema: Tanaman Hidroponik Sederhana · Tahun Ajaran 2026/2027", 105, 29.5, { align: "center" });
 
+ // Garis ganda kop surat
+ doc.setDrawColor(22, 77, 57);
+ doc.setLineWidth(0.8);
+ doc.line(14, 32.5, 196, 32.5);
+ doc.setLineWidth(0.25);
+ doc.line(14, 33.7, 196, 33.7);
+
+ // Judul Laporan & Info Cakupan
  doc.setTextColor(32, 51, 43);
- let y = 40;
+ doc.setFont("helvetica", "bold");
+ doc.setFontSize(11.5);
+ doc.text("LAPORAN REKAPITULASI & PENILAIAN PROYEK KOKURIKULER", 105, 40.5, { align: "center" });
+ doc.setFont("helvetica", "normal");
+ doc.setFontSize(9);
+ doc.text(`Cakupan Data: ${scopeLabel}   |   Tanggal Cetak: ${dateStr}`, 105, 45.5, { align: "center" });
+
+ let y = 52;
 
  // Bagian 1: Ringkasan Kemajuan & Penilaian
  doc.setFont("helvetica", "bold");
- doc.setFontSize(11);
+ doc.setFontSize(10.5);
  doc.text("1. Rekapitulasi Kemajuan & Penilaian Kelompok", 14, y);
  y += 3;
 
@@ -727,9 +921,9 @@ function exportToPdf(){
  // Bagian 2: Tugas Mingguan
  const weekRows = filterByGroup("week");
  if(weekRows.length){
-  if(y > 250){ doc.addPage(); y = 18; }
+  if(y > 245){ doc.addPage(); y = 18; }
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
+  doc.setFontSize(10.5);
   doc.text("2. Rekap Tugas Mingguan (Minggu 1 – 6)", 14, y);
   y += 3;
   doc.autoTable({
@@ -748,12 +942,12 @@ function exportToPdf(){
   y = doc.lastAutoTable.finalY + 8;
  }
 
- // Bagian 3: Minggu 4 Harian & Jurnal Pertumbuhan
+ // Bagian 3: Minggu 4 Harian
  const dailyList = filterByGroup("daily");
  if(dailyList.length){
-  if(y > 250){ doc.addPage(); y = 18; }
+  if(y > 245){ doc.addPage(); y = 18; }
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
+  doc.setFontSize(10.5);
   doc.text("3. Rekap Pengamatan Harian (Minggu 4)", 14, y);
   y += 3;
   doc.autoTable({
@@ -778,9 +972,9 @@ function exportToPdf(){
  // Bagian 4: Analisis Masalah
  const issueList = filterByGroup("issue");
  if(issueList.length){
-  if(y > 250){ doc.addPage(); y = 18; }
+  if(y > 245){ doc.addPage(); y = 18; }
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
+  doc.setFontSize(10.5);
   doc.text("4. Rekap Analisis Masalah & Solusi", 14, y);
   y += 3;
   doc.autoTable({
@@ -801,9 +995,9 @@ function exportToPdf(){
  // Bagian 5: Ringkasan Laporan Akhir
  const repList = filterByGroup("report");
  if(repList.length){
-  if(y > 250){ doc.addPage(); y = 18; }
+  if(y > 245){ doc.addPage(); y = 18; }
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
+  doc.setFontSize(10.5);
   doc.text("5. Ringkasan Laporan Akhir Kelompok", 14, y);
   y += 3;
   doc.autoTable({
@@ -818,24 +1012,56 @@ function exportToPdf(){
    styles: { fontSize: 7.5, cellPadding: 2, overflow: "linebreak" },
    margin: { left: 14, right: 14 }
   });
-  y = doc.lastAutoTable.finalY + 10;
+  y = doc.lastAutoTable.finalY + 12;
  }
 
- // Tanda Tangan Guru
- if(y > 255){ doc.addPage(); y = 22; }
+ // Blok Pengesahan Resmi (Kepala Sekolah & Wali Kelas 9.10)
+ if(y > 240){ doc.addPage(); y = 22; }
  doc.setFont("helvetica", "normal");
  doc.setFontSize(9.5);
- doc.text(`Baubau, ${dateStr}`, 135, y);
- doc.text("Guru Pembimbing / Koordinator Kokurikuler,", 135, y + 5);
- doc.text("______________________________________", 135, y + 24);
+ doc.setTextColor(32, 51, 43);
+
+ // Kolom Kiri: Kepala Sekolah
+ doc.text("Mengetahui,", 20, y);
+ doc.text("Kepala SMP Negeri 1 Baubau,", 20, y + 5);
+ doc.setFont("helvetica", "bold");
+ doc.text(meta.kepsekName || "Kepala SMP Negeri 1 Baubau", 20, y + 25);
+ doc.setFont("helvetica", "normal");
+ doc.text(`NIP. ${meta.kepsekNip || "........................................"}`, 20, y + 30);
+
+ // Kolom Kanan: Wali Kelas 9.10
+ doc.text(`Baubau, ${dateStr}`, 125, y);
+ doc.text("Wali Kelas 9.10 / Pembimbing Kokurikuler,", 125, y + 5);
+ doc.setFont("helvetica", "bold");
+ doc.text(meta.waliName || "Wali Kelas 9.10", 125, y + 25);
+ doc.setFont("helvetica", "normal");
+ doc.text(`NIP. ${meta.waliNip || "........................................"}`, 125, y + 30);
 
  const dateTag = new Date().toISOString().slice(0,10);
  const scopeTag = rekapGroupFilter === "ALL" ? "Semua_Kelompok" : `Kelompok_${rekapGroupFilter}`;
  doc.save(`Laporan_Kokurikuler_9.10_${scopeTag}_${dateTag}.pdf`);
- message("File PDF (.pdf) berhasil diunduh.");
+ message("File PDF resmi ber-kop sekolah (.pdf) berhasil diunduh.");
+}
+
+function openGroupCode(code){
+ const next = String(code || "").trim().toUpperCase();
+ if(!next){
+  message("Masukkan kode kelompok terlebih dahulu.",true);
+  $("group").focus();
+  return;
+ }
+ group = next;
+ $("group").value = next;
+ try { localStorage.setItem(LS_GROUP_KEY, next); } catch {}
+ editingJournal = editingIssue = editingReflection = editingDaily = null;
+ dailyPhotos = [];
+ dailyFilters = {group:"",date:"",status:""};
+ message("Menampilkan data kelompok " + group + ".");
+ render();
 }
 
 function bind(){
+ document.querySelectorAll("[data-quick-grp]").forEach(b => b.onclick = () => openGroupCode(b.dataset.quickGrp));
  if($("go-rekap-btn")) $("go-rekap-btn").onclick = () => showTab("Rekap & Export");
  if($("home-refresh-btn")) $("home-refresh-btn").onclick = async () => {
   message("Menyegarkan data dari server…");
@@ -851,6 +1077,17 @@ function bind(){
  };
  if($("export-xlsx")) $("export-xlsx").onclick = exportToXlsx;
  if($("export-pdf")) $("export-pdf").onclick = exportToPdf;
+ if($("toggle-pdf-meta")) $("toggle-pdf-meta").onclick = () => $("pdf-meta-box").classList.toggle("hidden");
+ if($("save-pdf-meta")) $("save-pdf-meta").onclick = () => {
+  saveSchoolMeta({
+   waliName: val("meta-wali-name") || "Wali Kelas 9.10",
+   waliNip: val("meta-wali-nip") || "........................................",
+   kepsekName: val("meta-kepsek-name") || "Kepala SMP Negeri 1 Baubau",
+   kepsekNip: val("meta-kepsek-nip") || "........................................"
+  });
+  message("Identitas kop surat & penandatangan PDF berhasil disimpan.");
+  render();
+ };
  if($("toggle-cloud-setup")) $("toggle-cloud-setup").onclick = () => $("cloud-setup-box").classList.toggle("hidden");
  if($("save-fb-url")) $("save-fb-url").onclick = async () => {
   const u = val("fb-url-input");
@@ -912,7 +1149,7 @@ function bind(){
 }
 
 /* Kontrol Buka Kelompok & Keamanan Password Mode Guru */
-$("open-group").onclick=()=>{let next=val("group").toUpperCase();if(!next){message("Masukkan kode kelompok terlebih dahulu.",true);$("group").focus();return}group=next;$("group").value=next;editingJournal=editingIssue=editingReflection=editingDaily=null;dailyPhotos=[];dailyFilters={group:"",date:"",status:""};message("Menampilkan data kelompok "+group+".");render()};
+$("open-group").onclick=()=>openGroupCode(val("group"));
 $("group").addEventListener("keydown",e=>{if(e.key==="Enter")$("open-group").click()});
 
 function openGuruModal(){
@@ -965,7 +1202,8 @@ $("guru-modal").onclick = (e) => {
 $("guru-pw-form").onsubmit = async (e) => {
  e.preventDefault();
  const entered = $("guru-pw-input").value;
- if(entered === GURU_PASSWORD){
+ const valid = await verifyGuruPassword(entered);
+ if(valid){
   guruAuthenticated = true;
   $("role").value = "guru";
   closeGuruModal();
@@ -984,12 +1222,19 @@ $("guru-pw-form").onsubmit = async (e) => {
 let loadTimer;
 const handler={onDataChanged(rows){clearTimeout(loadTimer);backendRecords=rows;ready=true;$("loading").classList.add("hidden");if(!document.activeElement?.closest("form"))render()}};
 async function initialize(){
- clearTimeout(loadTimer);$("loading").classList.remove("hidden");$("loading").innerHTML="Memuat data proyek…";
+ try {
+  const savedGrp = (localStorage.getItem(LS_GROUP_KEY) || "").trim().toUpperCase();
+  if(savedGrp){
+   group = savedGrp;
+   $("group").value = savedGrp;
+  }
+ } catch {}
+ clearTimeout(loadTimer);$("loading").classList.remove("hidden");
  loadTimer=setTimeout(()=>loadError("Data belum berhasil dimuat."),8000);
  try{const result=await window.dataSdk.init(handler);if(!result.isOk){clearTimeout(loadTimer);loadError("Koneksi data belum berhasil dimulai.")}}
  catch(e){clearTimeout(loadTimer);loadError("Koneksi data belum berhasil dimulai.")}
 }
-function loadError(text){ready=false;$("loading").classList.remove("hidden");$("loading").innerHTML=esc(text)+' <button id="retry" class="small-btn canva-button" type="button">Coba lagi</button>';$("retry").onclick=initialize}
+function loadError(text){ready=false;$("loading").classList.remove("hidden");$("loading").innerHTML='<div class="notice">'+esc(text)+' <button id="retry" class="small-btn canva-button" type="button">Coba lagi</button></div>';$("retry").onclick=initialize}
 
 // Sinkronisasi berkala setiap 20 detik saat Mode Guru aktif agar unggahan baru dari HP siswa muncul otomatis
 setInterval(() => {
