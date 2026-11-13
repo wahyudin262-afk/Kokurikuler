@@ -45,11 +45,12 @@
     .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
     .chart-wrap{position:relative;height:240px;width:100%;margin-top:14px}
 
-    /* Info Wali Kelas & Quick Group Pills */
+    /* Info Pembina & Quick Group Pills */
     .school-meta-bar{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;box-shadow:0 4px 18px #183e2508}
     .quick-groups{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
     .quick-grp-btn{border:1px solid #c7dccd;background:#f4faf5;color:var(--green);border-radius:99px;padding:4px 11px;font-size:12px;font-weight:700}
     .quick-grp-btn.active{background:var(--green);color:#fff;border-color:var(--green)}
+    .pembina-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 
     .daily-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.daily-stats .card{padding:14px}.daily-stats strong{display:block;font:700 23px "Outfit",sans-serif;color:var(--green);overflow-wrap:anywhere}.daily-photo{border:1px solid var(--line);border-radius:12px;padding:13px;margin:10px 0;background:#f8fbf7}.daily-photo .actions{margin-top:8px}.daily-photo a{overflow-wrap:anywhere}.filter-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.daily-history{min-width:740px}.daily-history td{max-width:190px;overflow-wrap:anywhere}
     .modal-backdrop{position:fixed;inset:0;background:rgba(16,36,27,.72);display:grid;place-items:center;padding:16px;z-index:100}.modal-box{background:#fff;border-radius:18px;max-width:410px;width:100%;padding:24px;box-shadow:0 18px 45px rgba(0,0,0,.22);border:1px solid var(--line)}.modal-box.wide{max-width:680px}.modal-box h3{margin-top:0}.pw-wrap{position:relative;display:flex;align-items:center}.pw-wrap input{padding-right:65px}.pw-toggle{position:absolute;right:8px;border:0;background:#eef5ef;color:var(--green);border-radius:7px;padding:5px 9px;font-size:12px;font-weight:700}
@@ -98,7 +99,7 @@
    <div class="modal-box">
     <span class="badge warn" style="margin-bottom:8px">Akses Terbatas</span>
     <h3 id="guru-modal-title">Masuk ke Mode Guru</h3>
-    <p class="muted" style="margin-bottom:14px">Masukkan password guru untuk mengakses rekap seluruh kelompok, penilaian, dan export laporan (.xlsx / .pdf).</p>
+    <p class="muted" style="margin-bottom:14px">Masukkan password guru pembina kokurikuler untuk mengakses rekap seluruh kelompok, penilaian, dan export laporan (.xlsx / .pdf).</p>
     <form id="guru-pw-form">
      <div class="field">
       <label for="guru-pw-input">Password Guru</label>
@@ -180,7 +181,6 @@ function compressImageFile(file, maxDim = 800, quality = 0.68){
     const ctx = canvas.getContext("2d");
     ctx.drawImage(img, 0, 0, width, height);
     let dataUrl = canvas.toDataURL("image/jpeg", quality);
-    // Jika masih di atas ~260 KB, kompres ulang agar tidak melebihi batas sel Excel & cepat dimuat
     if(dataUrl.length > 260000){
      dataUrl = canvas.toDataURL("image/jpeg", 0.5);
     }
@@ -192,21 +192,30 @@ function compressImageFile(file, maxDim = 800, quality = 0.68){
  });
 }
 
-/* Penyimpanan Identitas Kop Surat PDF & Kode Kelompok Terakhir */
+/* Penyimpanan Identitas 2 Guru Pembina Kokurikuler, Kop Surat PDF & Kode Kelompok Terakhir */
 const LS_GROUP_KEY = "ruang_tumbuh_910_last_group";
 const LS_META_KEY = "ruang_tumbuh_910_school_meta";
 
 function getSchoolMeta(){
  try {
+  const raw = JSON.parse(localStorage.getItem(LS_META_KEY) || "{}");
   return {
-   waliName: "Wali Kelas 9.10",
-   waliNip: "........................................",
-   kepsekName: "Kepala SMP Negeri 1 Baubau",
-   kepsekNip: "........................................",
-   ...JSON.parse(localStorage.getItem(LS_META_KEY) || "{}")
+   pembina1Name: raw.pembina1Name || raw.waliName || "Guru Pembina 1 (Wali Kelas 9.10)",
+   pembina1Nip: raw.pembina1Nip || raw.waliNip || "........................................",
+   pembina2Name: raw.pembina2Name || "Guru Pembina 2",
+   pembina2Nip: raw.pembina2Nip || "........................................",
+   kepsekName: raw.kepsekName || "Kepala SMP Negeri 1 Baubau",
+   kepsekNip: raw.kepsekNip || "........................................"
   };
  } catch {
-  return { waliName: "Wali Kelas 9.10", waliNip: "........................................", kepsekName: "Kepala SMP Negeri 1 Baubau", kepsekNip: "........................................" };
+  return {
+   pembina1Name: "Guru Pembina 1 (Wali Kelas 9.10)",
+   pembina1Nip: "........................................",
+   pembina2Name: "Guru Pembina 2",
+   pembina2Nip: "........................................",
+   kepsekName: "Kepala SMP Negeri 1 Baubau",
+   kepsekNip: "........................................"
+  };
  }
 }
 function saveSchoolMeta(meta){
@@ -480,14 +489,19 @@ function home(){
   <div class="hero-pills">
    <span class="pill"><i data-lucide="school"></i> SMP Negeri 1 Baubau</span>
    <span class="pill"><i data-lucide="users"></i> Kelas 9.10</span>
-   <span class="pill"><i data-lucide="user-check"></i> Pembimbing: ${esc(meta.waliName)}</span>
+   <span class="pill"><i data-lucide="user-check"></i> Pembina 1: ${esc(meta.pembina1Name)}</span>
+   <span class="pill"><i data-lucide="user-check"></i> Pembina 2: ${esc(meta.pembina2Name)}</span>
   </div>
  </section>
 
  <div class="school-meta-bar">
   <div>
-   <strong style="color:var(--green);font-family:'Outfit',sans-serif">Kelompok Aktif Kelas 9.10 (${groups.length} kelompok terdata)</strong>
-   <p class="muted" style="margin:2px 0 0">${groups.length?"Klik kode kelompok di bawah untuk membuka ruang kerja kelompok dengan cepat:":"Belum ada kelompok terdata. Masukkan kode kelompok baru di bagian atas (contoh: K01)."}</p>
+   <strong style="color:var(--green);font-family:'Outfit',sans-serif">Tim Pembina Kokurikuler &amp; Kelompok Aktif Kelas 9.10 (${groups.length} kelompok)</strong>
+   <div class="pembina-badges">
+    <span class="badge">Pembina 1: ${esc(meta.pembina1Name)}</span>
+    <span class="badge">Pembina 2: ${esc(meta.pembina2Name)}</span>
+   </div>
+   <p class="muted" style="margin:6px 0 0">${groups.length?"Klik kode kelompok di bawah untuk membuka ruang kerja kelompok dengan cepat:":"Belum ada kelompok terdata. Masukkan kode kelompok baru di bagian atas (contoh: K01)."}</p>
    ${groups.length?`<div class="quick-groups">${groups.map(g=>`<button type="button" class="quick-grp-btn ${group===g?"active":""}" data-quick-grp="${esc(g)}">${esc(g)}</button>`).join("")}</div>`:""}
   </div>
   ${group?`<span class="badge"><i data-lucide="check-circle-2" style="width:13px;height:13px;vertical-align:-2px"></i> Kelompok Aktif: ${esc(group)}</span>`:""}
@@ -496,9 +510,9 @@ function home(){
  ${isGuru()?`<section class="section"><div class="panel" style="border-left:5px solid var(--orange)">
   <div class="section-head">
    <div>
-    <span class="badge warn">Mode Guru Aktif</span>
+    <span class="badge warn">Mode Guru Pembina Aktif</span>
     <h2 style="margin-top:8px">Dashboard Rekap &amp; Export Kokurikuler</h2>
-    <p class="muted">Pantau semua unggahan foto &amp; laporan siswa dari HP, beri penilaian, dan unduh laporan resmi ber-kop sekolah dalam format Excel (.xlsx) atau PDF (.pdf).</p>
+    <p class="muted">Pantau semua unggahan foto &amp; laporan siswa dari HP, beri penilaian bersama tim pembina, dan unduh laporan resmi ber-kop sekolah dalam format Excel (.xlsx) atau PDF (.pdf).</p>
    </div>
    <div class="actions">
     <button type="button" id="go-rekap-btn" class="button accent"><i data-lucide="file-spreadsheet"></i> Buka Rekap &amp; Export</button>
@@ -512,7 +526,7 @@ function home(){
   </div>
  </div></section>`:""}
 
- <section class="section"><div class="grid"><article class="card canva-card"><h3>Mulai dari sini</h3><ol><li>Pilih peran tampilan dan masukkan kode kelompok yang disepakati bersama guru (contoh: <strong>K01</strong>).</li><li>Baca Materi dan keselamatan kerja sebelum menyemai dan merakit instalasi.</li><li>Isi Tugas Mingguan; foto langsung tanaman lewat HP pada <strong>Minggu 4</strong> &amp; <strong>Dokumentasi</strong>.</li><li>Lengkapi analisis masalah, laporan akhir, dan refleksi sebelum presentasi.</li></ol><p class="muted">Kode kelompok tersimpan otomatis di perangkatmu. Gunakan inisial untuk refleksi individu.</p></article>
+ <section class="section"><div class="grid"><article class="card canva-card"><h3>Mulai dari sini</h3><ol><li>Pilih peran tampilan dan masukkan kode kelompok yang disepakati bersama guru pembina (contoh: <strong>K01</strong>).</li><li>Baca Materi dan keselamatan kerja sebelum menyemai dan merakit instalasi.</li><li>Isi Tugas Mingguan; foto langsung tanaman lewat HP pada <strong>Minggu 4</strong> &amp; <strong>Dokumentasi</strong>.</li><li>Lengkapi analisis masalah, laporan akhir, dan refleksi sebelum presentasi.</li></ol><p class="muted">Kode kelompok tersimpan otomatis di perangkatmu. Gunakan inisial untuk refleksi individu.</p></article>
  <article class="card canva-card"><h3>Kemajuan proyek ${group?"· "+esc(group):""}</h3><div class="stat">${completed} / 6</div><p>Minggu berstatus Selesai</p><div class="progress-track canva-progress" role="progressbar" aria-label="Kemajuan tugas mingguan" aria-valuenow="${completed}" aria-valuemin="0" aria-valuemax="6"><div class="progress-fill" style="width:${completed/6*100}%"></div></div><p class="muted">Status dihitung dari tugas yang disimpan. Minggu 4: ${records("daily").filter(r=>data(r).status==="Terkirim").length} hari pengamatan terkirim.</p></article></div></section>
 
  <section class="section"><div class="section-head"><h2>Dimensi Karakter Kokurikuler</h2></div><div class="grid four">${[
@@ -528,14 +542,14 @@ function home(){
  "Menganalisis masalah, menentukan perbaikan, bekerja sama, menjaga kebersihan, dan mempresentasikan hasil."
  ].map((s,i)=>`<article class="card canva-card"><span class="badge">0${i+1}</span><p>${s}</p></article>`).join("")}</div></section>
 
- <section class="section"><h2>Peta perjalanan</h2><p class="intro">Enam tahap pemantauan; guru dapat menyesuaikannya dengan lima pertemuan pada modul.</p><div class="checklist">${weeks.map((w,i)=>`<div class="check ${data(one("week",i+1)||{}).status==="Selesai"?"done":""}">M${i+1} · ${esc(w.title)}<br><span class="muted">${esc(data(one("week",i+1)||{}).status||"Belum dimulai")}</span></div>`).join("")}</div></section>
- <div class="notice safe">Keselamatan utama: gunakan alat pemotong hanya dengan pengawasan guru, jangan mencicipi larutan, dan selalu ikuti label nutrisi AB Mix serta instruksi guru.</div>`;
+ <section class="section"><h2>Peta perjalanan</h2><p class="intro">Enam tahap pemantauan; tim guru pembina dapat menyesuaikannya dengan lima pertemuan pada modul.</p><div class="checklist">${weeks.map((w,i)=>`<div class="check ${data(one("week",i+1)||{}).status==="Selesai"?"done":""}">M${i+1} · ${esc(w.title)}<br><span class="muted">${esc(data(one("week",i+1)||{}).status||"Belum dimulai")}</span></div>`).join("")}</div></section>
+ <div class="notice safe">Keselamatan utama: gunakan alat pemotong hanya dengan pengawasan guru pembina, jangan mencicipi larutan, dan selalu ikuti label nutrisi AB Mix serta instruksi guru.</div>`;
 }
 
-function materi(){return `<section class="section"><h2>Materi singkat</h2><p class="intro">Baca sebelum praktik. Diskusikan setiap tindakan dengan guru dan kelompok.</p><div class="grid">${topics.map((t,i)=>`<article class="card canva-card"><span class="badge">Materi ${i+1}</span><h3 style="margin-top:12px">${t[0]}</h3><p>${t[1]}</p></article>`).join("")}</div></section>
+function materi(){return `<section class="section"><h2>Materi singkat</h2><p class="intro">Baca sebelum praktik. Diskusikan setiap tindakan dengan guru pembina dan kelompok.</p><div class="grid">${topics.map((t,i)=>`<article class="card canva-card"><span class="badge">Materi ${i+1}</span><h3 style="margin-top:12px">${t[0]}</h3><p>${t[1]}</p></article>`).join("")}</div></section>
 <section class="panel canva-panel">
  <h2>Video pembelajaran dari modul</h2>
- <p>Tonton panduan praktik berikut sebelum merakit instalasi wick di kelas. Pastikan prosedur keselamatan tetap mengikuti arahan guru.</p>
+ <p>Tonton panduan praktik berikut sebelum merakit instalasi wick di kelas. Pastikan prosedur keselamatan tetap mengikuti arahan guru pembina.</p>
  <div class="grid" style="margin-top:14px">
   <div class="card">
    <span class="badge">Video 1</span>
@@ -609,7 +623,7 @@ function dailyPage(){
  const first=submitted[0],last=submitted.at(-1),delta=(key,unit)=>submitted.length<2?"Belum ada data":((Number(last[key])-Number(first[key]))>=0?"+":"")+(Number(last[key])-Number(first[key])).toFixed(key==="height"?1:0)+unit;
  const problems={};submitted.forEach(x=>{let s=(x.problem||"").trim().toLowerCase();if(s)problems[s]=(problems[s]||0)+1});const common=Object.entries(problems).sort((a,b)=>b[1]-a[1])[0];
  const groups=[...new Set(all.map(r=>r.group_code))].sort();
- return `<section class="section canva-section" id="week4"><h2>Minggu 4 – Perawatan dan Pengamatan Harian</h2><p class="intro">Setiap kelompok mengisi satu laporan untuk setiap hari pengamatan sesuai jadwal guru. Tujuh hari di bawah adalah template kosong, bukan data pengamatan.</p><div class="notice safe">Keselamatan: alat pemotong hanya dengan pengawasan guru; jangan mencicipi larutan nutrisi; cuci tangan sebelum dan sesudah kegiatan; jaga area tetap bersih dan kering.</div><div class="daily-stats">${[["Hari dilaporkan",submitted.length],["Perubahan tinggi",delta("height"," cm")],["Perubahan daun",delta("leaves"," helai")],["Foto bukti",submitted.reduce((n,x)=>n+(x.photos||[]).length,0)],["Kendala tersering",common?common[0]+" ("+common[1]+")":"Belum ada data"]].map(([label,value])=>`<div class="card canva-card"><span class="muted">${label}</span><strong>${esc(value)}</strong></div>`).join("")}</div>
+ return `<section class="section canva-section" id="week4"><h2>Minggu 4 – Perawatan dan Pengamatan Harian</h2><p class="intro">Setiap kelompok mengisi satu laporan untuk setiap hari pengamatan sesuai jadwal guru pembina. Tujuh hari di bawah adalah template kosong, bukan data pengamatan.</p><div class="notice safe">Keselamatan: alat pemotong hanya dengan pengawasan guru; jangan mencicipi larutan nutrisi; cuci tangan sebelum dan sesudah kegiatan; jaga area tetap bersih dan kering.</div><div class="daily-stats">${[["Hari dilaporkan",submitted.length],["Perubahan tinggi",delta("height"," cm")],["Perubahan daun",delta("leaves"," helai")],["Foto bukti",submitted.reduce((n,x)=>n+(x.photos||[]).length,0)],["Kendala tersering",common?common[0]+" ("+common[1]+")":"Belum ada data"]].map(([label,value])=>`<div class="card canva-card"><span class="muted">${label}</span><strong>${esc(value)}</strong></div>`).join("")}</div>
  <div class="grid section"><form id="daily-form" class="panel canva-panel"><h3>${current?"Edit laporan harian":"Isi laporan harian"}</h3><p class="muted">Pilih Draft untuk menyimpan pekerjaan yang belum lengkap. Terkirim membutuhkan semua kolom penting dan bukti foto.</p><div class="form-grid">${field("d-day","Hari ke-",d.day||"","number",true,'min="1" step="1"')}${field("d-date","Tanggal pengamatan",d.date||"","date")}${field("d-group","Nama / kode kelompok",d.groupName||group)}${field("d-plant","Nama tanaman",d.plant||"")}${field("d-officer","Nama petugas",d.officer||"")}${field("d-height","Tinggi tanaman (cm)",d.height??"","number",false,'min="0" step="0.1"')}${field("d-leaves","Jumlah daun",d.leaves??"","number",false,'min="0" step="1"')}${field("d-condition","Warna dan kondisi tanaman",d.condition||"")}${selectField("d-water","Ketersediaan larutan nutrisi",["","Cukup","Perlu ditambah","Perlu diperiksa"],d.water||"")}${selectField("d-wick","Kondisi sumbu / wick",["","Baik","Perlu diperiksa","Perlu diganti"],d.wick||"")}${selectField("d-light","Cahaya yang diterima",["","Cukup","Kurang","Berlebih"],d.light||"")}${selectField("d-status","Status laporan",["Belum diisi","Draft","Terkirim"],d.status||"Draft")}</div>${field("d-action","Tindakan perawatan yang dilakukan",d.action||"","textarea")}${field("d-problem","Kendala",d.problem||"","textarea")}${field("d-note","Catatan tambahan",d.note||"","textarea")}<h3>Bukti foto</h3><p class="muted">Unggah foto langsung menggunakan <strong>Kamera HP</strong> atau pilih dari <strong>Galeri</strong> (foto otomatis dikompres agar cepat tersimpan). Maksimal 2 foto per laporan harian.</p><div id="daily-photos">${dailyPhotos.map(dailyPhotoMarkup).join("")}</div><button id="add-photo" type="button" class="small-btn canva-button"><i data-lucide="plus" style="width:14px;height:14px"></i> Tambah slot foto</button><p class="muted">Pembaruan terakhir: ${current?esc(current.updated_at||"Belum ada data"):"Belum ada data"}</p><div class="actions"><button class="button canva-button" type="submit">Simpan laporan</button>${current?'<button id="cancel-daily" type="button" class="button secondary canva-button">Batal edit</button>':""}</div></form><aside class="panel canva-panel"><h3>Hari pengamatan kelompok ${esc(group||"—")}</h3><p class="muted">Buka kelompok terlebih dahulu. Laporan tambahan dapat dibuat setelah hari ketujuh.</p>${group?`<div class="actions"><button id="add-daily" type="button" class="button secondary canva-button">Tambah laporan harian</button></div><div class="list-item">${templates.length?templates.map(n=>`<button type="button" class="small-btn canva-button template-day" data-day="${n}" style="margin:3px">Hari ${n} · Belum diisi</button>`).join(""):"Ketujuh template sudah digunakan; tambah hari berikutnya bila diperlukan."}</div>${own.slice().sort((a,b)=>Number(data(a).day)-Number(data(b).day)).map(r=>`<div class="list-item"><strong>Hari ${esc(data(r).day)}</strong> · ${esc(data(r).date||"Tanggal belum diisi")} <span class="badge canva-tag">${esc(dayStatus(r))}</span><div class="actions"><button type="button" class="small-btn canva-button edit-daily" data-id="${esc(r.__backendId)}">Edit</button><button type="button" class="small-btn canva-button delete-daily" data-id="${esc(r.__backendId)}">Hapus</button></div></div>`).join("")}`:'<div class="empty">Belum ada kelompok yang dibuka.</div>'}</aside></div>
  <div class="panel canva-panel section"><h3>Riwayat laporan harian · Kelas 9.10</h3><div class="filter-grid">${selectField("filter-group","Filter kelompok",["",...groups],dailyFilters.group)}${field("filter-date","Filter tanggal",dailyFilters.date,"date")}${selectField("filter-status","Filter status",["","Belum diisi","Draft","Terkirim"],dailyFilters.status)}</div>${filtered.length?`<div class="table-scroll"><table class="canva-table daily-history"><thead><tr><th>Kelompok / hari</th><th>Tanggal</th><th>Tinggi</th><th>Daun</th><th>Kondisi</th><th>Foto / bukti</th><th>Status</th><th>Diperbarui</th><th>Aksi</th></tr></thead><tbody>${filtered.map(r=>{let x=data(r);return `<tr><td>${esc(r.group_code)} · ${esc(x.day)}</td><td>${esc(x.date||"—")}</td><td>${x.height!==""&&x.height!=null?esc(x.height)+" cm":"—"}</td><td>${esc(x.leaves||"—")}</td><td>${esc(x.condition||"—")}</td><td>${(x.photos||[]).map((p,i)=>renderPhotoBadge(p.link,p.caption,"Foto "+(i+1))).join("<br>")||"—"}</td><td>${esc(dayStatus(r))}</td><td>${esc(r.updated_at||"—")}</td><td><button type="button" class="small-btn canva-button edit-daily" data-id="${esc(r.__backendId)}">Edit</button></td></tr>`}).join("")}</tbody></table></div>`:'<div class="empty">Belum ada laporan yang cocok dengan filter.</div>'}</div></section>`;
 }
@@ -699,17 +713,18 @@ function issues(){
 function grading(){
  let d=data(one("grade","main")||{}),all=aspects.every((_,i)=>d["s"+i]!==undefined&&d["s"+i]!==""),total=all?aspects.reduce((sum,a,i)=>sum+Number(d["s"+i])*a[1]/4,0):null;
  const guru=isGuru();
- return `<section class="section"><h2>Penilaian proyek ${group?"· Kelompok "+esc(group):""}</h2><p class="intro">Guru mengisi skor 1–4 berdasarkan bukti proyek. Siswa dapat memantau hasil yang telah diisi.</p><div class="grid"><form id="grade-form" class="panel canva-panel"><h3>Skor per aspek</h3>${aspects.map((a,i)=>selectField("score-"+i,`${a[0]} · bobot ${a[1]}%`,["","1","2","3","4"],d["s"+i]??"")).join("")}<button class="button canva-button" type="submit" ${!guru?"disabled title='Masuk ke Mode Guru untuk mengisi'":""}>Simpan penilaian</button><p class="muted">${guru?"Mode Guru aktif: Anda dapat menyimpan atau memperbarui nilai kelompok ini.":"Pilih peran Guru dan masukkan password untuk mengisi penilaian."}</p></form><article class="card canva-card"><h3>Total berbobot</h3><div class="score">${total===null?"Belum lengkap":total.toFixed(1)+" / 100"}</div><p>Rumus: skor tiap aspek ÷ 4 × bobot aspek. Total tampil setelah seluruh aspek diisi.</p><div class="table-scroll"><table class="canva-table"><thead><tr><th>Aspek</th><th>Bobot</th><th>Skor</th></tr></thead><tbody>${aspects.map((a,i)=>`<tr><td>${a[0]}</td><td>${a[1]}%</td><td>${d["s"+i]||"Belum diisi"}</td></tr>`).join("")}</tbody></table></div></article></div>
+ const meta=getSchoolMeta();
+ return `<section class="section"><h2>Penilaian proyek ${group?"· Kelompok "+esc(group):""}</h2><p class="intro">Tim Guru Pembina Kokurikuler (${esc(meta.pembina1Name)} &amp; ${esc(meta.pembina2Name)}) mengisi skor 1–4 berdasarkan bukti proyek.</p><div class="grid"><form id="grade-form" class="panel canva-panel"><h3>Skor per aspek</h3>${aspects.map((a,i)=>selectField("score-"+i,`${a[0]} · bobot ${a[1]}%`,["","1","2","3","4"],d["s"+i]??"")).join("")}<button class="button canva-button" type="submit" ${!guru?"disabled title='Masuk ke Mode Guru untuk mengisi'":""}>Simpan penilaian</button><p class="muted">${guru?"Mode Guru aktif: Anda dapat menyimpan atau memperbarui nilai kelompok ini.":"Pilih peran Guru dan masukkan password untuk mengisi penilaian."}</p></form><article class="card canva-card"><h3>Total berbobot</h3><div class="score">${total===null?"Belum lengkap":total.toFixed(1)+" / 100"}</div><p>Rumus: skor tiap aspek ÷ 4 × bobot aspek. Total tampil setelah seluruh aspek diisi.</p><div class="table-scroll"><table class="canva-table"><thead><tr><th>Aspek</th><th>Bobot</th><th>Skor</th></tr></thead><tbody>${aspects.map((a,i)=>`<tr><td>${a[0]}</td><td>${a[1]}%</td><td>${d["s"+i]||"Belum diisi"}</td></tr>`).join("")}</tbody></table></div></article></div>
  <div class="panel canva-panel section"><h3>Panduan rubrik skala 1–4</h3><div class="table-scroll"><table class="canva-table"><thead><tr><th>Kriteria</th><th>4 · Sangat baik</th><th>3 · Baik</th><th>2 · Cukup</th><th>1 · Perlu bimbingan</th></tr></thead><tbody>
  <tr><td>Perencanaan</td><td>Sangat jelas dan realistis</td><td>Jelas</td><td>Masih umum</td><td>Belum memiliki rencana</td></tr>
  <tr><td>Keterampilan</td><td>Mandiri, tepat, rapi</td><td>Cukup mandiri dan tepat</td><td>Masih perlu arahan</td><td>Banyak perlu bantuan</td></tr>
  <tr><td>Kolaborasi</td><td>Semua aktif dan bertanggung jawab</td><td>Sebagian besar aktif</td><td>Belum merata</td><td>Belum terlihat</td></tr>
  <tr><td>Perawatan</td><td>Rutin dan terdokumentasi</td><td>Cukup rutin</td><td>Tidak konsisten</td><td>Jarang dilakukan</td></tr>
  <tr><td>Presentasi</td><td>Jelas, berbasis data, percaya diri</td><td>Jelas dan terstruktur</td><td>Masih terbatas</td><td>Belum mampu menjelaskan</td></tr>
- </tbody></table></div><p class="muted">Rubrik adalah panduan pengamatan; guru menetapkan skor aspek berbobot dengan mempertimbangkan bukti yang relevan.</p></div></section>`;
+ </tbody></table></div><p class="muted">Rubrik adalah panduan pengamatan; tim guru pembina menetapkan skor aspek berbobot dengan mempertimbangkan bukti yang relevan.</p></div></section>`;
 }
 
-function report(){let d=data(one("report","main")||{});return `<section class="section"><h2>Laporan Akhir Kelompok</h2><p class="intro">Isi berdasarkan pekerjaan dan data sebenarnya. Dapat diperbarui sebelum diserahkan kepada guru.</p><form id="report-form" class="panel canva-panel">${reportFields.map((f,i)=>field("r-"+i,`${i+1}. ${f}`,d["f"+i]||"",i===0?"text":"textarea",i===0)).join("")}<button class="button canva-button" type="submit">Simpan / perbarui laporan</button></form></section>`}
+function report(){let d=data(one("report","main")||{});return `<section class="section"><h2>Laporan Akhir Kelompok</h2><p class="intro">Isi berdasarkan pekerjaan dan data sebenarnya. Dapat diperbarui sebelum diserahkan kepada guru pembina.</p><form id="report-form" class="panel canva-panel">${reportFields.map((f,i)=>field("r-"+i,`${i+1}. ${f}`,d["f"+i]||"",i===0?"text":"textarea",i===0)).join("")}<button class="button canva-button" type="submit">Simpan / perbarui laporan</button></form></section>`}
 
 function reflection(){
  let list=records("reflection").slice().sort((a,b)=>b.updated_at.localeCompare(a.updated_at)),edit=list.find(r=>r.record_key===editingReflection),d=edit?data(edit):{};
@@ -853,7 +868,7 @@ function rekapGuru(){
    <div>
     <span class="badge warn">Mode Guru · SMP Negeri 1 Baubau</span>
     <h2 style="margin-top:8px">Rekap &amp; Export Laporan Kokurikuler</h2>
-    <p class="intro" style="margin-bottom:0">Seluruh data &amp; foto yang diunggah siswa direkap otomatis di sini dan siap diunduh ke Excel atau PDF ber-kop sekolah.</p>
+    <p class="intro" style="margin-bottom:0">Tim Pembina Kelas 9.10: <strong>${esc(meta.pembina1Name)}</strong> &amp; <strong>${esc(meta.pembina2Name)}</strong></p>
    </div>
    <div class="actions">
     <button type="button" id="guru-refresh" class="button secondary"><i data-lucide="refresh-cw"></i> Refresh Data</button>
@@ -868,20 +883,22 @@ function rekapGuru(){
      <span class="sync-pill ${isCloud?"":"local"}">${isCloud?"● Terhubung ke Cloud Firebase (Sinkron Lintas HP)":"● Penyimpanan Lokal Browser (Belum Terhubung Cloud)"}</span>
     </div>
     <div class="actions">
-     <button type="button" id="toggle-pdf-meta" class="small-btn"><i data-lucide="pen-tool" style="width:14px;height:14px"></i> Pengaturan Kop &amp; TTD PDF</button>
+     <button type="button" id="toggle-pdf-meta" class="small-btn"><i data-lucide="users" style="width:14px;height:14px"></i> Pengaturan 2 Guru Pembina &amp; TTD PDF</button>
      <button type="button" id="toggle-cloud-setup" class="small-btn">${isCloud?"Pengaturan URL Firebase":"Hubungkan Firebase"}</button>
     </div>
    </div>
 
    <div id="pdf-meta-box" class="hidden" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">
-    <p class="muted" style="margin-bottom:10px">Identitas penandatangan di bawah akan dicetak otomatis pada bagian pengesahan di halaman akhir dokumen PDF:</p>
+    <p class="muted" style="margin-bottom:10px">Identitas 2 Guru Pembina Kokurikuler Kelas 9.10 dan Kepala Sekolah di bawah ini akan ditampilkan pada halaman Beranda serta dicetak pada kolom pengesahan di laporan PDF &amp; Excel:</p>
     <div class="form-grid">
-     ${field("meta-wali-name","Nama Wali Kelas 9.10 / Pembimbing",meta.waliName)}
-     ${field("meta-wali-nip","NIP Wali Kelas 9.10",meta.waliNip)}
+     ${field("meta-pembina1-name","Nama Guru Pembina Kokurikuler 1 (Wali Kelas 9.10)",meta.pembina1Name)}
+     ${field("meta-pembina1-nip","NIP Guru Pembina 1",meta.pembina1Nip)}
+     ${field("meta-pembina2-name","Nama Guru Pembina Kokurikuler 2",meta.pembina2Name)}
+     ${field("meta-pembina2-nip","NIP Guru Pembina 2",meta.pembina2Nip)}
      ${field("meta-kepsek-name","Nama Kepala SMP Negeri 1 Baubau",meta.kepsekName)}
      ${field("meta-kepsek-nip","NIP Kepala Sekolah",meta.kepsekNip)}
     </div>
-    <button type="button" id="save-pdf-meta" class="button">Simpan Identitas PDF</button>
+    <button type="button" id="save-pdf-meta" class="button">Simpan Identitas Pembina &amp; PDF</button>
    </div>
 
    <div id="cloud-setup-box" class="hidden" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">
@@ -933,6 +950,7 @@ function exportToXlsx(){
   return;
  }
  const wb = XLSX.utils.book_new();
+ const meta = getSchoolMeta();
  const filterByGroup = (type) => backendRecords
   .filter(r => r.record_type === type && (rekapGroupFilter === "ALL" || r.group_code === rekapGroupFilter))
   .sort((a,b) => a.group_code.localeCompare(b.group_code) || String(a.record_key).localeCompare(String(b.record_key)));
@@ -947,7 +965,14 @@ function exportToXlsx(){
    s.totalScore
   ];
  });
- const ws1 = XLSX.utils.aoa_to_sheet([s1Header, ...s1Rows]);
+ const footerRows = [
+  [],
+  ["Satuan Pendidikan", "SMP Negeri 1 Baubau - Kelas 9.10"],
+  ["Guru Pembina Kokurikuler 1 (Wali Kelas)", `${meta.pembina1Name} (NIP. ${meta.pembina1Nip})`],
+  ["Guru Pembina Kokurikuler 2", `${meta.pembina2Name} (NIP. ${meta.pembina2Nip})`],
+  ["Kepala Sekolah", `${meta.kepsekName} (NIP. ${meta.kepsekNip})`]
+ ];
+ const ws1 = XLSX.utils.aoa_to_sheet([s1Header, ...s1Rows, ...footerRows]);
  ws1["!cols"] = s1Header.map(()=>({wch:18}));
  XLSX.utils.book_append_sheet(wb, ws1, "Ringkasan & Nilai");
 
@@ -1191,25 +1216,35 @@ function exportToPdf(){
   y = doc.lastAutoTable.finalY + 12;
  }
 
- // Blok Pengesahan Resmi (Kepala Sekolah & Wali Kelas 9.10)
- if(y > 240){ doc.addPage(); y = 22; }
+ // Blok Pengesahan Resmi (2 Guru Pembina Kokurikuler + Mengetahui Kepala Sekolah)
+ if(y > 215){ doc.addPage(); y = 24; }
  doc.setFont("helvetica", "normal");
  doc.setFontSize(9.5);
  doc.setTextColor(32, 51, 43);
 
- doc.text("Mengetahui,", 20, y);
- doc.text("Kepala SMP Negeri 1 Baubau,", 20, y + 5);
+ // Baris 1 Kiri: Guru Pembina Kokurikuler 1 / Wali Kelas 9.10
+ doc.text("Guru Pembina Kokurikuler 1,", 18, y);
+ doc.text("Wali Kelas 9.10", 18, y + 4.5);
  doc.setFont("helvetica", "bold");
- doc.text(meta.kepsekName || "Kepala SMP Negeri 1 Baubau", 20, y + 25);
+ doc.text(meta.pembina1Name || "Guru Pembina 1 (Wali Kelas 9.10)", 18, y + 23);
  doc.setFont("helvetica", "normal");
- doc.text(`NIP. ${meta.kepsekNip || "........................................"}`, 20, y + 30);
+ doc.text(`NIP. ${meta.pembina1Nip || "........................................"}`, 18, y + 27.5);
 
- doc.text(`Baubau, ${dateStr}`, 125, y);
- doc.text("Wali Kelas 9.10 / Pembimbing Kokurikuler,", 125, y + 5);
+ // Baris 1 Kanan: Guru Pembina Kokurikuler 2
+ doc.text(`Baubau, ${dateStr}`, 122, y);
+ doc.text("Guru Pembina Kokurikuler 2,", 122, y + 4.5);
  doc.setFont("helvetica", "bold");
- doc.text(meta.waliName || "Wali Kelas 9.10", 125, y + 25);
+ doc.text(meta.pembina2Name || "Guru Pembina 2", 122, y + 23);
  doc.setFont("helvetica", "normal");
- doc.text(`NIP. ${meta.waliNip || "........................................"}`, 125, y + 30);
+ doc.text(`NIP. ${meta.pembina2Nip || "........................................"}`, 122, y + 27.5);
+
+ // Baris 2 Tengah: Mengetahui Kepala Sekolah
+ doc.text("Mengetahui,", 105, y + 38, { align: "center" });
+ doc.text("Kepala SMP Negeri 1 Baubau,", 105, y + 42.5, { align: "center" });
+ doc.setFont("helvetica", "bold");
+ doc.text(meta.kepsekName || "Kepala SMP Negeri 1 Baubau", 105, y + 61, { align: "center" });
+ doc.setFont("helvetica", "normal");
+ doc.text(`NIP. ${meta.kepsekNip || "........................................"}`, 105, y + 65.5, { align: "center" });
 
  const dateTag = new Date().toISOString().slice(0,10);
  const scopeTag = rekapGroupFilter === "ALL" ? "Semua_Kelompok" : `Kelompok_${rekapGroupFilter}`;
@@ -1259,12 +1294,14 @@ function bind(){
  if($("toggle-pdf-meta")) $("toggle-pdf-meta").onclick = () => $("pdf-meta-box").classList.toggle("hidden");
  if($("save-pdf-meta")) $("save-pdf-meta").onclick = () => {
   saveSchoolMeta({
-   waliName: val("meta-wali-name") || "Wali Kelas 9.10",
-   waliNip: val("meta-wali-nip") || "........................................",
+   pembina1Name: val("meta-pembina1-name") || "Guru Pembina 1 (Wali Kelas 9.10)",
+   pembina1Nip: val("meta-pembina1-nip") || "........................................",
+   pembina2Name: val("meta-pembina2-name") || "Guru Pembina 2",
+   pembina2Nip: val("meta-pembina2-nip") || "........................................",
    kepsekName: val("meta-kepsek-name") || "Kepala SMP Negeri 1 Baubau",
    kepsekNip: val("meta-kepsek-nip") || "........................................"
   });
-  message("Identitas kop surat & penandatangan PDF berhasil disimpan.");
+  message("Identitas 2 Guru Pembina Kokurikuler & pengesahan PDF berhasil disimpan.");
   render();
  };
  if($("toggle-cloud-setup")) $("toggle-cloud-setup").onclick = () => $("cloud-setup-box").classList.toggle("hidden");
