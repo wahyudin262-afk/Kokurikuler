@@ -19,7 +19,7 @@
     .brand-logos{display:flex;align-items:center;gap:8px;flex-shrink:0}
     .logo-badge{width:46px;height:46px;border-radius:12px;background:#fff;padding:3px;display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.18);overflow:hidden;flex-shrink:0}
     .logo-badge img{width:100%;height:100%;object-fit:contain;display:block}
-    .top small{display:block;font:500 11px "DM Sans",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#b8d8c4}.identity{display:flex;gap:9px;align-items:end;flex-wrap:wrap}.identity label{font-size:11px;color:#d4e7da;font-weight:700;display:block;margin-bottom:4px}.identity input,.identity select{background:#fff;border:0;border-radius:9px;padding:9px 11px;min-height:38px;color:var(--ink)}.identity input{width:155px}.identity select{width:110px}
+    .top small{display:block;font:500 11px "DM Sans",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#b8d8c4}.identity{display:flex;gap:9px;align-items:end;flex-wrap:wrap}.identity label{font-size:11px;color:#d4e7da;font-weight:700;display:block;margin-bottom:4px}.identity input,.identity select{background:#fff;border:0;border-radius:9px;padding:9px 11px;min-height:38px;color:var(--ink)}.identity input{width:155px}.identity select{width:165px}
     .nav-wrap{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}nav{max-width:1180px;margin:auto;padding:0 22px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:thin}nav button{border:0;background:transparent;color:#63776b;padding:15px 13px;white-space:nowrap;font-weight:700;border-bottom:3px solid transparent;display:inline-flex;align-items:center;gap:7px;transition:color .18s ease}nav button svg{width:15px;height:15px;flex-shrink:0}nav button:hover{color:var(--green)}nav button.active{color:var(--green);border-color:#5baf72}nav button.guru-tab{color:#8a4f1d}nav button.guru-tab.active{color:#8a4f1d;border-color:#bd7434}
     .hero{margin:29px 0 22px;background:linear-gradient(135deg,#164d39 0%,#20664c 100%);border-radius:22px;color:#fff;padding:34px 38px;position:relative;overflow:hidden}.hero:after{content:"✳";position:absolute;right:55px;top:-75px;font-size:310px;line-height:1;color:#ffffff10;pointer-events:none}
     .hero-top{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
@@ -84,7 +84,7 @@
      <span>Ruang Tumbuh<small>SMP Negeri 1 Baubau · Kokurikuler Kelas 9.10</small></span>
     </div>
     <div class="identity">
-     <div><label for="role">Peran tampilan</label><select id="role" class="canva-dropdown"><option value="siswa">Siswa</option><option value="guru">Guru 🔒</option></select>
+     <div><label for="role">Peran tampilan</label><select id="role" class="canva-dropdown"><option value="siswa">Siswa</option><option value="guru">Guru / Pembimbing 🔒</option></select>
      </div>
      <div><label for="group">Kode kelompok</label><input id="group" class="canva-input" placeholder="Contoh: K01" maxlength="30" autocomplete="off">
      </div><button id="open-group" class="button canva-button" type="button">Buka kelompok</button>
@@ -110,15 +110,15 @@
    </footer>
   </main>
 
-  <!-- Modal Password Mode Guru -->
+  <!-- Modal Password Mode Guru / Pembimbing -->
   <div id="guru-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="guru-modal-title">
    <div class="modal-box">
     <span class="badge warn" style="margin-bottom:8px">Akses Terbatas</span>
-    <h3 id="guru-modal-title">Masuk ke Mode Guru</h3>
-    <p class="muted" style="margin-bottom:14px">Masukkan password guru pembina kokurikuler untuk mengakses rekap seluruh kelompok, penilaian, pengaturan logo, dan export laporan (.xlsx / .pdf).</p>
+    <h3 id="guru-modal-title">Masuk ke Mode Guru / Pembimbing</h3>
+    <p class="muted" style="margin-bottom:14px">Masukkan password guru pembina kokurikuler untuk mengakses rekap seluruh kelompok, format penilaian, pengaturan logo, dan export laporan (.xlsx / .pdf).</p>
     <form id="guru-pw-form">
      <div class="field">
-      <label for="guru-pw-input">Password Guru</label>
+      <label for="guru-pw-input">Password Guru / Pembimbing</label>
       <div class="pw-wrap">
        <input id="guru-pw-input" type="password" placeholder="Masukkan password…" autocomplete="off" required>
        <button id="toggle-pw" type="button" class="pw-toggle">Lihat</button>
@@ -167,22 +167,44 @@ async function verifyGuruPassword(raw){
 }
 
 /* ==========================================================================
-   LOGO DEFAULT (SVG EMBLEM) & KONFIGURASI FILE LOGO GITHUB / UNGGAHAN GURU
+   LOGO RESMI SMP NEGERI 1 BAUBAU & KONFIGURASI LOGO KELAS 9.10
    ========================================================================== */
 const DEFAULT_SCHOOL_LOGO_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
- `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+ `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 260">
    <defs>
-    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-     <stop offset="0%" stop-color="#164d39"/>
-     <stop offset="100%" stop-color="#287455"/>
-    </linearGradient>
+    <path id="bannerCurve" d="M 32 45 Q 110 13 188 45"/>
+    <clipPath id="shieldClip">
+     <path d="M 43 52 Q 77 48 110 35 Q 143 48 177 52 L 182 84 L 201 94 C 201 168 164 218 110 247 C 56 218 19 168 19 94 L 38 84 Z"/>
+    </clipPath>
    </defs>
-   <path d="M60 8 L104 24 L104 62 C104 88 84 106 60 113 C36 106 16 88 16 62 L16 24 Z" fill="url(#g1)" stroke="#d9a441" stroke-width="4"/>
-   <circle cx="60" cy="49" r="18" fill="#ffffff" fill-opacity="0.16"/>
-   <path d="M40 54 L60 44 L80 54 L60 63 Z" fill="#f7f8f2"/>
-   <path d="M48 58 L48 67 C48 71 72 71 72 67 L72 58" fill="none" stroke="#c9e8a7" stroke-width="3" stroke-linecap="round"/>
-   <text x="60" y="85" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">SMPN 1</text>
-   <text x="60" y="97" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#c9e8a7" text-anchor="middle">BAUBAU</text>
+   <!-- Pita Atas SMP NEGERI 1 BAUBAU -->
+   <path d="M 14 42 Q 110 4 206 42 L 184 62 Q 110 31 36 62 Z" fill="#ffffff" stroke="#221e1f" stroke-width="3.2" stroke-linejoin="round"/>
+   <text font-family="Arial, Helvetica, sans-serif" font-size="13.2" font-weight="800" fill="#181818" letter-spacing="0.4">
+    <textPath href="#bannerCurve" startOffset="50%" text-anchor="middle">SMP NEGERI 1 BAUBAU</textPath>
+   </text>
+   <!-- Perisai Tiga Warna (Hijau - Kuning - Merah) -->
+   <g clip-path="url(#shieldClip)">
+    <rect x="15" y="30" width="63" height="222" fill="#0b9444"/>
+    <rect x="78" y="30" width="64" height="222" fill="#fff200"/>
+    <rect x="142" y="30" width="64" height="222" fill="#ed1c24"/>
+   </g>
+   <path d="M 43 52 Q 77 48 110 35 Q 143 48 177 52 L 182 84 L 201 94 C 201 168 164 218 110 247 C 56 218 19 168 19 94 L 38 84 Z" fill="none" stroke="#221e1f" stroke-width="3.8" stroke-linejoin="round"/>
+   <!-- Tiga Bintang Kuning -->
+   <polygon points="59,56 62.5,64 71,65 64.5,71 66.5,79.5 59,75 51.5,79.5 53.5,71 47,65 55.5,64" fill="#ffde17" stroke="#221e1f" stroke-width="1.6"/>
+   <polygon points="110,45 114.2,54.5 124.5,55.8 116.8,63 119,73 110,67.8 101,73 103.2,63 95.5,55.8 105.8,54.5" fill="#ffde17" stroke="#221e1f" stroke-width="1.7"/>
+   <polygon points="161,56 164.5,64 173,65 166.5,71 168.5,79.5 161,75 153.5,79.5 155.5,71 149,65 157.5,64" fill="#ffde17" stroke="#221e1f" stroke-width="1.6"/>
+   <!-- Bunga Merah Muda di Tengah -->
+   <path d="M 110 80 C 96 80 86 96 91 116 C 72 108 52 117 48 133 C 64 130 78 136 86 146 C 75 152 72 167 84 174 C 95 166 104 156 110 148 C 116 156 125 166 136 174 C 148 167 145 152 134 146 C 142 136 156 130 172 133 C 168 117 148 108 129 116 C 134 96 124 80 110 80 Z" fill="#f7b2b0" stroke="#221e1f" stroke-width="2.2" stroke-linejoin="round"/>
+   <path d="M 92 124 Q 103 130 107 137 M 128 124 Q 117 130 113 137" fill="none" stroke="#221e1f" stroke-width="2" stroke-linecap="round"/>
+   <!-- Mata Pena Emas -->
+   <path d="M 103 137 L 117 137 L 122 176 L 110 198 L 98 176 Z" fill="#f7b718" stroke="#221e1f" stroke-width="2" stroke-linejoin="round"/>
+   <line x1="110" y1="168" x2="110" y2="198" stroke="#221e1f" stroke-width="1.8"/>
+   <circle cx="110" cy="166" r="2.6" fill="#221e1f"/>
+   <!-- Buku Terbuka 1946 -->
+   <path d="M 55 182 Q 83 177 110 198 Q 137 177 165 182 L 171 207 Q 138 202 110 215 Q 82 202 49 207 Z" fill="#ffffff" stroke="#221e1f" stroke-width="2.2" stroke-linejoin="round"/>
+   <line x1="110" y1="198" x2="110" y2="215" stroke="#221e1f" stroke-width="2"/>
+   <text x="83" y="201" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800" fill="#221e1f" text-anchor="middle">19</text>
+   <text x="137" y="201" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800" fill="#221e1f" text-anchor="middle">46</text>
  </svg>`
 );
 
@@ -265,7 +287,6 @@ function compressLogoFile(file, maxDim = 260){
     canvas.height = height;
     const ctx = canvas.getContext("2d");
     ctx.drawImage(img, 0, 0, width, height);
-    // Gunakan PNG agar latar belakang transparan logo tetap terjaga
     resolve(canvas.toDataURL("image/png"));
    };
    img.src = reader.result;
@@ -322,20 +343,20 @@ function bindLogoImg(imgEl, uploadedDataUrl, repoFilename, fallbackSvg){
 
 function applyLogosToDom(){
  const meta = getSchoolMeta();
- bindLogoImg($("hdr-logo-school"), meta.logoSchool, "./logo-smpn1.png", DEFAULT_SCHOOL_LOGO_SVG);
+ bindLogoImg($("hdr-logo-school"), meta.logoSchool, "./SMPN1BB_Logo-removebg-preview.png", DEFAULT_SCHOOL_LOGO_SVG);
  bindLogoImg($("hdr-logo-class"), meta.logoClass, "./logo-910.png", DEFAULT_CLASS_LOGO_SVG);
- bindLogoImg($("hero-logo-school"), meta.logoSchool, "./logo-smpn1.png", DEFAULT_SCHOOL_LOGO_SVG);
+ bindLogoImg($("hero-logo-school"), meta.logoSchool, "./SMPN1BB_Logo-removebg-preview.png", DEFAULT_SCHOOL_LOGO_SVG);
  bindLogoImg($("hero-logo-class"), meta.logoClass, "./logo-910.png", DEFAULT_CLASS_LOGO_SVG);
 }
 
-/* Mengonversi elemen <img> logo (baik unggahan maupun file GitHub) menjadi PNG DataURL untuk PDF */
+/* Mengonversi elemen <img> logo (baik unggahan, file GitHub, maupun SVG) menjadi PNG DataURL untuk PDF */
 function extractLogoPngForPdf(imgEl, uploadedDataUrl){
- if(uploadedDataUrl && uploadedDataUrl.startsWith("data:image/")) return uploadedDataUrl;
+ if(uploadedDataUrl && uploadedDataUrl.startsWith("data:image/png")) return uploadedDataUrl;
  if(!imgEl || !imgEl.complete || !imgEl.naturalWidth) return null;
  try {
   const c = document.createElement("canvas");
-  c.width = imgEl.naturalWidth || 160;
-  c.height = imgEl.naturalHeight || 160;
+  c.width = imgEl.naturalWidth || 220;
+  c.height = imgEl.naturalHeight || 260;
   const ctx = c.getContext("2d");
   ctx.drawImage(imgEl, 0, 0, c.width, c.height);
   return c.toDataURL("image/png");
@@ -494,17 +515,18 @@ function extractLogoPngForPdf(imgEl, uploadedDataUrl){
  };
 })();
 
-const baseTabs=["Beranda","Materi","Tugas Mingguan","Minggu 4","Jurnal Pertumbuhan","Dokumentasi","Analisis Masalah","Penilaian","Laporan Akhir","Refleksi"];
+/* Tab Siswa vs Tab Khusus Guru / Pembimbing Kokurikuler */
+const baseTabs=["Beranda","Materi","Tugas Mingguan","Minggu 4","Jurnal Pertumbuhan","Dokumentasi","Analisis Masalah","Laporan Akhir","Refleksi"];
 const tabIcons={
  "Beranda":"home",
  "Rekap & Export":"file-spreadsheet",
+ "Format Penilaian":"award",
  "Materi":"book-open",
  "Tugas Mingguan":"calendar-check",
  "Minggu 4":"clipboard-list",
  "Jurnal Pertumbuhan":"trending-up",
  "Dokumentasi":"camera",
  "Analisis Masalah":"wrench",
- "Penilaian":"award",
  "Laporan Akhir":"file-text",
  "Refleksi":"sparkles"
 };
@@ -535,7 +557,7 @@ let guruAuthenticated=false,rekapGroupFilter="ALL",rekapSubTab="ringkasan",msgTi
 
 const $=id=>document.getElementById(id), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function isGuru(){return $("role").value==="guru" && guruAuthenticated}
-function getTabs(){return isGuru()?["Beranda","Rekap & Export",...baseTabs.slice(1)]:baseTabs}
+function getTabs(){return isGuru()?["Beranda","Rekap & Export","Format Penilaian",...baseTabs.slice(1)]:baseTabs}
 function icons(){if(window.lucide) lucide.createIcons()}
 function message(text,error=false){
  clearTimeout(msgTimer);
@@ -610,12 +632,12 @@ function showTab(name){active=name;render()}
 function nav(){
  const list=getTabs();
  if(!list.includes(active)) active="Beranda";
- $("tabs").innerHTML=list.map(t=>`<button type="button" class="canva-button ${t===active?"active":""} ${t==="Rekap & Export"?"guru-tab":""}" data-tab="${esc(t)}" aria-current="${t===active?"page":"false"}"><i data-lucide="${tabIcons[t]||"circle"}"></i><span>${esc(t)}</span></button>`).join("");
+ $("tabs").innerHTML=list.map(t=>`<button type="button" class="canva-button ${t===active?"active":""} ${(t==="Rekap & Export"||t==="Format Penilaian")?"guru-tab":""}" data-tab="${esc(t)}" aria-current="${t===active?"page":"false"}"><i data-lucide="${tabIcons[t]||"circle"}"></i><span>${esc(t)}</span></button>`).join("");
  $("tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
 }
 function render(){
  nav();
- const map={Beranda:home,"Rekap & Export":rekapGuru,Materi:materi,"Tugas Mingguan":tasks,"Minggu 4":dailyPage,"Jurnal Pertumbuhan":journal,Dokumentasi:documentation,"Analisis Masalah":issues,Penilaian:grading,"Laporan Akhir":report,Refleksi:reflection};
+ const map={Beranda:home,"Rekap & Export":rekapGuru,"Format Penilaian":grading,Materi:materi,"Tugas Mingguan":tasks,"Minggu 4":dailyPage,"Jurnal Pertumbuhan":journal,Dokumentasi:documentation,"Analisis Masalah":issues,"Laporan Akhir":report,Refleksi:reflection};
  $("view").innerHTML=(map[active]||home)();
  applyLogosToDom();
  bind();
@@ -669,12 +691,13 @@ function home(){
  ${isGuru()?`<section class="section"><div class="panel" style="border-left:5px solid var(--orange)">
   <div class="section-head">
    <div>
-    <span class="badge warn">Mode Guru Pembina Aktif</span>
-    <h2 style="margin-top:8px">Dashboard Rekap &amp; Export Kokurikuler</h2>
-    <p class="muted">Pantau semua unggahan foto &amp; laporan siswa dari HP, atur logo sekolah/kelas, beri penilaian bersama tim pembina, dan unduh laporan resmi ber-kop sekolah dalam format Excel (.xlsx) atau PDF (.pdf).</p>
+    <span class="badge warn">Mode Guru / Pembimbing Kokurikuler Aktif</span>
+    <h2 style="margin-top:8px">Dashboard Rekap, Format Penilaian &amp; Export</h2>
+    <p class="muted">Pantau semua unggahan foto &amp; laporan siswa dari HP, isi format penilaian proyek kokurikuler per kelompok, atur logo sekolah/kelas, dan unduh laporan resmi ber-kop sekolah dalam format Excel (.xlsx) atau PDF (.pdf).</p>
    </div>
    <div class="actions">
     <button type="button" id="go-rekap-btn" class="button accent"><i data-lucide="file-spreadsheet"></i> Buka Rekap &amp; Export</button>
+    <button type="button" id="go-grade-btn" class="button"><i data-lucide="award"></i> Format Penilaian</button>
     <button type="button" id="home-refresh-btn" class="button secondary"><i data-lucide="refresh-cw"></i> Refresh Data</button>
    </div>
   </div>
@@ -869,18 +892,95 @@ function issues(){
  return `<section class="section"><h2>Analisis Masalah</h2><p class="intro">Gunakan bukti dari pengamatan, diskusikan penyebab, dan pilih tindakan yang aman.</p><div class="grid"><form id="issue-form" class="panel canva-panel"><h3>${edit?"Perbarui analisis":"Catat masalah"}</h3>${field("i-problem","Masalah",d.problem||"","text",true)}${field("i-evidence","Bukti / gejala",d.evidence||"","textarea",true)}${field("i-cause","Kemungkinan penyebab",d.cause||"","textarea",true)}${field("i-solution","Solusi / tindakan perbaikan",d.solution||"","textarea",true)}${field("i-owner","Penanggung jawab (inisial / peran)",d.owner||"","text",true)}${selectField("i-status","Status tindak lanjut",["Belum dimulai","Sedang dikerjakan","Selesai"],d.status||"Belum dimulai")}<div class="actions"><button class="button canva-button" type="submit">${edit?"Perbarui analisis":"Simpan analisis"}</button>${edit?'<button id="cancel-issue" class="button secondary canva-button" type="button">Batal edit</button>':""}</div></form><div class="panel canva-panel"><h3>Daftar masalah</h3>${list.length?list.map(r=>{let x=data(r);return `<article class="list-item"><span class="badge">${esc(x.status)}</span><h3 style="margin-top:9px">${esc(x.problem)}</h3><p><strong>Gejala:</strong> ${esc(x.evidence)}</p><p><strong>Penyebab:</strong> ${esc(x.cause)}</p><p><strong>Tindakan:</strong> ${esc(x.solution)}</p><p class="muted">Penanggung jawab: ${esc(x.owner)}</p><button type="button" class="small-btn canva-button edit-i" data-key="${esc(r.record_key)}">Edit</button></article>`}).join(""):'<div class="empty">Belum ada analisis masalah.</div>'}</div></div></section>`;
 }
 
+/* ==========================================================================
+   FORMAT PENILAIAN KHUSUS MENU GURU / PEMBIMBING KOKURIKULER
+   ========================================================================== */
 function grading(){
+ if(!isGuru()){
+  return `<section class="section"><div class="panel" style="border-left:5px solid var(--orange)">
+   <span class="badge warn">Menu Khusus Guru / Pembimbing Kokurikuler</span>
+   <h2 style="margin-top:8px">Akses Format Penilaian Terbatas</h2>
+   <p>Format penilaian berada di dalam menu Guru / Pembimbing Kokurikuler. Silakan pilih peran <strong>Guru / Pembimbing 🔒</strong> di bagian kanan atas dan masukkan password pembina.</p>
+  </div></section>`;
+ }
+ const groups=allGroupCodes();
+ if(!group && groups.length) group=groups[0];
  let d=data(one("grade","main")||{}),all=aspects.every((_,i)=>d["s"+i]!==undefined&&d["s"+i]!==""),total=all?aspects.reduce((sum,a,i)=>sum+Number(d["s"+i])*a[1]/4,0):null;
- const guru=isGuru();
  const meta=getSchoolMeta();
- return `<section class="section"><h2>Penilaian proyek ${group?"· Kelompok "+esc(group):""}</h2><p class="intro">Tim Guru Pembina Kokurikuler (${esc(meta.pembina1Name)} &amp; ${esc(meta.pembina2Name)}) mengisi skor 1–4 berdasarkan bukti proyek.</p><div class="grid"><form id="grade-form" class="panel canva-panel"><h3>Skor per aspek</h3>${aspects.map((a,i)=>selectField("score-"+i,`${a[0]} · bobot ${a[1]}%`,["","1","2","3","4"],d["s"+i]??"")).join("")}<button class="button canva-button" type="submit" ${!guru?"disabled title='Masuk ke Mode Guru untuk mengisi'":""}>Simpan penilaian</button><p class="muted">${guru?"Mode Guru aktif: Anda dapat menyimpan atau memperbarui nilai kelompok ini.":"Pilih peran Guru dan masukkan password untuk mengisi penilaian."}</p></form><article class="card canva-card"><h3>Total berbobot</h3><div class="score">${total===null?"Belum lengkap":total.toFixed(1)+" / 100"}</div><p>Rumus: skor tiap aspek ÷ 4 × bobot aspek. Total tampil setelah seluruh aspek diisi.</p><div class="table-scroll"><table class="canva-table"><thead><tr><th>Aspek</th><th>Bobot</th><th>Skor</th></tr></thead><tbody>${aspects.map((a,i)=>`<tr><td>${a[0]}</td><td>${a[1]}%</td><td>${d["s"+i]||"Belum diisi"}</td></tr>`).join("")}</tbody></table></div></article></div>
- <div class="panel canva-panel section"><h3>Panduan rubrik skala 1–4</h3><div class="table-scroll"><table class="canva-table"><thead><tr><th>Kriteria</th><th>4 · Sangat baik</th><th>3 · Baik</th><th>2 · Cukup</th><th>1 · Perlu bimbingan</th></tr></thead><tbody>
- <tr><td>Perencanaan</td><td>Sangat jelas dan realistis</td><td>Jelas</td><td>Masih umum</td><td>Belum memiliki rencana</td></tr>
- <tr><td>Keterampilan</td><td>Mandiri, tepat, rapi</td><td>Cukup mandiri dan tepat</td><td>Masih perlu arahan</td><td>Banyak perlu bantuan</td></tr>
- <tr><td>Kolaborasi</td><td>Semua aktif dan bertanggung jawab</td><td>Sebagian besar aktif</td><td>Belum merata</td><td>Belum terlihat</td></tr>
- <tr><td>Perawatan</td><td>Rutin dan terdokumentasi</td><td>Cukup rutin</td><td>Tidak konsisten</td><td>Jarang dilakukan</td></tr>
- <tr><td>Presentasi</td><td>Jelas, berbasis data, percaya diri</td><td>Jelas dan terstruktur</td><td>Masih terbatas</td><td>Belum mampu menjelaskan</td></tr>
- </tbody></table></div><p class="muted">Rubrik adalah panduan pengamatan; tim guru pembina menetapkan skor aspek berbobot dengan mempertimbangkan bukti yang relevan.</p></div></section>`;
+ const summaries=groups.map(computeGroupSummary);
+ return `<section class="section">
+  <div class="section-head">
+   <div>
+    <span class="badge warn">Menu Guru / Pembimbing Kokurikuler</span>
+    <h2 style="margin-top:8px">Format Penilaian Proyek ${group?"· Kelompok "+esc(group):""}</h2>
+    <p class="intro" style="margin-bottom:0">Tim Pembina Kokurikuler (${esc(meta.pembina1Name)} &amp; ${esc(meta.pembina2Name)}) mengisi skor 1–4 berdasarkan bukti proyek setiap kelompok.</p>
+   </div>
+   <div class="actions">
+    <button type="button" id="grade-go-rekap" class="button secondary"><i data-lucide="file-spreadsheet"></i> Ke Rekap &amp; Export</button>
+   </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:18px">
+   <div class="form-grid" style="align-items:end">
+    <div class="field" style="margin-bottom:0">
+     <label for="grade-group-select">Pilih Kelompok yang Dinilai</label>
+     <select id="grade-group-select">
+      ${groups.length?groups.map(g=>`<option value="${esc(g)}" ${group===g?"selected":""}>Kelompok ${esc(g)}</option>`).join(""):`<option value="">Belum ada kelompok terdata</option>`}
+     </select>
+    </div>
+    <div class="field" style="margin-bottom:0">
+     <label>Atau Klik Cepat Kode Kelompok</label>
+     <div class="quick-groups" style="margin-top:0">
+      ${groups.length?groups.map(g=>`<button type="button" class="quick-grp-btn ${group===g?"active":""}" data-grade-grp="${esc(g)}">${esc(g)}</button>`).join(""):`<span class="muted">Masukkan kode kelompok di bagian atas (contoh: K01).</span>`}
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="grid">
+   <form id="grade-form" class="panel canva-panel">
+    <h3>Input Skor Per Aspek ${group?"("+esc(group)+")":""}</h3>
+    ${aspects.map((a,i)=>selectField("score-"+i,`${a[0]} · bobot ${a[1]}%`,["","1","2","3","4"],d["s"+i]??"")).join("")}
+    ${field("grade-feedback","Catatan / Umpan Balik Pembimbing Kokurikuler",d.feedback||"","textarea",false,'placeholder="Tuliskan catatan apresiasi atau saran perbaikan untuk kelompok ini…"')}
+    <button class="button canva-button" type="submit" ${!group?"disabled":""}><i data-lucide="check-circle-2"></i> Simpan Penilaian Kelompok ${esc(group||"")}</button>
+   </form>
+   <article class="card canva-card">
+    <h3>Hasil Nilai Berbobot ${group?"· "+esc(group):""}</h3>
+    <div class="score">${total===null?"Belum lengkap":total.toFixed(1)+" / 100"}</div>
+    <p>Rumus: skor tiap aspek ÷ 4 × bobot aspek. Total tampil setelah seluruh aspek diisi.</p>
+    <div class="table-scroll"><table class="canva-table"><thead><tr><th>Aspek Penilaian</th><th>Bobot</th><th>Skor (1–4)</th><th>Nilai</th></tr></thead><tbody>${aspects.map((a,i)=>{const sc=d["s"+i];const nv=(sc!==undefined&&sc!=="")?(Number(sc)*a[1]/4).toFixed(1):"—";return `<tr><td>${a[0]}</td><td>${a[1]}%</td><td>${sc||"Belum diisi"}</td><td><strong>${nv}</strong></td></tr>`}).join("")}</tbody></table></div>
+    ${d.feedback?`<div class="notice safe" style="margin-top:12px"><strong>Catatan Pembimbing:</strong> ${esc(d.feedback)}</div>`:""}
+   </article>
+  </div>
+
+  <div class="panel canva-panel section">
+   <div class="section-head">
+    <h3>Daftar Rekap Nilai Seluruh Kelompok Kelas 9.10</h3>
+    <span class="badge">${summaries.length} Kelompok</span>
+   </div>
+   ${summaries.length?`<div class="table-scroll"><table class="canva-table">
+    <thead><tr><th>Kelompok</th><th>Pengetahuan (20%)</th><th>Keterampilan (30%)</th><th>Kolaborasi (20%)</th><th>Produk (20%)</th><th>Presentasi (10%)</th><th>Total Nilai</th><th>Aksi</th></tr></thead>
+    <tbody>${summaries.map(s=>`<tr ${s.grp===group?'style="background:#f1f8f2"':""}>
+     <td><strong>${esc(s.grp)}</strong></td>
+     <td>${esc(s.gr.s0||"—")}</td>
+     <td>${esc(s.gr.s1||"—")}</td>
+     <td>${esc(s.gr.s2||"—")}</td>
+     <td>${esc(s.gr.s3||"—")}</td>
+     <td>${esc(s.gr.s4||"—")}</td>
+     <td><strong>${esc(s.totalScore)}</strong></td>
+     <td><button type="button" class="small-btn" data-grade-grp="${esc(s.grp)}">Isi / Edit Nilai</button></td>
+    </tr>`).join("")}</tbody>
+   </table></div>`:`<div class="empty">Belum ada data kelompok.</div>`}
+  </div>
+
+  <div class="panel canva-panel section"><h3>Panduan rubrik skala 1–4</h3><div class="table-scroll"><table class="canva-table"><thead><tr><th>Kriteria</th><th>4 · Sangat baik</th><th>3 · Baik</th><th>2 · Cukup</th><th>1 · Perlu bimbingan</th></tr></thead><tbody>
+  <tr><td>Perencanaan</td><td>Sangat jelas dan realistis</td><td>Jelas</td><td>Masih umum</td><td>Belum memiliki rencana</td></tr>
+  <tr><td>Keterampilan</td><td>Mandiri, tepat, rapi</td><td>Cukup mandiri dan tepat</td><td>Masih perlu arahan</td><td>Banyak perlu bantuan</td></tr>
+  <tr><td>Kolaborasi</td><td>Semua aktif dan bertanggung jawab</td><td>Sebagian besar aktif</td><td>Belum merata</td><td>Belum terlihat</td></tr>
+  <tr><td>Perawatan</td><td>Rutin dan terdokumentasi</td><td>Cukup rutin</td><td>Tidak konsisten</td><td>Jarang dilakukan</td></tr>
+  <tr><td>Presentasi</td><td>Jelas, berbasis data, percaya diri</td><td>Jelas dan terstruktur</td><td>Masih terbatas</td><td>Belum mampu menjelaskan</td></tr>
+  </tbody></table></div><p class="muted">Rubrik adalah panduan pengamatan; tim guru pembina menetapkan skor aspek berbobot dengan mempertimbangkan bukti yang relevan.</p></div>
+ </section>`;
 }
 
 function report(){let d=data(one("report","main")||{});return `<section class="section"><h2>Laporan Akhir Kelompok</h2><p class="intro">Isi berdasarkan pekerjaan dan data sebenarnya. Dapat diperbarui sebelum diserahkan kepada guru pembina.</p><form id="report-form" class="panel canva-panel">${reportFields.map((f,i)=>field("r-"+i,`${i+1}. ${f}`,d["f"+i]||"",i===0?"text":"textarea",i===0)).join("")}<button class="button canva-button" type="submit">Simpan / perbarui laporan</button></form></section>`}
@@ -911,7 +1011,7 @@ function computeGroupSummary(grp){
 
 function rekapGuru(){
  if(!isGuru()){
-  return `<section class="section"><div class="panel"><h2>Akses Terbatas</h2><p>Halaman ini hanya dapat diakses dalam Mode Guru.</p></div></section>`;
+  return `<section class="section"><div class="panel"><h2>Akses Terbatas</h2><p>Halaman ini hanya dapat diakses dalam Mode Guru / Pembimbing.</p></div></section>`;
  }
  const groups = allGroupCodes();
  if(rekapGroupFilter !== "ALL" && !groups.includes(rekapGroupFilter)) rekapGroupFilter = "ALL";
@@ -940,7 +1040,7 @@ function rekapGuru(){
     <td>${s.refCount} siswa</td>
     <td><strong>${esc(s.totalScore)}</strong></td>
     <td><div class="actions">
-     <button type="button" class="small-btn guru-open-grp" data-grp="${esc(s.grp)}" data-goto="Penilaian">Nilai</button>
+     <button type="button" class="small-btn guru-open-grp" data-grp="${esc(s.grp)}" data-goto="Format Penilaian">Nilai</button>
      <button type="button" class="small-btn guru-open-grp" data-grp="${esc(s.grp)}" data-goto="Tugas Mingguan">Lihat Detail</button>
     </div></td>
    </tr>`).join("")}</tbody></table></div>` : `<div class="empty">Belum ada data kelompok yang tersimpan.</div>`;
@@ -1025,7 +1125,7 @@ function rekapGuru(){
  return `<section class="section">
   <div class="section-head">
    <div>
-    <span class="badge warn">Mode Guru · SMP Negeri 1 Baubau</span>
+    <span class="badge warn">Mode Guru / Pembimbing · SMP Negeri 1 Baubau</span>
     <h2 style="margin-top:8px">Rekap &amp; Export Laporan Kokurikuler</h2>
     <p class="intro" style="margin-bottom:0">Tim Pembina Kelas 9.10: <strong>${esc(meta.pembina1Name)}</strong> &amp; <strong>${esc(meta.pembina2Name)}</strong></p>
    </div>
@@ -1048,13 +1148,13 @@ function rekapGuru(){
    </div>
 
    <div id="pdf-meta-box" class="hidden" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">
-    <p class="muted" style="margin-bottom:12px">Unggah <strong>Logo SMP Negeri 1 Baubau</strong> dan <strong>Logo Kelas 9.10</strong> serta atur identitas tim pembina di bawah ini. Logo dan identitas akan otomatis tampil di Header, Beranda, dan Kop Surat PDF:</p>
+    <p class="muted" style="margin-bottom:12px">Unggah <strong>Logo SMP Negeri 1 Baubau</strong> dan <strong>Logo Kelas 9.10</strong> atau atur identitas tim pembina di bawah ini. Logo dan identitas akan otomatis tampil di Header, Beranda, dan Kop Surat PDF:</p>
 
     <div class="grid" style="margin-bottom:16px">
      <div class="card" style="padding:14px">
       <strong>1. Logo SMP Negeri 1 Baubau</strong>
       <div class="photo-preview-box" style="margin-top:8px">
-       <img id="meta-prev-school" src="${esc(meta.logoSchool || "./logo-smpn1.png")}" onerror="this.onerror=null;this.src='${DEFAULT_SCHOOL_LOGO_SVG}'" alt="Preview Logo Sekolah">
+       <img id="meta-prev-school" src="${esc(meta.logoSchool || "./SMPN1BB_Logo-removebg-preview.png")}" onerror="this.onerror=null;this.src='${DEFAULT_SCHOOL_LOGO_SVG}'" alt="Preview Logo Sekolah">
        <div>
         <div class="actions">
          <label class="small-btn cam" style="cursor:pointer">
@@ -1153,14 +1253,14 @@ function exportToXlsx(){
   .filter(r => r.record_type === type && (rekapGroupFilter === "ALL" || r.group_code === rekapGroupFilter))
   .sort((a,b) => a.group_code.localeCompare(b.group_code) || String(a.record_key).localeCompare(String(b.record_key)));
 
- const s1Header = ["Kode Kelompok","Tugas Mingguan Selesai","Minggu 4 Terkirim","Total Minggu 4","Jurnal Pertumbuhan","Dokumentasi Tahap","Analisis Masalah","Laporan Akhir","Refleksi Siswa","Skor Pengetahuan (20%)","Skor Keterampilan (30%)","Skor Kolaborasi (20%)","Skor Produk (20%)","Skor Presentasi (10%)","Total Nilai Berbobot"];
+ const s1Header = ["Kode Kelompok","Tugas Mingguan Selesai","Minggu 4 Terkirim","Total Minggu 4","Jurnal Pertumbuhan","Dokumentasi Tahap","Analisis Masalah","Laporan Akhir","Refleksi Siswa","Skor Pengetahuan (20%)","Skor Keterampilan (30%)","Skor Kolaborasi (20%)","Skor Produk (20%)","Skor Presentasi (10%)","Total Nilai Berbobot","Catatan Pembimbing"];
  const s1Rows = groups.map(g => {
   const s = computeGroupSummary(g);
   return [
    s.grp, `${s.wDone}/6`, s.dSent, s.dAll, s.jCount, `${s.docCount}/6`, s.iCount,
    s.hasReport ? "Sudah" : "Belum", s.refCount,
    s.gr.s0 || "-", s.gr.s1 || "-", s.gr.s2 || "-", s.gr.s3 || "-", s.gr.s4 || "-",
-   s.totalScore
+   s.totalScore, s.gr.feedback || "-"
   ];
  });
  const footerRows = [
@@ -1262,7 +1362,7 @@ function exportToPdf(){
  const schoolLogoPng = extractLogoPngForPdf($("hdr-logo-school"), meta.logoSchool);
  const classLogoPng = extractLogoPngForPdf($("hdr-logo-class"), meta.logoClass);
  if(schoolLogoPng){
-  try { doc.addImage(schoolLogoPng, "PNG", 15, 10.5, 19, 19); } catch {}
+  try { doc.addImage(schoolLogoPng, "PNG", 15.5, 10, 17.5, 20.7); } catch {}
  }
  if(classLogoPng){
   try { doc.addImage(classLogoPng, "PNG", 176, 10.5, 19, 19); } catch {}
@@ -1485,11 +1585,29 @@ function bind(){
 
  document.querySelectorAll("[data-quick-grp]").forEach(b => b.onclick = () => openGroupCode(b.dataset.quickGrp));
  if($("go-rekap-btn")) $("go-rekap-btn").onclick = () => showTab("Rekap & Export");
+ if($("go-grade-btn")) $("go-grade-btn").onclick = () => showTab("Format Penilaian");
+ if($("grade-go-rekap")) $("grade-go-rekap").onclick = () => showTab("Rekap & Export");
  if($("home-refresh-btn")) $("home-refresh-btn").onclick = async () => {
   message("Menyegarkan data dari server…");
   await window.cloudConfig.refresh();
   message("Data terbaru berhasil dimuat.");
  };
+
+ // Bindings Halaman Format Penilaian (Menu Guru / Pembimbing)
+ if($("grade-group-select")) $("grade-group-select").onchange = () => {
+  group = $("grade-group-select").value;
+  $("group").value = group;
+  try { localStorage.setItem(LS_GROUP_KEY, group); } catch {}
+  render();
+ };
+ document.querySelectorAll("[data-grade-grp]").forEach(b => b.onclick = () => {
+  group = b.dataset.gradeGrp;
+  $("group").value = group;
+  try { localStorage.setItem(LS_GROUP_KEY, group); } catch {}
+  render();
+  const gfEl = $("grade-form");
+  if(gfEl) gfEl.scrollIntoView({behavior:"smooth"});
+ });
 
  // Bindings Halaman Rekap & Export Guru
  if($("guru-refresh")) $("guru-refresh").onclick = async () => {
@@ -1584,7 +1702,7 @@ function bind(){
  document.querySelectorAll(".guru-open-grp").forEach(b => b.onclick = () => {
   group = b.dataset.grp;
   $("group").value = group;
-  active = b.dataset.goto || "Penilaian";
+  active = b.dataset.goto || "Format Penilaian";
   message("Membuka kelompok " + group + ".");
   render();
  });
@@ -1694,14 +1812,14 @@ function bind(){
  const inf=$("issue-form");if(inf)inf.onsubmit=async e=>{e.preventDefault();if(!formValid("issue-form"))return;let ok=await save("issue",editingIssue||("i-"+Date.now()+"-"+Math.random().toString(36).slice(2,7)),{problem:val("i-problem"),evidence:val("i-evidence"),cause:val("i-cause"),solution:val("i-solution"),owner:val("i-owner"),status:val("i-status")},e.submitter);if(ok){editingIssue=null;render()}};
  document.querySelectorAll(".edit-i").forEach(b=>b.onclick=()=>{editingIssue=b.dataset.key;render();$("issue-form").scrollIntoView({behavior:"smooth"})});
  if($("cancel-issue"))$("cancel-issue").onclick=()=>{editingIssue=null;render()};
- const gf=$("grade-form");if(gf)gf.onsubmit=async e=>{e.preventDefault();if(!isGuru())return;let d={};aspects.forEach((_,i)=>d["s"+i]=val("score-"+i));if(await save("grade","main",d,e.submitter))render()};
+ const gf=$("grade-form");if(gf)gf.onsubmit=async e=>{e.preventDefault();if(!isGuru())return;let d={feedback:val("grade-feedback")};aspects.forEach((_,i)=>d["s"+i]=val("score-"+i));if(await save("grade","main",d,e.submitter))render()};
  const rf=$("report-form");if(rf)rf.onsubmit=async e=>{e.preventDefault();if(!formValid("report-form"))return;let d={};reportFields.forEach((_,i)=>d["f"+i]=val("r-"+i));await save("report","main",d,e.submitter)};
  const ref=$("reflection-form");if(ref)ref.onsubmit=async e=>{e.preventDefault();if(!formValid("reflection-form"))return;let name=val("ref-name"),duplicate=records("reflection").find(r=>data(r).name.toLowerCase()===name.toLowerCase()&&r.record_key!==editingReflection);if(duplicate){message("Inisial tersebut sudah dipakai. Buka entri lama untuk memperbaruinya atau gunakan inisial berbeda.",true);return}let d={name};questions.forEach((_,i)=>d["q"+i]=val("ref-"+i));let ok=await save("reflection",editingReflection||("r-"+Date.now()+"-"+Math.random().toString(36).slice(2,7)),d,e.submitter);if(ok){editingReflection=null;render()}};
  document.querySelectorAll(".edit-r").forEach(b=>b.onclick=()=>{editingReflection=b.dataset.key;render();$("reflection-form").scrollIntoView({behavior:"smooth"})});
  if($("cancel-ref"))$("cancel-ref").onclick=()=>{editingReflection=null;render()};
 }
 
-/* Kontrol Buka Kelompok & Keamanan Password Mode Guru */
+/* Kontrol Buka Kelompok & Keamanan Password Mode Guru / Pembimbing */
 $("open-group").onclick=()=>openGroupCode(val("group"));
 $("group").addEventListener("keydown",e=>{if(e.key==="Enter")$("open-group").click()});
 
@@ -1727,7 +1845,7 @@ $("role").onchange = () => {
   }
  } else {
   guruAuthenticated = false;
-  if(active === "Rekap & Export") active = "Beranda";
+  if(active === "Rekap & Export" || active === "Format Penilaian") active = "Beranda";
   message("Kembali ke tampilan Siswa.");
   render();
  }
@@ -1761,7 +1879,7 @@ $("guru-pw-form").onsubmit = async (e) => {
   $("role").value = "guru";
   closeGuruModal();
   active = "Rekap & Export";
-  message("Berhasil masuk ke Mode Guru.");
+  message("Berhasil masuk ke Mode Guru / Pembimbing Kokurikuler.");
   if(window.cloudConfig.isCloud()){
    try { await window.cloudConfig.refresh(); } catch {}
   }
