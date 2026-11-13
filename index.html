@@ -15,16 +15,27 @@
   <style>
     :root{--green:#164d39;--green2:#287455;--mint:#e4f2e8;--cream:#f7f8f2;--ink:#20332b;--muted:#64746b;--line:#dce7dd;--white:#fff;--orange:#bd7434}
     *{box-sizing:border-box}body,button,input,select,textarea{font-family:"DM Sans",sans-serif}body{margin:0;background:var(--cream);color:var(--ink);line-height:1.5}button,input,select,textarea{font-size:14px}button{cursor:pointer}button:disabled{opacity:.55;cursor:wait}a{color:var(--green2)}:focus-visible{outline:3px solid #e1a94b;outline-offset:2px}
-    .shell{max-width:1180px;margin:auto;padding:0 22px 60px}.top{background:var(--green);color:white}.top-inner{max-width:1180px;margin:auto;padding:21px 22px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.brand{display:flex;gap:13px;align-items:center;font-family:"Outfit",sans-serif;font-size:20px;font-weight:700}.brand-mark{width:42px;height:42px;border-radius:12px;background:#c9e8a7;color:var(--green);display:grid;place-items:center;flex-shrink:0}.brand-mark svg{width:23px}.top small{display:block;font:500 11px "DM Sans",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#b8d8c4}.identity{display:flex;gap:9px;align-items:end;flex-wrap:wrap}.identity label{font-size:11px;color:#d4e7da;font-weight:700;display:block;margin-bottom:4px}.identity input,.identity select{background:#fff;border:0;border-radius:9px;padding:9px 11px;min-height:38px;color:var(--ink)}.identity input{width:155px}.identity select{width:110px}
+    .shell{max-width:1180px;margin:auto;padding:0 22px 60px}.top{background:var(--green);color:white}.top-inner{max-width:1180px;margin:auto;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.brand{display:flex;gap:13px;align-items:center;font-family:"Outfit",sans-serif;font-size:20px;font-weight:700}
+    .brand-logos{display:flex;align-items:center;gap:8px;flex-shrink:0}
+    .logo-badge{width:46px;height:46px;border-radius:12px;background:#fff;padding:3px;display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.18);overflow:hidden;flex-shrink:0}
+    .logo-badge img{width:100%;height:100%;object-fit:contain;display:block}
+    .top small{display:block;font:500 11px "DM Sans",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#b8d8c4}.identity{display:flex;gap:9px;align-items:end;flex-wrap:wrap}.identity label{font-size:11px;color:#d4e7da;font-weight:700;display:block;margin-bottom:4px}.identity input,.identity select{background:#fff;border:0;border-radius:9px;padding:9px 11px;min-height:38px;color:var(--ink)}.identity input{width:155px}.identity select{width:110px}
     .nav-wrap{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}nav{max-width:1180px;margin:auto;padding:0 22px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:thin}nav button{border:0;background:transparent;color:#63776b;padding:15px 13px;white-space:nowrap;font-weight:700;border-bottom:3px solid transparent;display:inline-flex;align-items:center;gap:7px;transition:color .18s ease}nav button svg{width:15px;height:15px;flex-shrink:0}nav button:hover{color:var(--green)}nav button.active{color:var(--green);border-color:#5baf72}nav button.guru-tab{color:#8a4f1d}nav button.guru-tab.active{color:#8a4f1d;border-color:#bd7434}
-    .hero{margin:29px 0 22px;background:linear-gradient(135deg,#164d39 0%,#20664c 100%);border-radius:22px;color:#fff;padding:36px 40px;position:relative;overflow:hidden}.hero:after{content:"✳";position:absolute;right:55px;top:-75px;font-size:310px;line-height:1;color:#ffffff10;pointer-events:none}.eyebrow{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.13em;color:#aee0b2}.hero h1{font:700 clamp(30px,4vw,48px)/1.1 "Outfit",sans-serif;max-width:680px;margin:11px 0}.hero p{max-width:650px;color:#d8e9dc;margin:0}.hero-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}.hero .pill{display:inline-flex;align-items:center;gap:6px;background:#ffffff19;border:1px solid #ffffff34;border-radius:100px;padding:7px 13px;font-size:12px;font-weight:600}.hero .pill svg{width:14px;height:14px}
+    .hero{margin:29px 0 22px;background:linear-gradient(135deg,#164d39 0%,#20664c 100%);border-radius:22px;color:#fff;padding:34px 38px;position:relative;overflow:hidden}.hero:after{content:"✳";position:absolute;right:55px;top:-75px;font-size:310px;line-height:1;color:#ffffff10;pointer-events:none}
+    .hero-top{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .hero-crests{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.24);padding:10px 14px;border-radius:16px;backdrop-filter:blur(4px)}
+    .hero-crest-item{display:flex;align-items:center;gap:9px}
+    .hero-crest-box{width:54px;height:54px;border-radius:13px;background:#fff;padding:4px;display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.16);overflow:hidden;flex-shrink:0}
+    .hero-crest-box img{width:100%;height:100%;object-fit:contain;display:block}
+    .hero-crest-label{font-size:11px;line-height:1.25;color:#e3f3e7;font-weight:700;max-width:95px}
+    .eyebrow{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.13em;color:#aee0b2}.hero h1{font:700 clamp(28px,4vw,46px)/1.1 "Outfit",sans-serif;max-width:680px;margin:11px 0}.hero p{max-width:650px;color:#d8e9dc;margin:0}.hero-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}.hero .pill{display:inline-flex;align-items:center;gap:6px;background:#ffffff19;border:1px solid #ffffff34;border-radius:100px;padding:7px 13px;font-size:12px;font-weight:600}.hero .pill svg{width:14px;height:14px}
     h2,h3{font-family:"Outfit",sans-serif;color:var(--green);line-height:1.2}h2{font-size:26px;margin:0 0 6px}h3{font-size:18px;margin:0 0 9px}.intro{color:var(--muted);margin:0 0 22px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}.card,.panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:21px;box-shadow:0 5px 22px #183e2510;transition:transform .2s ease,box-shadow .2s ease}.card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(24,62,37,.12)}.card p,.panel p{margin:6px 0;color:#53665a}.card ul,.panel ul{padding-left:19px;margin:9px 0}.card li,.panel li{margin:5px 0}.section{margin:26px 0}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px;flex-wrap:wrap}.badge{display:inline-block;border-radius:30px;padding:5px 10px;font-weight:700;font-size:12px;background:var(--mint);color:var(--green)}.badge.warn{background:#fff1dc;color:#8a4f1d}.muted{color:var(--muted);font-size:13px}.progress-track{height:12px;background:#e7eee5;border-radius:30px;overflow:hidden}.progress-fill{height:100%;width:0;background:#66ad77;border-radius:30px;transition:width .3s}.stat{font:700 32px "Outfit",sans-serif;color:var(--green)}.notice{border-left:4px solid #e9aa52;background:#fff8e9;border-radius:8px;padding:13px 16px;color:#694d23;margin:16px 0}.safe{border-color:#69aa7a;background:#ecf7ed;color:#275b3a}
     .field{margin-bottom:15px}.field label{display:block;font-weight:700;font-size:13px;margin-bottom:6px}.field input,.field textarea,.field select{width:100%;border:1px solid #ccdcd0;border-radius:10px;background:#fff;padding:11px 12px;color:var(--ink)}.field textarea{min-height:105px;resize:vertical}.field input:disabled,.field textarea:disabled,.field select:disabled{background:#f2f5f0;color:#68766e}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}.button{border:0;border-radius:10px;background:var(--green);color:#fff;padding:11px 17px;font-weight:700;display:inline-flex;align-items:center;gap:7px;transition:opacity .15s ease,transform .15s ease}.button:hover:not(:disabled){opacity:.93}.button.secondary{background:#e8f1e9;color:var(--green)}.button.accent{background:var(--orange);color:#fff}.button svg{width:16px;height:16px}.actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.list-item{padding:15px 0;border-top:1px solid var(--line)}.list-item:first-child{border-top:0}.list-item p{margin:5px 0}.small-btn{border:1px solid #c7dccd;background:#fff;color:var(--green);border-radius:8px;padding:7px 11px;font-weight:700;display:inline-flex;align-items:center;gap:5px;font-size:13px}.small-btn:hover{background:#f1f7f0}.small-btn.cam{background:#e8f4ec;border-color:#9ec7ab}.week-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.week-tabs button{border:1px solid var(--line);background:white;border-radius:9px;padding:9px 12px;color:var(--green);font-weight:700}.week-tabs button.active{background:var(--green);color:white}.checklist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.check{background:#f1f7f0;padding:12px;border-radius:10px;font-size:13px;font-weight:600}.check.done{background:#d9efde;color:var(--green)}.table-scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:600px}th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);vertical-align:top;font-size:13px}th{background:#eff6ed;color:var(--green)}.empty{padding:20px;text-align:center;border:1px dashed #c8d9cc;border-radius:12px;color:var(--muted)}.score{font:700 38px "Outfit",sans-serif;color:var(--green)}.hidden{display:none!important}footer{padding:30px 0;color:var(--muted);font-size:12px;text-align:center}
 
     /* Unggah Kamera / Galeri & Thumbnail Preview */
     .upload-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
     .photo-preview-box{margin:8px 0 12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);padding:10px;border-radius:10px}
-    .photo-preview-box img{width:84px;height:84px;object-fit:cover;border-radius:8px;border:1px solid #c7dccd;cursor:pointer}
+    .photo-preview-box img{width:84px;height:84px;object-fit:contain;background:#f7f8f2;border-radius:8px;border:1px solid #c7dccd;cursor:pointer}
     .photo-thumb-btn{display:inline-flex;align-items:center;gap:7px;border:1px solid #c7dccd;background:#f4faf5;color:var(--green);border-radius:8px;padding:5px 9px;font-size:12px;font-weight:700;margin:2px 0;text-align:left}
     .photo-thumb-btn img{width:34px;height:34px;object-fit:cover;border-radius:5px;flex-shrink:0}
     .photo-thumb-btn:hover{background:#e4f2e8}
@@ -59,13 +70,18 @@
     .sync-pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 11px;border-radius:99px;background:#e4f2e8;color:var(--green)}.sync-pill.local{background:#fff1dc;color:#8a4f1d}
     @media(max-width:900px){.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:760px){.daily-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.filter-grid{grid-template-columns:1fr}}
-    @media(max-width:760px){.shell{padding:0 15px 40px}.top-inner{padding:17px 15px}.identity{width:100%}.identity input{flex:1;min-width:120px}.hero{padding:29px 23px}.hero:after{right:-60px}.grid,.grid.three,.grid.four,.form-grid{grid-template-columns:1fr}.checklist{grid-template-columns:repeat(2,1fr)}.card,.panel{padding:17px}nav{padding:0 10px}nav button{padding:13px 10px;font-size:12px}.message:not(:empty){left:15px;right:15px;bottom:15px;max-width:none}}
+    @media(max-width:760px){.shell{padding:0 15px 40px}.top-inner{padding:15px 15px}.identity{width:100%}.identity input{flex:1;min-width:120px}.hero{padding:26px 21px}.hero:after{right:-60px}.grid,.grid.three,.grid.four,.form-grid{grid-template-columns:1fr}.checklist{grid-template-columns:repeat(2,1fr)}.card,.panel{padding:17px}nav{padding:0 10px}nav button{padding:13px 10px;font-size:12px}.message:not(:empty){left:15px;right:15px;bottom:15px;max-width:none}}
   </style>
  </head>
  <body>
   <header class="top canva-header">
    <div class="top-inner">
-    <div class="brand"><span class="brand-mark" aria-hidden="true"><i data-lucide="sprout"></i></span><span>Ruang Tumbuh<small>SMP Negeri 1 Baubau · Kokurikuler Kelas 9.10</small></span>
+    <div class="brand">
+     <div class="brand-logos" aria-label="Logo Sekolah dan Kelas">
+      <span class="logo-badge" title="Logo SMP Negeri 1 Baubau"><img id="hdr-logo-school" alt="Logo SMP Negeri 1 Baubau"></span>
+      <span class="logo-badge" title="Logo Kelas 9.10"><img id="hdr-logo-class" alt="Logo Kelas 9.10"></span>
+     </div>
+     <span>Ruang Tumbuh<small>SMP Negeri 1 Baubau · Kokurikuler Kelas 9.10</small></span>
     </div>
     <div class="identity">
      <div><label for="role">Peran tampilan</label><select id="role" class="canva-dropdown"><option value="siswa">Siswa</option><option value="guru">Guru 🔒</option></select>
@@ -99,7 +115,7 @@
    <div class="modal-box">
     <span class="badge warn" style="margin-bottom:8px">Akses Terbatas</span>
     <h3 id="guru-modal-title">Masuk ke Mode Guru</h3>
-    <p class="muted" style="margin-bottom:14px">Masukkan password guru pembina kokurikuler untuk mengakses rekap seluruh kelompok, penilaian, dan export laporan (.xlsx / .pdf).</p>
+    <p class="muted" style="margin-bottom:14px">Masukkan password guru pembina kokurikuler untuk mengakses rekap seluruh kelompok, penilaian, pengaturan logo, dan export laporan (.xlsx / .pdf).</p>
     <form id="guru-pw-form">
      <div class="field">
       <label for="guru-pw-input">Password Guru</label>
@@ -151,7 +167,37 @@ async function verifyGuruPassword(raw){
 }
 
 /* ==========================================================================
-   KOMPRESI FOTO OTOMATIS (KAMERA / GALERI) AGAR RINGAN & HEMAT KUOTA FIREBASE
+   LOGO DEFAULT (SVG EMBLEM) & KONFIGURASI FILE LOGO GITHUB / UNGGAHAN GURU
+   ========================================================================== */
+const DEFAULT_SCHOOL_LOGO_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
+ `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+   <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+     <stop offset="0%" stop-color="#164d39"/>
+     <stop offset="100%" stop-color="#287455"/>
+    </linearGradient>
+   </defs>
+   <path d="M60 8 L104 24 L104 62 C104 88 84 106 60 113 C36 106 16 88 16 62 L16 24 Z" fill="url(#g1)" stroke="#d9a441" stroke-width="4"/>
+   <circle cx="60" cy="49" r="18" fill="#ffffff" fill-opacity="0.16"/>
+   <path d="M40 54 L60 44 L80 54 L60 63 Z" fill="#f7f8f2"/>
+   <path d="M48 58 L48 67 C48 71 72 71 72 67 L72 58" fill="none" stroke="#c9e8a7" stroke-width="3" stroke-linecap="round"/>
+   <text x="60" y="85" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">SMPN 1</text>
+   <text x="60" y="97" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#c9e8a7" text-anchor="middle">BAUBAU</text>
+ </svg>`
+);
+
+const DEFAULT_CLASS_LOGO_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
+ `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+   <circle cx="60" cy="60" r="52" fill="#e4f2e8" stroke="#164d39" stroke-width="5"/>
+   <circle cx="60" cy="60" r="44" fill="none" stroke="#66ad77" stroke-width="2" stroke-dasharray="4 3"/>
+   <path d="M60 36 C52 24 38 25 38 36 C38 45 50 47 60 40 C70 47 82 45 82 36 C82 25 68 24 60 36 Z" fill="#287455"/>
+   <text x="60" y="67" font-family="Arial, sans-serif" font-size="25" font-weight="800" fill="#164d39" text-anchor="middle">9.10</text>
+   <text x="60" y="84" font-family="Arial, sans-serif" font-size="9.5" font-weight="bold" fill="#8a4f1d" text-anchor="middle">KELAS KOKURIKULER</text>
+ </svg>`
+);
+
+/* ==========================================================================
+   KOMPRESI FOTO & LOGO OTOMATIS (MENDUKUNG TRANSPARANSI PNG UNTUK LOGO)
    ========================================================================== */
 function compressImageFile(file, maxDim = 800, quality = 0.68){
  return new Promise((resolve, reject) => {
@@ -192,7 +238,43 @@ function compressImageFile(file, maxDim = 800, quality = 0.68){
  });
 }
 
-/* Penyimpanan Identitas 2 Guru Pembina Kokurikuler, Kop Surat PDF & Kode Kelompok Terakhir */
+function compressLogoFile(file, maxDim = 260){
+ return new Promise((resolve, reject) => {
+  if(!file || !file.type.startsWith("image/")){
+   reject(new Error("Berkas logo harus berupa gambar (PNG/JPG/WEBP)."));
+   return;
+  }
+  const reader = new FileReader();
+  reader.onerror = () => reject(new Error("Gagal membaca berkas logo."));
+  reader.onload = () => {
+   const img = new Image();
+   img.onerror = () => reject(new Error("Format logo tidak dapat diproses."));
+   img.onload = () => {
+    let { width, height } = img;
+    if(width > maxDim || height > maxDim){
+     if(width >= height){
+      height = Math.round(height * (maxDim / width));
+      width = maxDim;
+     } else {
+      width = Math.round(width * (maxDim / height));
+      height = maxDim;
+     }
+    }
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, width, height);
+    // Gunakan PNG agar latar belakang transparan logo tetap terjaga
+    resolve(canvas.toDataURL("image/png"));
+   };
+   img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+ });
+}
+
+/* Penyimpanan Identitas 2 Guru Pembina Kokurikuler, Logo Sekolah & Kelas, dan Kop Surat PDF */
 const LS_GROUP_KEY = "ruang_tumbuh_910_last_group";
 const LS_META_KEY = "ruang_tumbuh_910_school_meta";
 
@@ -205,7 +287,9 @@ function getSchoolMeta(){
    pembina2Name: raw.pembina2Name || "Guru Pembina 2",
    pembina2Nip: raw.pembina2Nip || "........................................",
    kepsekName: raw.kepsekName || "Kepala SMP Negeri 1 Baubau",
-   kepsekNip: raw.kepsekNip || "........................................"
+   kepsekNip: raw.kepsekNip || "........................................",
+   logoSchool: raw.logoSchool || "",
+   logoClass: raw.logoClass || ""
   };
  } catch {
   return {
@@ -214,12 +298,50 @@ function getSchoolMeta(){
    pembina2Name: "Guru Pembina 2",
    pembina2Nip: "........................................",
    kepsekName: "Kepala SMP Negeri 1 Baubau",
-   kepsekNip: "........................................"
+   kepsekNip: "........................................",
+   logoSchool: "",
+   logoClass: ""
   };
  }
 }
 function saveSchoolMeta(meta){
  try { localStorage.setItem(LS_META_KEY, JSON.stringify(meta)); } catch {}
+ applyLogosToDom();
+}
+
+function bindLogoImg(imgEl, uploadedDataUrl, repoFilename, fallbackSvg){
+ if(!imgEl) return;
+ if(uploadedDataUrl){
+  imgEl.onerror = () => { imgEl.onerror = null; imgEl.src = fallbackSvg; };
+  imgEl.src = uploadedDataUrl;
+  return;
+ }
+ imgEl.onerror = () => { imgEl.onerror = null; imgEl.src = fallbackSvg; };
+ imgEl.src = repoFilename;
+}
+
+function applyLogosToDom(){
+ const meta = getSchoolMeta();
+ bindLogoImg($("hdr-logo-school"), meta.logoSchool, "./logo-smpn1.png", DEFAULT_SCHOOL_LOGO_SVG);
+ bindLogoImg($("hdr-logo-class"), meta.logoClass, "./logo-910.png", DEFAULT_CLASS_LOGO_SVG);
+ bindLogoImg($("hero-logo-school"), meta.logoSchool, "./logo-smpn1.png", DEFAULT_SCHOOL_LOGO_SVG);
+ bindLogoImg($("hero-logo-class"), meta.logoClass, "./logo-910.png", DEFAULT_CLASS_LOGO_SVG);
+}
+
+/* Mengonversi elemen <img> logo (baik unggahan maupun file GitHub) menjadi PNG DataURL untuk PDF */
+function extractLogoPngForPdf(imgEl, uploadedDataUrl){
+ if(uploadedDataUrl && uploadedDataUrl.startsWith("data:image/")) return uploadedDataUrl;
+ if(!imgEl || !imgEl.complete || !imgEl.naturalWidth) return null;
+ try {
+  const c = document.createElement("canvas");
+  c.width = imgEl.naturalWidth || 160;
+  c.height = imgEl.naturalHeight || 160;
+  const ctx = c.getContext("2d");
+  ctx.drawImage(imgEl, 0, 0, c.width, c.height);
+  return c.toDataURL("image/png");
+ } catch {
+  return null;
+ }
 }
 
 /* Adapter Penyimpanan Data (Sinkron ke Firebase Realtime Database) */
@@ -247,9 +369,19 @@ function saveSchoolMeta(meta){
  async function fetchRemote(){
   const url = getDbUrl();
   if(!url) return null;
-  const res = await fetch(url + "/kokurikuler_records.json", { cache: "no-store" });
-  if(!res.ok) throw new Error("Gagal mengambil data Firebase");
-  const obj = await res.json();
+  const [recRes, metaRes] = await Promise.all([
+   fetch(url + "/kokurikuler_records.json", { cache: "no-store" }),
+   fetch(url + "/kokurikuler_meta.json", { cache: "no-store" }).catch(() => null)
+  ]);
+  if(!recRes.ok) throw new Error("Gagal mengambil data Firebase");
+  if(metaRes && metaRes.ok){
+   const remoteMeta = await metaRes.json().catch(() => null);
+   if(remoteMeta && typeof remoteMeta === "object"){
+    const merged = { ...getSchoolMeta(), ...remoteMeta };
+    saveSchoolMeta(merged);
+   }
+  }
+  const obj = await recRes.json();
   if(!obj || typeof obj !== "object") return [];
   return Object.entries(obj).map(([id, val]) => ({ ...val, __backendId: id }));
  }
@@ -269,6 +401,17 @@ function saveSchoolMeta(meta){
   return cache;
  }
 
+ async function pushMetaCloud(meta){
+  const url = getDbUrl();
+  if(!url) return true;
+  const res = await fetch(url + "/kokurikuler_meta.json", {
+   method: "PUT",
+   headers: { "Content-Type": "application/json" },
+   body: JSON.stringify(meta)
+  });
+  return res.ok;
+ }
+
  window.cloudConfig = {
   getDbUrl,
   isCloud: () => Boolean(getDbUrl()),
@@ -277,7 +420,8 @@ function saveSchoolMeta(meta){
    if(clean) localStorage.setItem(LS_FB_KEY, clean);
    else localStorage.removeItem(LS_FB_KEY);
   },
-  refresh: syncAll
+  refresh: syncAll,
+  pushMeta: pushMetaCloud
  };
 
  window.dataSdk = {
@@ -473,6 +617,7 @@ function render(){
  nav();
  const map={Beranda:home,"Rekap & Export":rekapGuru,Materi:materi,"Tugas Mingguan":tasks,"Minggu 4":dailyPage,"Jurnal Pertumbuhan":journal,Dokumentasi:documentation,"Analisis Masalah":issues,Penilaian:grading,"Laporan Akhir":report,Refleksi:reflection};
  $("view").innerHTML=(map[active]||home)();
+ applyLogosToDom();
  bind();
  icons();
  if(active==="Jurnal Pertumbuhan") renderGrowthChart();
@@ -483,8 +628,22 @@ function home(){
  const groups=allGroupCodes();
  const meta=getSchoolMeta();
  return `<section class="hero canva-banner">
-  <div class="eyebrow">Project Based Learning · Tahun Ajaran 2026/2027</div>
-  <h1>Tanaman Hidroponik Sederhana</h1>
+  <div class="hero-top">
+   <div>
+    <div class="eyebrow">Project Based Learning · Tahun Ajaran 2026/2027</div>
+    <h1>Tanaman Hidroponik Sederhana</h1>
+   </div>
+   <div class="hero-crests" aria-label="Identitas Sekolah dan Kelas">
+    <div class="hero-crest-item">
+     <div class="hero-crest-box"><img id="hero-logo-school" alt="Logo SMP Negeri 1 Baubau"></div>
+     <span class="hero-crest-label">SMP Negeri 1 Baubau</span>
+    </div>
+    <div class="hero-crest-item">
+     <div class="hero-crest-box"><img id="hero-logo-class" alt="Logo Kelas 9.10"></div>
+     <span class="hero-crest-label">Kelas 9.10 Kokurikuler</span>
+    </div>
+   </div>
+  </div>
   <p>Belajar menanam pakcoy, selada, atau kangkung dengan sistem wick/sumbu. Amati, rawat, catat, dan ceritakan perjalanan proyek kelompokmu.</p>
   <div class="hero-pills">
    <span class="pill"><i data-lucide="school"></i> SMP Negeri 1 Baubau</span>
@@ -512,7 +671,7 @@ function home(){
    <div>
     <span class="badge warn">Mode Guru Pembina Aktif</span>
     <h2 style="margin-top:8px">Dashboard Rekap &amp; Export Kokurikuler</h2>
-    <p class="muted">Pantau semua unggahan foto &amp; laporan siswa dari HP, beri penilaian bersama tim pembina, dan unduh laporan resmi ber-kop sekolah dalam format Excel (.xlsx) atau PDF (.pdf).</p>
+    <p class="muted">Pantau semua unggahan foto &amp; laporan siswa dari HP, atur logo sekolah/kelas, beri penilaian bersama tim pembina, dan unduh laporan resmi ber-kop sekolah dalam format Excel (.xlsx) atau PDF (.pdf).</p>
    </div>
    <div class="actions">
     <button type="button" id="go-rekap-btn" class="button accent"><i data-lucide="file-spreadsheet"></i> Buka Rekap &amp; Export</button>
@@ -883,13 +1042,52 @@ function rekapGuru(){
      <span class="sync-pill ${isCloud?"":"local"}">${isCloud?"● Terhubung ke Cloud Firebase (Sinkron Lintas HP)":"● Penyimpanan Lokal Browser (Belum Terhubung Cloud)"}</span>
     </div>
     <div class="actions">
-     <button type="button" id="toggle-pdf-meta" class="small-btn"><i data-lucide="users" style="width:14px;height:14px"></i> Pengaturan 2 Guru Pembina &amp; TTD PDF</button>
+     <button type="button" id="toggle-pdf-meta" class="small-btn"><i data-lucide="shield-check" style="width:14px;height:14px"></i> Pengaturan Logo, 2 Pembina &amp; TTD PDF</button>
      <button type="button" id="toggle-cloud-setup" class="small-btn">${isCloud?"Pengaturan URL Firebase":"Hubungkan Firebase"}</button>
     </div>
    </div>
 
    <div id="pdf-meta-box" class="hidden" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">
-    <p class="muted" style="margin-bottom:10px">Identitas 2 Guru Pembina Kokurikuler Kelas 9.10 dan Kepala Sekolah di bawah ini akan ditampilkan pada halaman Beranda serta dicetak pada kolom pengesahan di laporan PDF &amp; Excel:</p>
+    <p class="muted" style="margin-bottom:12px">Unggah <strong>Logo SMP Negeri 1 Baubau</strong> dan <strong>Logo Kelas 9.10</strong> serta atur identitas tim pembina di bawah ini. Logo dan identitas akan otomatis tampil di Header, Beranda, dan Kop Surat PDF:</p>
+
+    <div class="grid" style="margin-bottom:16px">
+     <div class="card" style="padding:14px">
+      <strong>1. Logo SMP Negeri 1 Baubau</strong>
+      <div class="photo-preview-box" style="margin-top:8px">
+       <img id="meta-prev-school" src="${esc(meta.logoSchool || "./logo-smpn1.png")}" onerror="this.onerror=null;this.src='${DEFAULT_SCHOOL_LOGO_SVG}'" alt="Preview Logo Sekolah">
+       <div>
+        <div class="actions">
+         <label class="small-btn cam" style="cursor:pointer">
+          <i data-lucide="upload" style="width:14px;height:14px"></i> Unggah Logo Sekolah
+          <input type="file" accept="image/*" id="upload-logo-school" class="hidden">
+         </label>
+         ${meta.logoSchool?`<button type="button" id="reset-logo-school" class="small-btn">Reset</button>`:""}
+        </div>
+        <p class="muted" style="margin:6px 0 0">Disarankan format PNG transparan atau JPG.</p>
+       </div>
+      </div>
+      <input type="hidden" id="meta-logo-school-val" value="${esc(meta.logoSchool)}">
+     </div>
+
+     <div class="card" style="padding:14px">
+      <strong>2. Logo Kelas 9.10 SMPN 1 Baubau</strong>
+      <div class="photo-preview-box" style="margin-top:8px">
+       <img id="meta-prev-class" src="${esc(meta.logoClass || "./logo-910.png")}" onerror="this.onerror=null;this.src='${DEFAULT_CLASS_LOGO_SVG}'" alt="Preview Logo Kelas 9.10">
+       <div>
+        <div class="actions">
+         <label class="small-btn cam" style="cursor:pointer">
+          <i data-lucide="upload" style="width:14px;height:14px"></i> Unggah Logo Kelas 9.10
+          <input type="file" accept="image/*" id="upload-logo-class" class="hidden">
+         </label>
+         ${meta.logoClass?`<button type="button" id="reset-logo-class" class="small-btn">Reset</button>`:""}
+        </div>
+        <p class="muted" style="margin:6px 0 0">Disarankan format PNG transparan atau JPG.</p>
+       </div>
+      </div>
+      <input type="hidden" id="meta-logo-class-val" value="${esc(meta.logoClass)}">
+     </div>
+    </div>
+
     <div class="form-grid">
      ${field("meta-pembina1-name","Nama Guru Pembina Kokurikuler 1 (Wali Kelas 9.10)",meta.pembina1Name)}
      ${field("meta-pembina1-nip","NIP Guru Pembina 1",meta.pembina1Nip)}
@@ -898,7 +1096,7 @@ function rekapGuru(){
      ${field("meta-kepsek-name","Nama Kepala SMP Negeri 1 Baubau",meta.kepsekName)}
      ${field("meta-kepsek-nip","NIP Kepala Sekolah",meta.kepsekNip)}
     </div>
-    <button type="button" id="save-pdf-meta" class="button">Simpan Identitas Pembina &amp; PDF</button>
+    <button type="button" id="save-pdf-meta" class="button">Simpan Logo, Identitas Pembina &amp; PDF</button>
    </div>
 
    <div id="cloud-setup-box" class="hidden" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">
@@ -937,7 +1135,7 @@ function rekapGuru(){
 }
 
 /* ==========================================================================
-   FUNGSI EXPORT EXCEL (.XLSX) & PDF (.PDF) DENGAN KOP SURAT RESMI SEKOLAH
+   FUNGSI EXPORT EXCEL (.XLSX) & PDF (.PDF) DENGAN KOP SURAT & 2 LOGO RESMI
    ========================================================================== */
 function exportToXlsx(){
  if(!window.XLSX){
@@ -1059,6 +1257,16 @@ function exportToPdf(){
  const dateStr = new Date().toLocaleDateString("id-ID", { day:"numeric", month:"long", year:"numeric" });
  const scopeLabel = rekapGroupFilter === "ALL" ? `Semua Kelompok (${groups.length} Kelompok)` : `Kelompok ${rekapGroupFilter}`;
  const meta = getSchoolMeta();
+
+ // Sisipkan Logo SMP Negeri 1 Baubau (Kiri) & Logo Kelas 9.10 (Kanan) pada Kop Surat
+ const schoolLogoPng = extractLogoPngForPdf($("hdr-logo-school"), meta.logoSchool);
+ const classLogoPng = extractLogoPngForPdf($("hdr-logo-class"), meta.logoClass);
+ if(schoolLogoPng){
+  try { doc.addImage(schoolLogoPng, "PNG", 15, 10.5, 19, 19); } catch {}
+ }
+ if(classLogoPng){
+  try { doc.addImage(classLogoPng, "PNG", 176, 10.5, 19, 19); } catch {}
+ }
 
  // Kop Surat Resmi SMP Negeri 1 Baubau
  doc.setTextColor(20, 35, 28);
@@ -1249,7 +1457,7 @@ function exportToPdf(){
  const dateTag = new Date().toISOString().slice(0,10);
  const scopeTag = rekapGroupFilter === "ALL" ? "Semua_Kelompok" : `Kelompok_${rekapGroupFilter}`;
  doc.save(`Laporan_Kokurikuler_9.10_${scopeTag}_${dateTag}.pdf`);
- message("File PDF resmi ber-kop sekolah (.pdf) berhasil diunduh.");
+ message("File PDF resmi ber-kop sekolah & logo (.pdf) berhasil diunduh.");
 }
 
 function openGroupCode(code){
@@ -1292,18 +1500,70 @@ function bind(){
  if($("export-xlsx")) $("export-xlsx").onclick = exportToXlsx;
  if($("export-pdf")) $("export-pdf").onclick = exportToPdf;
  if($("toggle-pdf-meta")) $("toggle-pdf-meta").onclick = () => $("pdf-meta-box").classList.toggle("hidden");
- if($("save-pdf-meta")) $("save-pdf-meta").onclick = () => {
-  saveSchoolMeta({
+
+ // Unggah & Reset Logo SMP Negeri 1 Baubau / Logo Kelas 9.10
+ if($("upload-logo-school")) $("upload-logo-school").onchange = async (e) => {
+  const f = e.target.files && e.target.files[0];
+  if(!f) return;
+  try {
+   const pngUrl = await compressLogoFile(f);
+   $("meta-logo-school-val").value = pngUrl;
+   $("meta-prev-school").src = pngUrl;
+   message("Logo SMP Negeri 1 Baubau siap. Klik Simpan Logo, Identitas Pembina & PDF.");
+  } catch(err){ message(err.message, true); }
+ };
+ if($("reset-logo-school")) $("reset-logo-school").onclick = () => {
+  $("meta-logo-school-val").value = "";
+  $("meta-prev-school").src = DEFAULT_SCHOOL_LOGO_SVG;
+  message("Logo sekolah direset ke bawaan. Klik Simpan untuk menerapkan.");
+ };
+
+ if($("upload-logo-class")) $("upload-logo-class").onchange = async (e) => {
+  const f = e.target.files && e.target.files[0];
+  if(!f) return;
+  try {
+   const pngUrl = await compressLogoFile(f);
+   $("meta-logo-class-val").value = pngUrl;
+   $("meta-prev-class").src = pngUrl;
+   message("Logo Kelas 9.10 siap. Klik Simpan Logo, Identitas Pembina & PDF.");
+  } catch(err){ message(err.message, true); }
+ };
+ if($("reset-logo-class")) $("reset-logo-class").onclick = () => {
+  $("meta-logo-class-val").value = "";
+  $("meta-prev-class").src = DEFAULT_CLASS_LOGO_SVG;
+  message("Logo kelas direset ke bawaan. Klik Simpan untuk menerapkan.");
+ };
+
+ if($("save-pdf-meta")) $("save-pdf-meta").onclick = async (e) => {
+  const btn = e.currentTarget;
+  btn.disabled = true;
+  const oldTxt = btn.textContent;
+  btn.textContent = "Menyimpan…";
+  const nextMeta = {
    pembina1Name: val("meta-pembina1-name") || "Guru Pembina 1 (Wali Kelas 9.10)",
    pembina1Nip: val("meta-pembina1-nip") || "........................................",
    pembina2Name: val("meta-pembina2-name") || "Guru Pembina 2",
    pembina2Nip: val("meta-pembina2-nip") || "........................................",
    kepsekName: val("meta-kepsek-name") || "Kepala SMP Negeri 1 Baubau",
-   kepsekNip: val("meta-kepsek-nip") || "........................................"
-  });
-  message("Identitas 2 Guru Pembina Kokurikuler & pengesahan PDF berhasil disimpan.");
-  render();
+   kepsekNip: val("meta-kepsek-nip") || "........................................",
+   logoSchool: $("meta-logo-school-val").value || "",
+   logoClass: $("meta-logo-class-val").value || ""
+  };
+  saveSchoolMeta(nextMeta);
+  try {
+   if(window.cloudConfig.isCloud()){
+    await window.cloudConfig.pushMeta(nextMeta);
+   }
+   message("Logo & identitas 2 Guru Pembina berhasil disimpan dan disinkronkan.");
+  } catch {
+   message("Logo & identitas tersimpan di perangkat ini.", false);
+  } finally {
+   btn.disabled = false;
+   btn.textContent = oldTxt;
+   render();
+  }
  };
+
  if($("toggle-cloud-setup")) $("toggle-cloud-setup").onclick = () => $("cloud-setup-box").classList.toggle("hidden");
  if($("save-fb-url")) $("save-fb-url").onclick = async () => {
   const u = val("fb-url-input");
@@ -1536,7 +1796,9 @@ setInterval(() => {
  }
 }, 20000);
 
-render();initialize();
+applyLogosToDom();
+render();
+initialize();
 </script>
  </body>
 </html>
