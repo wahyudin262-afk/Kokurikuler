@@ -96,7 +96,7 @@
      <div><label for="role">Peran tampilan</label><select id="role" class="canva-dropdown"><option value="siswa">Siswa</option><option value="guru">Guru / Pembimbing 🔒</option></select>
      </div>
      <div><label for="group">Kode kelompok</label><input id="group" class="canva-input" placeholder="Contoh: K01" maxlength="30" autocomplete="off">
-     </div><button id="open-group" class="button canva-button" type="button">Buka kelompok</button><button id="install-pwa-btn" class="button accent hidden" type="button" title="Pasang ke layar utama HP"><i data-lucide="smartphone"></i> Instal Aplikasi</button>
+     </div><button id="open-group" class="button canva-button" type="button">Buka kelompok</button><button id="new-group-btn" class="button secondary canva-button" type="button" title="Buat kelompok baru & isi identitas anggota"><i data-lucide="user-plus"></i> Buat Kelompok</button><button id="install-pwa-btn" class="button accent hidden" type="button" title="Pasang ke layar utama HP"><i data-lucide="smartphone"></i> Instal Aplikasi</button>
     </div>
    </div>
   </header>
@@ -155,6 +155,58 @@
      <a id="lightbox-download" class="button secondary" href="#" download="bukti-hidroponik.jpg"><i data-lucide="download"></i> Unduh Foto</a>
      <button id="close-photo-modal-2" type="button" class="button">Selesai</button>
     </div>
+   </div>
+  </div>
+
+  <!-- Modal Pendaftaran & Identitas Kelompok + Anggota Siswa -->
+  <div id="group-profile-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="gp-modal-title">
+   <div class="modal-box wide" style="max-height:90vh;overflow-y:auto">
+    <div class="section-head" style="margin-bottom:8px">
+     <div>
+      <span class="badge">Identitas Kelompok Kelas 9.10</span>
+      <h3 id="gp-modal-title" style="margin:6px 0 0">Buat / Lengkapi Nama Kelompok &amp; Anggota</h3>
+     </div>
+     <button id="close-gp-modal" type="button" class="small-btn">Tutup ✕</button>
+    </div>
+    <p class="muted" style="margin-bottom:14px">Isi kode kelompok, nama kelompok, tanaman pilihan, serta nama lengkap dan identitas anggota kelompokmu agar tercatat di daftar kelas dan rekap guru.</p>
+    <form id="group-profile-form">
+     <div class="form-grid">
+      <div class="field">
+       <label for="gp-code">Kode Kelompok *</label>
+       <input id="gp-code" type="text" placeholder="Contoh: K01" maxlength="20" required style="text-transform:uppercase">
+      </div>
+      <div class="field">
+       <label for="gp-name">Nama Kelompok *</label>
+       <input id="gp-name" type="text" placeholder="Contoh: Kelompok 1 – Hijau Mandiri" maxlength="60" required>
+      </div>
+     </div>
+     <div class="field">
+      <label for="gp-plant">Tanaman Hidroponik Pilihan *</label>
+      <select id="gp-plant" required>
+       <option value="Pakcoy">Pakcoy</option>
+       <option value="Selada">Selada</option>
+       <option value="Kangkung">Kangkung</option>
+       <option value="Sawi Hijau">Sawi Hijau</option>
+       <option value="Bayam Hijau">Bayam Hijau</option>
+      </select>
+     </div>
+
+     <div style="margin:14px 0;padding:13px;border:1px solid var(--line);border-radius:12px;background:#f8fbf8">
+      <div class="section-head" style="margin-bottom:8px">
+       <div>
+        <strong style="color:var(--green);font-size:14px">Daftar Nama &amp; Identitas Anggota Kelompok *</strong>
+        <p class="muted" style="margin:2px 0 0">Masukkan nama lengkap, NIS / No. Absen, dan peran setiap anggota Kelas 9.10.</p>
+       </div>
+       <button type="button" id="gp-add-member-btn" class="small-btn cam"><i data-lucide="user-plus" style="width:14px;height:14px"></i> Tambah Anggota</button>
+      </div>
+      <div id="gp-members-container"></div>
+     </div>
+
+     <div class="actions">
+      <button type="submit" id="gp-save-btn" class="button"><i data-lucide="check-circle-2"></i> Simpan Nama Kelompok &amp; Anggota</button>
+      <button type="button" id="cancel-gp-modal" class="button secondary">Batal</button>
+     </div>
+    </form>
    </div>
   </div>
 
@@ -628,6 +680,28 @@ function one(type,key){return records(type).find(r=>r.record_key===String(key))}
 function oneForGroup(grp,type,key){return backendRecords.find(r=>r.group_code===grp&&r.record_type===type&&r.record_key===String(key))}
 function data(r){try{return JSON.parse(r.content_json)}catch{return {}}}
 function allGroupCodes(){return [...new Set(backendRecords.map(r=>r.group_code).filter(Boolean))].sort()}
+function getGroupProfile(grp){
+ if(!grp) return {groupName:"",plant:"Pakcoy",members:[]};
+ const raw=data(oneForGroup(grp,"group_info","profile")||{});
+ return {
+  groupName: raw.groupName || "",
+  plant: raw.plant || "Pakcoy",
+  members: Array.isArray(raw.members) ? raw.members : []
+ };
+}
+function formatGroupLabel(grp){
+ if(!grp) return "";
+ const prof=getGroupProfile(grp);
+ return prof.groupName ? `${grp} · ${prof.groupName}` : grp;
+}
+function suggestNextGroupCode(){
+ const existing=new Set(allGroupCodes());
+ for(let i=1;i<=30;i++){
+  const code="K"+String(i).padStart(2,"0");
+  if(!existing.has(code)) return code;
+ }
+ return "";
+}
 function requireGroup(){if(!ready){message("Data belum siap. Coba lagi setelah pemuatan selesai.",true);return false}if(!group){message("Masukkan kode kelompok lalu pilih Buka kelompok.",true);$("group").focus();return false}return true}
 
 async function save(type,key,content,button){
@@ -713,17 +787,39 @@ function home(){
  </section>
 
  <div class="school-meta-bar">
-  <div>
-   <strong style="color:var(--green);font-family:'Outfit',sans-serif">Tim Pembina Kokurikuler &amp; Kelompok Aktif Kelas 9.10 (${groups.length} kelompok)</strong>
+  <div style="flex:1;min-width:260px">
+   <strong style="color:var(--green);font-family:'Outfit',sans-serif">Tim Pembina Kokurikuler &amp; Daftar Kelompok Kelas 9.10 (${groups.length} kelompok)</strong>
    <div class="pembina-badges">
     <span class="badge">Pembina 1: ${esc(meta.pembina1Name)}</span>
     <span class="badge">Pembina 2: ${esc(meta.pembina2Name)}</span>
    </div>
-   <p class="muted" style="margin:6px 0 0">${groups.length?"Klik kode kelompok di bawah untuk membuka ruang kerja kelompok dengan cepat:":"Belum ada kelompok terdata. Masukkan kode kelompok baru di bagian atas (contoh: K01)."}</p>
-   ${groups.length?`<div class="quick-groups">${groups.map(g=>`<button type="button" class="quick-grp-btn ${group===g?"active":""}" data-quick-grp="${esc(g)}">${esc(g)}</button>`).join("")}</div>`:""}
+   <p class="muted" style="margin:6px 0 0">${groups.length?"Pilih kelompok di bawah atau klik <strong>+ Buat Kelompok Baru</strong> untuk mendaftarkan nama kelompok &amp; anggota:":"Belum ada kelompok terdaftar. Klik <strong>+ Buat Kelompok Baru</strong> untuk mendaftarkan nama kelompok &amp; identitas anggota."}</p>
+   <div class="quick-groups">
+    ${groups.map(g=>`<button type="button" class="quick-grp-btn ${group===g?"active":""}" data-quick-grp="${esc(g)}">${esc(formatGroupLabel(g))}</button>`).join("")}
+    <button type="button" id="home-new-group-btn" class="quick-grp-btn" style="background:#fff1dc;border-color:#e9aa52;color:#8a4f1d">+ Buat Kelompok Baru</button>
+   </div>
   </div>
-  ${group?`<span class="badge"><i data-lucide="check-circle-2" style="width:13px;height:13px;vertical-align:-2px"></i> Kelompok Aktif: ${esc(group)}</span>`:""}
+  ${group?`<span class="badge"><i data-lucide="check-circle-2" style="width:13px;height:13px;vertical-align:-2px"></i> Aktif: ${esc(formatGroupLabel(group))}</span>`:""}
  </div>
+
+ ${(()=>{
+  if(!group) return "";
+  const prof=getGroupProfile(group);
+  return `<section class="section" style="margin-top:0"><div class="panel" style="border-left:5px solid var(--green2)">
+   <div class="section-head" style="margin-bottom:10px">
+    <div>
+     <span class="badge">Identitas Kelompok Aktif · Kelas 9.10</span>
+     <h2 style="margin-top:6px;margin-bottom:2px">${esc(prof.groupName || "Nama Kelompok Belum Diisi")} <span class="muted" style="font-size:16px">(${esc(group)})</span></h2>
+     <p class="muted" style="margin:0">Tanaman Pilihan: <strong>${esc(prof.plant || "Pakcoy")}</strong> · Jumlah Anggota Terdaftar: <strong>${prof.members.length} siswa</strong></p>
+    </div>
+    <button type="button" id="home-edit-group-btn" class="button secondary"><i data-lucide="edit-3"></i> ${prof.groupName||prof.members.length?"Edit Nama Kelompok & Anggota":"Lengkapi Nama Kelompok & Anggota"}</button>
+   </div>
+   ${prof.members.length?`<div class="table-scroll"><table style="min-width:480px">
+    <thead><tr><th style="width:45px">No.</th><th>Nama Lengkap Siswa</th><th>NIS / No. Absen</th><th>Peran / Jabatan</th></tr></thead>
+    <tbody>${prof.members.map((m,idx)=>`<tr><td>${idx+1}</td><td><strong>${esc(m.name)}</strong></td><td>${esc(m.studentId||"—")}</td><td><span class="badge">${esc(m.role||"Anggota")}</span></td></tr>`).join("")}</tbody>
+   </table></div>`:`<div class="notice" style="margin-bottom:0">Kelompok <strong>${esc(group)}</strong> belum memiliki nama kelompok dan daftar anggota. Klik tombol <strong>Lengkapi Nama Kelompok &amp; Anggota</strong> di atas agar nama kelompok dan identitas anggota muncul di sistem.</div>`}
+  </div></section>`;
+ })()}
 
  ${isGuru()?`<section class="section"><div class="panel" style="border-left:5px solid var(--orange)">
   <div class="section-head">
@@ -813,7 +909,7 @@ function tasks(){
  let w=weeks[week],d=data(one("week",week+1)||{});
  return `<section class="section"><h2>Tugas Mingguan</h2><p class="intro">Pilih tahap, isi hasil kerja yang sebenarnya, lalu simpan atau perbarui.</p><div class="week-tabs canva-tabs">${weeks.map((x,i)=>`<button type="button" class="canva-button ${i===week?"active":""}" data-week="${i}">Minggu ${i+1} ${data(one("week",i+1)||{}).status==="Selesai"?"✓":""}</button>`).join("")}</div>
  <div class="grid"><article class="card canva-card"><span class="badge">Minggu ${week+1}</span><h2 style="margin-top:13px">${w.title}</h2><h3>Tujuan</h3><p>${w.goal}</p><h3>Instruksi</h3><p>${w.steps}</p><p class="muted">Tanggal diisi berdasarkan pelaksanaan, bukan tanggal contoh.</p></article>
- <form id="week-form" class="panel canva-panel"><h3>Catatan kelompok</h3><div class="form-grid">${field("week-date","Tanggal kegiatan",d.date||"","date",true)}${field("week-group","Nama / kode kelompok",d.name||group,"text",true)}</div>${field("week-roles","Pembagian peran anggota",d.roles||"","textarea",true)}${field("week-answer","Jawaban, hasil kerja, dan catatan",d.answer||"","textarea",true)}${selectField("week-status","Status tugas",["Belum dimulai","Sedang dikerjakan","Selesai"],d.status||"Belum dimulai",true)}<button class="button canva-button" type="submit">Simpan / perbarui minggu ${week+1}</button></form></div></section>`;
+ <form id="week-form" class="panel canva-panel"><h3>Catatan kelompok</h3><div class="form-grid">${field("week-date","Tanggal kegiatan",d.date||"","date",true)}${field("week-group","Nama / kode kelompok",d.name||formatGroupLabel(group),"text",true)}</div>${field("week-roles","Pembagian peran anggota",d.roles||"","textarea",true)}${field("week-answer","Jawaban, hasil kerja, dan catatan",d.answer||"","textarea",true)}${selectField("week-status","Status tugas",["Belum dimulai","Sedang dikerjakan","Selesai"],d.status||"Belum dimulai",true)}<button class="button canva-button" type="submit">Simpan / perbarui minggu ${week+1}</button></form></div></section>`;
 }
 
 function dailyRows(){return backendRecords.filter(r=>r.record_type==="daily")}
@@ -867,7 +963,7 @@ function dailyPage(){
  const problems={};submitted.forEach(x=>{let s=(x.problem||"").trim().toLowerCase();if(s)problems[s]=(problems[s]||0)+1});const common=Object.entries(problems).sort((a,b)=>b[1]-a[1])[0];
  const groups=[...new Set(all.map(r=>r.group_code))].sort();
  return `<section class="section canva-section" id="week4"><h2>Minggu 4 – Perawatan dan Pengamatan Harian</h2><p class="intro">Setiap kelompok mengisi satu laporan untuk setiap hari pengamatan sesuai jadwal guru pembina. Tujuh hari di bawah adalah template kosong, bukan data pengamatan.</p><div class="notice safe">Keselamatan: alat pemotong hanya dengan pengawasan guru; jangan mencicipi larutan nutrisi; cuci tangan sebelum dan sesudah kegiatan; jaga area tetap bersih dan kering.</div><div class="daily-stats">${[["Hari dilaporkan",submitted.length],["Perubahan tinggi",delta("height"," cm")],["Perubahan daun",delta("leaves"," helai")],["Foto bukti",submitted.reduce((n,x)=>n+(x.photos||[]).length,0)],["Kendala tersering",common?common[0]+" ("+common[1]+")":"Belum ada data"]].map(([label,value])=>`<div class="card canva-card"><span class="muted">${label}</span><strong>${esc(value)}</strong></div>`).join("")}</div>
- <div class="grid section"><form id="daily-form" class="panel canva-panel"><h3>${current?"Edit laporan harian":"Isi laporan harian"}</h3><p class="muted">Pilih Draft untuk menyimpan pekerjaan yang belum lengkap. Terkirim membutuhkan semua kolom penting dan bukti foto.</p><div class="form-grid">${field("d-day","Hari ke-",d.day||"","number",true,'min="1" step="1"')}${field("d-date","Tanggal pengamatan",d.date||"","date")}${field("d-group","Nama / kode kelompok",d.groupName||group)}${field("d-plant","Nama tanaman",d.plant||"")}${field("d-officer","Nama petugas",d.officer||"")}${field("d-height","Tinggi tanaman (cm)",d.height??"","number",false,'min="0" step="0.1"')}${field("d-leaves","Jumlah daun",d.leaves??"","number",false,'min="0" step="1"')}${field("d-condition","Warna dan kondisi tanaman",d.condition||"")}${selectField("d-water","Ketersediaan larutan nutrisi",["","Cukup","Perlu ditambah","Perlu diperiksa"],d.water||"")}${selectField("d-wick","Kondisi sumbu / wick",["","Baik","Perlu diperiksa","Perlu diganti"],d.wick||"")}${selectField("d-light","Cahaya yang diterima",["","Cukup","Kurang","Berlebih"],d.light||"")}${selectField("d-status","Status laporan",["Belum diisi","Draft","Terkirim"],d.status||"Draft")}</div>${field("d-action","Tindakan perawatan yang dilakukan",d.action||"","textarea")}${field("d-problem","Kendala",d.problem||"","textarea")}${field("d-note","Catatan tambahan",d.note||"","textarea")}<h3>Bukti foto</h3><p class="muted">Unggah foto langsung menggunakan <strong>Kamera HP</strong> atau pilih dari <strong>Galeri</strong> (foto otomatis dikompres agar cepat tersimpan). Maksimal 2 foto per laporan harian.</p><div id="daily-photos">${dailyPhotos.map(dailyPhotoMarkup).join("")}</div><button id="add-photo" type="button" class="small-btn canva-button"><i data-lucide="plus" style="width:14px;height:14px"></i> Tambah slot foto</button><p class="muted">Pembaruan terakhir: ${current?esc(current.updated_at||"Belum ada data"):"Belum ada data"}</p><div class="actions"><button class="button canva-button" type="submit">Simpan laporan</button>${current?'<button id="cancel-daily" type="button" class="button secondary canva-button">Batal edit</button>':""}</div></form><aside class="panel canva-panel"><h3>Hari pengamatan kelompok ${esc(group||"—")}</h3><p class="muted">Buka kelompok terlebih dahulu. Laporan tambahan dapat dibuat setelah hari ketujuh.</p>${group?`<div class="actions"><button id="add-daily" type="button" class="button secondary canva-button">Tambah laporan harian</button></div><div class="list-item">${templates.length?templates.map(n=>`<button type="button" class="small-btn canva-button template-day" data-day="${n}" style="margin:3px">Hari ${n} · Belum diisi</button>`).join(""):"Ketujuh template sudah digunakan; tambah hari berikutnya bila diperlukan."}</div>${own.slice().sort((a,b)=>Number(data(a).day)-Number(data(b).day)).map(r=>`<div class="list-item"><strong>Hari ${esc(data(r).day)}</strong> · ${esc(data(r).date||"Tanggal belum diisi")} <span class="badge canva-tag">${esc(dayStatus(r))}</span><div class="actions"><button type="button" class="small-btn canva-button edit-daily" data-id="${esc(r.__backendId)}">Edit</button><button type="button" class="small-btn canva-button delete-daily" data-id="${esc(r.__backendId)}">Hapus</button></div></div>`).join("")}`:'<div class="empty">Belum ada kelompok yang dibuka.</div>'}</aside></div>
+ <div class="grid section"><form id="daily-form" class="panel canva-panel"><h3>${current?"Edit laporan harian":"Isi laporan harian"}</h3><p class="muted">Pilih Draft untuk menyimpan pekerjaan yang belum lengkap. Terkirim membutuhkan semua kolom penting dan bukti foto.</p><div class="form-grid">${field("d-day","Hari ke-",d.day||"","number",true,'min="1" step="1"')}${field("d-date","Tanggal pengamatan",d.date||"","date")}${field("d-group","Nama / kode kelompok",d.groupName||formatGroupLabel(group))}${field("d-plant","Nama tanaman",d.plant||(group?getGroupProfile(group).plant:""))}${field("d-officer","Nama petugas",d.officer||"")}${field("d-height","Tinggi tanaman (cm)",d.height??"","number",false,'min="0" step="0.1"')}${field("d-leaves","Jumlah daun",d.leaves??"","number",false,'min="0" step="1"')}${field("d-condition","Warna dan kondisi tanaman",d.condition||"")}${selectField("d-water","Ketersediaan larutan nutrisi",["","Cukup","Perlu ditambah","Perlu diperiksa"],d.water||"")}${selectField("d-wick","Kondisi sumbu / wick",["","Baik","Perlu diperiksa","Perlu diganti"],d.wick||"")}${selectField("d-light","Cahaya yang diterima",["","Cukup","Kurang","Berlebih"],d.light||"")}${selectField("d-status","Status laporan",["Belum diisi","Draft","Terkirim"],d.status||"Draft")}</div>${field("d-action","Tindakan perawatan yang dilakukan",d.action||"","textarea")}${field("d-problem","Kendala",d.problem||"","textarea")}${field("d-note","Catatan tambahan",d.note||"","textarea")}<h3>Bukti foto</h3><p class="muted">Unggah foto langsung menggunakan <strong>Kamera HP</strong> atau pilih dari <strong>Galeri</strong> (foto otomatis dikompres agar cepat tersimpan). Maksimal 2 foto per laporan harian.</p><div id="daily-photos">${dailyPhotos.map(dailyPhotoMarkup).join("")}</div><button id="add-photo" type="button" class="small-btn canva-button"><i data-lucide="plus" style="width:14px;height:14px"></i> Tambah slot foto</button><p class="muted">Pembaruan terakhir: ${current?esc(current.updated_at||"Belum ada data"):"Belum ada data"}</p><div class="actions"><button class="button canva-button" type="submit">Simpan laporan</button>${current?'<button id="cancel-daily" type="button" class="button secondary canva-button">Batal edit</button>':""}</div></form><aside class="panel canva-panel"><h3>Hari pengamatan kelompok ${esc(group||"—")}</h3><p class="muted">Buka kelompok terlebih dahulu. Laporan tambahan dapat dibuat setelah hari ketujuh.</p>${group?`<div class="actions"><button id="add-daily" type="button" class="button secondary canva-button">Tambah laporan harian</button></div><div class="list-item">${templates.length?templates.map(n=>`<button type="button" class="small-btn canva-button template-day" data-day="${n}" style="margin:3px">Hari ${n} · Belum diisi</button>`).join(""):"Ketujuh template sudah digunakan; tambah hari berikutnya bila diperlukan."}</div>${own.slice().sort((a,b)=>Number(data(a).day)-Number(data(b).day)).map(r=>`<div class="list-item"><strong>Hari ${esc(data(r).day)}</strong> · ${esc(data(r).date||"Tanggal belum diisi")} <span class="badge canva-tag">${esc(dayStatus(r))}</span><div class="actions"><button type="button" class="small-btn canva-button edit-daily" data-id="${esc(r.__backendId)}">Edit</button><button type="button" class="small-btn canva-button delete-daily" data-id="${esc(r.__backendId)}">Hapus</button></div></div>`).join("")}`:'<div class="empty">Belum ada kelompok yang dibuka.</div>'}</aside></div>
  <div class="panel canva-panel section"><h3>Riwayat laporan harian · Kelas 9.10</h3><div class="filter-grid">${selectField("filter-group","Filter kelompok",["",...groups],dailyFilters.group)}${field("filter-date","Filter tanggal",dailyFilters.date,"date")}${selectField("filter-status","Filter status",["","Belum diisi","Draft","Terkirim"],dailyFilters.status)}</div>${filtered.length?`<div class="table-scroll"><table class="canva-table daily-history"><thead><tr><th>Kelompok / hari</th><th>Tanggal</th><th>Tinggi</th><th>Daun</th><th>Kondisi</th><th>Foto / bukti</th><th>Status</th><th>Diperbarui</th><th>Aksi</th></tr></thead><tbody>${filtered.map(r=>{let x=data(r);return `<tr><td>${esc(r.group_code)} · ${esc(x.day)}</td><td>${esc(x.date||"—")}</td><td>${x.height!==""&&x.height!=null?esc(x.height)+" cm":"—"}</td><td>${esc(x.leaves||"—")}</td><td>${esc(x.condition||"—")}</td><td>${(x.photos||[]).map((p,i)=>renderPhotoBadge(p.link,p.caption,"Foto "+(i+1))).join("<br>")||"—"}</td><td>${esc(dayStatus(r))}</td><td>${esc(r.updated_at||"—")}</td><td><button type="button" class="small-btn canva-button edit-daily" data-id="${esc(r.__backendId)}">Edit</button></td></tr>`}).join("")}</tbody></table></div>`:'<div class="empty">Belum ada laporan yang cocok dengan filter.</div>'}</div></section>`;
 }
 
@@ -979,7 +1075,14 @@ function grading(){
  });
  const activeSummary=group?computeGroupSummary(group):null;
  if(gradeMemberDrafts===null){
-  gradeMemberDrafts=Array.isArray(d.members)?d.members.map(m=>({...m})):[];
+  if(Array.isArray(d.members) && d.members.length){
+   gradeMemberDrafts=d.members.map(m=>({...m}));
+  } else if(group){
+   const prof=getGroupProfile(group);
+   gradeMemberDrafts=prof.members.map(m=>({name:m.name+(m.studentId?` (${m.studentId})`:""),adj:"0",note:m.role||""}));
+  } else {
+   gradeMemberDrafts=[];
+  }
  }
  return `<section class="section">
   <div class="section-head">
@@ -1016,7 +1119,7 @@ function grading(){
       ${groups.length?groups.map(g=>{
        const sm=computeGroupSummary(g);
        const st=sm.totalScore==="Belum lengkap"?"Perlu Dinilai":"Nilai: "+sm.totalScore;
-       return `<option value="${esc(g)}" ${group===g?"selected":""}>Kelompok ${esc(g)} (${st})</option>`;
+       return `<option value="${esc(g)}" ${group===g?"selected":""}>${esc(formatGroupLabel(g))} (${st})</option>`;
       }).join(""):`<option value="">Belum ada kelompok terdata</option>`}
      </select>
     </div>
@@ -1032,7 +1135,7 @@ function grading(){
     ${groups.map(g=>{
      const sm=computeGroupSummary(g);
      const done=sm.totalScore!=="Belum lengkap";
-     return `<button type="button" class="quick-grp-btn ${group===g?"active":""}" data-grade-grp="${esc(g)}">${esc(g)} ${done?"✓":"•"}</button>`;
+     return `<button type="button" class="quick-grp-btn ${group===g?"active":""}" data-grade-grp="${esc(g)}">${esc(formatGroupLabel(g))} ${done?"✓":"•"}</button>`;
     }).join("")}
    </div>`:""}
   </div>
@@ -1140,7 +1243,7 @@ function grading(){
    ${filteredSummaries.length?`<div class="table-scroll"><table class="canva-table">
     <thead><tr><th>Kelompok</th><th>Pengetahuan (20%)</th><th>Keterampilan (30%)</th><th>Kolaborasi (20%)</th><th>Produk (20%)</th><th>Presentasi (10%)</th><th>Total Nilai</th><th>Status</th><th>Aksi</th></tr></thead>
     <tbody>${filteredSummaries.map(s=>`<tr ${s.grp===group?'style="background:#f1f8f2"':""}>
-     <td><strong>${esc(s.grp)}</strong></td>
+     <td><strong>${esc(s.grp)}</strong>${s.groupName?`<br><span class="muted">${esc(s.groupName)}</span>`:""}</td>
      <td>${esc(s.gr.s0||"—")}</td>
      <td>${esc(s.gr.s1||"—")}</td>
      <td>${esc(s.gr.s2||"—")}</td>
@@ -1166,6 +1269,7 @@ function reflection(){
    HALAMAN KHUSUS GURU: REKAP DATA & EXPORT EXCEL (.XLSX) / PDF (.PDF)
    ========================================================================== */
 function computeGroupSummary(grp){
+ const prof = getGroupProfile(grp);
  const wDone = weeks.filter((_,i)=>data(oneForGroup(grp,"week",i+1)||{}).status==="Selesai").length;
  const wStarted = weeks.filter((_,i)=>Boolean(oneForGroup(grp,"week",i+1))).length;
  const dAll = backendRecords.filter(r=>r.group_code===grp && r.record_type==="daily");
@@ -1178,7 +1282,7 @@ function computeGroupSummary(grp){
  const gr = data(oneForGroup(grp,"grade","main")||{});
  const allScored = aspects.every((_,i)=>gr["s"+i]!==undefined && gr["s"+i]!=="");
  const totalScore = allScored ? aspects.reduce((s,a,i)=>s+Number(gr["s"+i])*a[1]/4,0).toFixed(1) : "Belum lengkap";
- return { grp, wDone, wStarted, dAll: dAll.length, dSent, jCount, docCount, iCount, hasReport: Boolean(rep), refCount, gr, totalScore };
+ return { grp, groupName: prof.groupName, plant: prof.plant, members: prof.members, wDone, wStarted, dAll: dAll.length, dSent, jCount, docCount, iCount, hasReport: Boolean(rep), refCount, gr, totalScore };
 }
 
 function rekapGuru(){
@@ -1200,9 +1304,9 @@ function rekapGuru(){
  let detailHtml = "";
  if(rekapSubTab === "ringkasan"){
   detailHtml = summaries.length ? `<div class="table-scroll"><table>
-   <thead><tr><th>Kelompok</th><th>Tugas Mingguan</th><th>Minggu 4 Harian</th><th>Jurnal</th><th>Dokumentasi</th><th>Masalah</th><th>Laporan Akhir</th><th>Refleksi</th><th>Nilai Akhir</th><th>Aksi</th></tr></thead>
+   <thead><tr><th>Kelompok &amp; Anggota</th><th>Tugas Mingguan</th><th>Minggu 4 Harian</th><th>Jurnal</th><th>Dokumentasi</th><th>Masalah</th><th>Laporan Akhir</th><th>Refleksi</th><th>Nilai Akhir</th><th>Aksi</th></tr></thead>
    <tbody>${summaries.map(s=>`<tr>
-    <td><strong>${esc(s.grp)}</strong></td>
+    <td><strong>${esc(s.grp)}</strong>${s.groupName?` · <strong>${esc(s.groupName)}</strong>`:""}<br><span class="muted">Tanaman: ${esc(s.plant||"-")} · ${s.members.length?s.members.map(m=>esc(m.name)).join(", "):"Anggota belum diisi"}</span></td>
     <td>${s.wDone} / 6 Selesai</td>
     <td>${s.dSent} Terkirim (${s.dAll} total)</td>
     <td>${s.jCount} entri</td>
@@ -1386,7 +1490,7 @@ function rekapGuru(){
      <label for="rekap-group-select" style="display:block;font-weight:700;font-size:13px;margin-bottom:5px">Filter Kelompok (Berlaku untuk Tampilan &amp; Export)</label>
      <select id="rekap-group-select" style="width:100%;border:1px solid #ccdcd0;border-radius:10px;padding:10px 12px;background:#fff">
       <option value="ALL" ${rekapGroupFilter==="ALL"?"selected":""}>Semua Kelompok (${groups.length} kelompok)</option>
-      ${groups.map(g=>`<option value="${esc(g)}" ${rekapGroupFilter===g?"selected":""}>Kelompok ${esc(g)}</option>`).join("")}
+      ${groups.map(g=>`<option value="${esc(g)}" ${rekapGroupFilter===g?"selected":""}>${esc(formatGroupLabel(g))}</option>`).join("")}
      </select>
     </div>
     <div class="muted">Total entri database: <strong>${backendRecords.length}</strong> rekaman</div>
@@ -1425,18 +1529,36 @@ function exportToXlsx(){
   .filter(r => r.record_type === type && (rekapGroupFilter === "ALL" || r.group_code === rekapGroupFilter))
   .sort((a,b) => a.group_code.localeCompare(b.group_code) || String(a.record_key).localeCompare(String(b.record_key)));
 
- const s1Header = ["Kode Kelompok","Tugas Mingguan Selesai","Minggu 4 Terkirim","Total Minggu 4","Jurnal Pertumbuhan","Dokumentasi Tahap","Analisis Masalah","Laporan Akhir","Refleksi Siswa","Skor Pengetahuan (20%)","Skor Keterampilan (30%)","Skor Kolaborasi (20%)","Skor Produk (20%)","Skor Presentasi (10%)","Total Nilai Berbobot","Predikat","Status Panen Pertemuan 5","Status Publikasi","Catatan Pembimbing"];
+ const s1Header = ["Kode Kelompok","Nama Kelompok","Tanaman Pilihan","Daftar Anggota","Tugas Mingguan Selesai","Minggu 4 Terkirim","Total Minggu 4","Jurnal Pertumbuhan","Dokumentasi Tahap","Analisis Masalah","Laporan Akhir","Refleksi Siswa","Skor Pengetahuan (20%)","Skor Keterampilan (30%)","Skor Kolaborasi (20%)","Skor Produk (20%)","Skor Presentasi (10%)","Total Nilai Berbobot","Predikat","Status Panen Pertemuan 5","Status Publikasi","Catatan Pembimbing"];
  const s1Rows = groups.map(g => {
   const s = computeGroupSummary(g);
   const pred = s.totalScore !== "Belum lengkap" ? getPredicate(Number(s.totalScore)) : {code:"-",label:"-"};
+  const memberStr = s.members.length ? s.members.map(m => `${m.name}${m.studentId ? " ("+m.studentId+")" : ""}`).join(", ") : "-";
   return [
-   s.grp, `${s.wDone}/6`, s.dSent, s.dAll, s.jCount, `${s.docCount}/6`, s.iCount,
+   s.grp, s.groupName || "-", s.plant || "-", memberStr, `${s.wDone}/6`, s.dSent, s.dAll, s.jCount, `${s.docCount}/6`, s.iCount,
    s.hasReport ? "Sudah" : "Belum", s.refCount,
    s.gr.s0 || "-", s.gr.s1 || "-", s.gr.s2 || "-", s.gr.s3 || "-", s.gr.s4 || "-",
    s.totalScore, pred.code !== "-" ? `${pred.code} (${pred.label})` : "-",
    s.gr.harvestStatus || "-", s.gr.publishStatus || "-", s.gr.feedback || "-"
   ];
  });
+
+ // Sheet Identitas Kelompok & Anggota Siswa
+ const sIdHeader = ["Kode Kelompok","Nama Kelompok","Tanaman Pilihan","No. Anggota","Nama Lengkap Siswa","NIS / No. Absen","Peran / Jabatan"];
+ const sIdRows = [];
+ groups.forEach(g => {
+  const s = computeGroupSummary(g);
+  if(s.members.length){
+   s.members.forEach((m, idx) => {
+    sIdRows.push([s.grp, s.groupName || "-", s.plant || "-", idx + 1, m.name || "-", m.studentId || "-", m.role || "Anggota"]);
+   });
+  } else {
+   sIdRows.push([s.grp, s.groupName || "-", s.plant || "-", "-", "Belum diisi siswa", "-", "-"]);
+  }
+ });
+ const wsId = XLSX.utils.aoa_to_sheet([sIdHeader, ...sIdRows]);
+ wsId["!cols"] = [{wch:14},{wch:26},{wch:16},{wch:12},{wch:28},{wch:18},{wch:22}];
+ XLSX.utils.book_append_sheet(wb, wsId, "Identitas & Anggota");
  const footerRows = [
   [],
   ["Satuan Pendidikan", "SMP Negeri 1 Baubau - Kelas 9.10"],
@@ -1602,9 +1724,9 @@ function exportToPdf(){
  const summaries = groups.map(computeGroupSummary);
  doc.autoTable({
   startY: y,
-  head: [["Kelompok","Tugas M1-M6","Minggu 4","Jurnal","Dok.","Masalah","Laporan","Refleksi","Nilai Akhir"]],
+  head: [["Kelompok & Nama","Tugas","M4","Jurnal","Dok.","Masalah","Lap.","Refl.","Nilai"]],
   body: summaries.map(s => [
-   s.grp, `${s.wDone}/6`, `${s.dSent}/${s.dAll}`, `${s.jCount}`, `${s.docCount}/6`, `${s.iCount}`,
+   s.groupName ? `${s.grp} - ${s.groupName}` : s.grp, `${s.wDone}/6`, `${s.dSent}/${s.dAll}`, `${s.jCount}`, `${s.docCount}/6`, `${s.iCount}`,
    s.hasReport ? "Ada" : "Belum", `${s.refCount}`, s.totalScore
   ]),
   theme: "grid",
@@ -1613,6 +1735,33 @@ function exportToPdf(){
   margin: { left: 14, right: 14 }
  });
  y = doc.lastAutoTable.finalY + 8;
+
+ // Daftar Identitas Kelompok & Anggota Siswa
+ const memberRows = [];
+ summaries.forEach(s => {
+  if(s.members.length){
+   s.members.forEach((m, idx) => {
+    memberRows.push([idx === 0 ? (s.groupName ? `${s.grp} (${s.groupName})` : s.grp) : "", idx === 0 ? (s.plant || "-") : "", m.name || "-", m.studentId || "-", m.role || "Anggota"]);
+   });
+  }
+ });
+ if(memberRows.length){
+  if(y > 245){ doc.addPage(); y = 18; }
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10.5);
+  doc.text("1B. Daftar Identitas Kelompok & Anggota Siswa Kelas 9.10", 14, y);
+  y += 3;
+  doc.autoTable({
+   startY: y,
+   head: [["Kelompok","Tanaman","Nama Lengkap Siswa","NIS / Absen","Peran"]],
+   body: memberRows,
+   theme: "grid",
+   headStyles: { fillColor: [40, 116, 85], textColor: 255, fontSize: 8 },
+   styles: { fontSize: 7.8, cellPadding: 2 },
+   margin: { left: 14, right: 14 }
+  });
+  y = doc.lastAutoTable.finalY + 8;
+ }
 
  const filterByGroup = (type) => backendRecords
   .filter(r => r.record_type === type && (rekapGroupFilter === "ALL" || r.group_code === rekapGroupFilter))
@@ -1777,6 +1926,8 @@ function bind(){
  });
 
  document.querySelectorAll("[data-quick-grp]").forEach(b => b.onclick = () => openGroupCode(b.dataset.quickGrp));
+ if($("home-new-group-btn")) $("home-new-group-btn").onclick = () => openGroupProfileModal("");
+ if($("home-edit-group-btn")) $("home-edit-group-btn").onclick = () => openGroupProfileModal(group);
  if($("go-rekap-btn")) $("go-rekap-btn").onclick = () => showTab("Rekap & Export");
  if($("go-grade-btn")) $("go-grade-btn").onclick = () => showTab("Format Penilaian");
  if($("grade-go-rekap")) $("grade-go-rekap").onclick = () => showTab("Rekap & Export");
@@ -2094,6 +2245,162 @@ function bind(){
 
 /* Kontrol Buka Kelompok & Keamanan Password Mode Guru / Pembimbing */
 $("open-group").onclick=()=>openGroupCode(val("group"));
+
+/* ==========================================================================
+   MODAL PENDAFTARAN NAMA KELOMPOK & IDENTITAS ANGGOTA SISWA
+   ========================================================================== */
+let gpMemberDrafts = [];
+const memberRoleOptions = ["Ketua Kelompok","Sekretaris & Jurnal","Logistik & Nutrisi","Dokumentasi","Perawatan & Kebersihan","Anggota"];
+
+function renderGpMembers(){
+ const box = $("gp-members-container");
+ if(!box) return;
+ box.innerHTML = gpMemberDrafts.map((m, idx) => `
+  <div class="daily-photo" style="padding:11px;margin:8px 0" data-gp-idx="${idx}">
+   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+    <strong style="font-size:12px;color:var(--green)">Anggota #${idx + 1}</strong>
+    ${gpMemberDrafts.length > 1 ? `<button type="button" class="small-btn gp-remove-member" data-gp-idx="${idx}" style="padding:4px 8px;font-size:12px">Hapus</button>` : ""}
+   </div>
+   <div class="form-grid">
+    <div class="field" style="margin-bottom:8px">
+     <label for="gp-m-name-${idx}">Nama Lengkap Siswa ${idx === 0 ? "*" : ""}</label>
+     <input id="gp-m-name-${idx}" type="text" value="${esc(m.name || "")}" placeholder="Contoh: Ahmad Fauzan" ${idx === 0 ? "required" : ""}>
+    </div>
+    <div class="field" style="margin-bottom:8px">
+     <label for="gp-m-id-${idx}">NIS / No. Absen</label>
+     <input id="gp-m-id-${idx}" type="text" value="${esc(m.studentId || "")}" placeholder="Contoh: Absen 01 / NIS 24101">
+    </div>
+   </div>
+   <div class="field" style="margin-bottom:0">
+    <label for="gp-m-role-${idx}">Peran / Tugas dalam Kelompok</label>
+    <select id="gp-m-role-${idx}">
+     ${memberRoleOptions.map(r => `<option value="${esc(r)}" ${(m.role || (idx === 0 ? "Ketua Kelompok" : "Anggota")) === r ? "selected" : ""}>${esc(r)}</option>`).join("")}
+    </select>
+   </div>
+  </div>
+ `).join("");
+ box.querySelectorAll(".gp-remove-member").forEach(btn => {
+  btn.onclick = () => {
+   collectGpMembers();
+   gpMemberDrafts.splice(Number(btn.dataset.gpIdx), 1);
+   renderGpMembers();
+  };
+ });
+}
+
+function collectGpMembers(){
+ gpMemberDrafts = gpMemberDrafts.map((_, idx) => ({
+  name: $("gp-m-name-" + idx) ? val("gp-m-name-" + idx) : "",
+  studentId: $("gp-m-id-" + idx) ? val("gp-m-id-" + idx) : "",
+  role: $("gp-m-role-" + idx) ? val("gp-m-role-" + idx) : "Anggota"
+ }));
+}
+
+function openGroupProfileModal(targetCode = ""){
+ const code = String(targetCode || "").trim().toUpperCase();
+ if(code){
+  const prof = getGroupProfile(code);
+  $("gp-code").value = code;
+  $("gp-name").value = prof.groupName || "";
+  $("gp-plant").value = prof.plant || "Pakcoy";
+  gpMemberDrafts = prof.members.length
+   ? prof.members.map(m => ({ ...m }))
+   : [
+      { name: "", studentId: "", role: "Ketua Kelompok" },
+      { name: "", studentId: "", role: "Sekretaris & Jurnal" },
+      { name: "", studentId: "", role: "Logistik & Nutrisi" },
+      { name: "", studentId: "", role: "Dokumentasi" }
+     ];
+ } else {
+  $("gp-code").value = suggestNextGroupCode();
+  $("gp-name").value = "";
+  $("gp-plant").value = "Pakcoy";
+  gpMemberDrafts = [
+   { name: "", studentId: "", role: "Ketua Kelompok" },
+   { name: "", studentId: "", role: "Sekretaris & Jurnal" },
+   { name: "", studentId: "", role: "Logistik & Nutrisi" },
+   { name: "", studentId: "", role: "Dokumentasi" }
+  ];
+ }
+ renderGpMembers();
+ $("group-profile-modal").classList.remove("hidden");
+ icons();
+ setTimeout(() => ($("gp-name").value ? $("gp-name").focus() : $("gp-code").focus()), 50);
+}
+
+function closeGroupProfileModal(){
+ $("group-profile-modal").classList.add("hidden");
+}
+
+$("new-group-btn").onclick = () => openGroupProfileModal("");
+$("close-gp-modal").onclick = closeGroupProfileModal;
+$("cancel-gp-modal").onclick = closeGroupProfileModal;
+$("group-profile-modal").onclick = e => { if(e.target === $("group-profile-modal")) closeGroupProfileModal(); };
+$("gp-add-member-btn").onclick = () => {
+ collectGpMembers();
+ gpMemberDrafts.push({ name: "", studentId: "", role: "Anggota" });
+ renderGpMembers();
+};
+
+$("group-profile-form").onsubmit = async (e) => {
+ e.preventDefault();
+ if(!$("group-profile-form").reportValidity()) return;
+ if(!ready){
+  message("Data belum siap. Tunggu sebentar hingga koneksi selesai.", true);
+  return;
+ }
+ collectGpMembers();
+ const code = val("gp-code").toUpperCase().replace(/[^A-Z0-9_-]/g, "");
+ const groupName = val("gp-name");
+ const plant = val("gp-plant") || "Pakcoy";
+ const cleanMembers = gpMemberDrafts.filter(m => m.name.trim() !== "");
+
+ if(!code){
+  message("Kode kelompok harus berisi huruf/angka (contoh: K01).", true);
+  $("gp-code").focus();
+  return;
+ }
+ if(!cleanMembers.length){
+  message("Masukkan minimal 1 nama lengkap anggota kelompok.", true);
+  return;
+ }
+
+ const btn = $("gp-save-btn");
+ btn.disabled = true;
+ const oldTxt = btn.textContent;
+ btn.textContent = "Menyimpan Kelompok…";
+
+ try {
+  const existing = oneForGroup(code, "group_info", "profile");
+  const fields = {
+   group_code: code,
+   record_type: "group_info",
+   record_key: "profile",
+   content_json: JSON.stringify({ groupName, plant, members: cleanMembers }),
+   updated_at: new Date().toISOString()
+  };
+  const result = existing
+   ? await window.dataSdk.update({ ...existing, ...fields })
+   : await window.dataSdk.create(fields);
+
+  if(!result.isOk){
+   message("Gagal menyimpan data kelompok. Periksa koneksi internet dan coba lagi.", true);
+   return;
+  }
+  group = code;
+  $("group").value = code;
+  gradeMemberDrafts = null;
+  try { localStorage.setItem(LS_GROUP_KEY, code); } catch {}
+  closeGroupProfileModal();
+  message(`Kelompok ${code} (${groupName}) & ${cleanMembers.length} anggota berhasil disimpan!`);
+  render();
+ } catch(err){
+  message("Terjadi kendala jaringan saat menyimpan kelompok.", true);
+ } finally {
+  btn.disabled = false;
+  btn.textContent = oldTxt;
+ }
+};
 $("group").addEventListener("keydown",e=>{if(e.key==="Enter")$("open-group").click()});
 
 function openGuruModal(){
