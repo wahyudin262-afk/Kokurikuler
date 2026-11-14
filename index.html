@@ -32,7 +32,7 @@
     .nav-wrap{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}nav{max-width:1180px;margin:auto;padding:0 22px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:thin}nav button{border:0;background:transparent;color:#63776b;padding:15px 13px;white-space:nowrap;font-weight:700;border-bottom:3px solid transparent;display:inline-flex;align-items:center;gap:7px;transition:color .18s ease}nav button svg{width:15px;height:15px;flex-shrink:0}nav button:hover{color:var(--green)}nav button.active{color:var(--green);border-color:#5baf72}nav button.guru-tab{color:#8a4f1d}nav button.guru-tab.active{color:#8a4f1d;border-color:#bd7434}
     .hero{margin:29px 0 22px;background:linear-gradient(135deg,#164d39 0%,#20664c 100%);border-radius:22px;color:#fff;padding:34px 38px;position:relative;overflow:hidden}.hero:after{content:"✳";position:absolute;right:55px;top:-75px;font-size:310px;line-height:1;color:#ffffff10;pointer-events:none}
     .hero-top{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
-    .hero-crests{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.24);padding:10px 14px;border-radius:16px;backdrop-filter:blur(4px)}
+    .hero-crests{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.24);padding:10px 14px;border-radius:16px;backdrop-filter:blur(4px)}
     .hero-crest-item{display:flex;align-items:center;gap:9px}
     .hero-crest-box{width:54px;height:54px;border-radius:13px;background:#fff;padding:4px;display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.16);overflow:hidden;flex-shrink:0}
     .hero-crest-box img{width:100%;height:100%;object-fit:contain;display:block}
@@ -86,9 +86,10 @@
   <header class="top canva-header">
    <div class="top-inner">
     <div class="brand">
-     <div class="brand-logos" aria-label="Logo Sekolah dan Kelas">
+     <div class="brand-logos" aria-label="Logo Sekolah, Kelas, dan Kokurikuler">
       <span class="logo-badge" title="Logo SMP Negeri 1 Baubau"><img id="hdr-logo-school" alt="Logo SMP Negeri 1 Baubau"></span>
       <span class="logo-badge" title="Logo Kelas 9.10"><img id="hdr-logo-class" alt="Logo Kelas 9.10"></span>
+      <span class="logo-badge" title="Logo Kokurikuler 9.10 Hydroponic"><img id="hdr-logo-kokurikuler" alt="Logo Kokurikuler 9.10"></span>
      </div>
      <span>Ruang Tumbuh<small>SMP Negeri 1 Baubau · Kokurikuler Kelas 9.10</small></span>
     </div>
@@ -191,15 +192,36 @@
       </select>
      </div>
 
-     <div style="margin:14px 0;padding:13px;border:1px solid var(--line);border-radius:12px;background:#f8fbf8">
+     <div style="margin:14px 0;padding:14px;border:1px solid var(--line);border-radius:12px;background:#f8fbf8">
       <div class="section-head" style="margin-bottom:8px">
        <div>
-        <strong style="color:var(--green);font-size:14px">Daftar Nama &amp; Identitas Anggota Kelompok *</strong>
-        <p class="muted" style="margin:2px 0 0">Masukkan nama lengkap, NIS / No. Absen, dan peran setiap anggota Kelas 9.10.</p>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+         <strong style="color:var(--green);font-size:14px">Daftar Nama &amp; Identitas Anggota Kelompok *</strong>
+         <span id="gp-member-count-badge" class="badge">4 Slot Anggota · Bebas Lebih dari 4</span>
+        </div>
+        <p class="muted" style="margin:4px 0 0">Jumlah anggota <strong>tidak dibatasi</strong> (bisa 4, 5, 6, 7, 8, atau lebih). Pilih jumlah anggota di bawah atau klik <strong>+ Tambah Anggota</strong>.</p>
        </div>
-       <button type="button" id="gp-add-member-btn" class="small-btn cam"><i data-lucide="user-plus" style="width:14px;height:14px"></i> Tambah Anggota</button>
+       <button type="button" id="gp-add-member-btn" class="small-btn cam"><i data-lucide="user-plus" style="width:14px;height:14px"></i> + Tambah Anggota</button>
       </div>
+
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:9px 11px;margin-bottom:10px;background:#fff;border:1px solid var(--line);border-radius:10px">
+       <span style="font-size:12px;font-weight:700;color:var(--green);margin-right:2px">Pilih Jumlah Anggota:</span>
+       <button type="button" class="small-btn gp-preset-count" data-count="4" style="padding:4px 10px;font-size:12px">4 Orang</button>
+       <button type="button" class="small-btn gp-preset-count" data-count="5" style="padding:4px 10px;font-size:12px">5 Orang</button>
+       <button type="button" class="small-btn gp-preset-count" data-count="6" style="padding:4px 10px;font-size:12px">6 Orang</button>
+       <button type="button" class="small-btn gp-preset-count" data-count="7" style="padding:4px 10px;font-size:12px">7 Orang</button>
+       <button type="button" class="small-btn gp-preset-count" data-count="8" style="padding:4px 10px;font-size:12px">8 Orang</button>
+       <div style="display:inline-flex;align-items:center;gap:4px;margin-left:auto">
+        <input id="gp-custom-count" type="number" min="1" max="40" placeholder="Jml..." aria-label="Jumlah anggota kustom" style="width:68px;padding:4px 8px;border:1px solid #ccdcd0;border-radius:7px;font-size:12px">
+        <button type="button" id="gp-apply-count-btn" class="small-btn" style="padding:4px 9px;font-size:12px">Atur</button>
+       </div>
+      </div>
+
       <div id="gp-members-container"></div>
+
+      <button type="button" id="gp-add-member-bottom-btn" class="button secondary" style="width:100%;justify-content:center;margin-top:8px;border:1.5px dashed #7fb392;background:#eef7f0">
+       <i data-lucide="user-plus"></i> <span id="gp-add-bottom-label">+ Tambah Anggota ke-5 (Tidak Dibatasi)</span>
+      </button>
      </div>
 
      <div class="actions">
@@ -371,7 +393,8 @@ function getSchoolMeta(){
    kepsekName: raw.kepsekName || "WA ODE WAHYUNI, S.Pd",
    kepsekNip: raw.kepsekNip || "197601012002122 006",
    logoSchool: raw.logoSchool || "",
-   logoClass: raw.logoClass || ""
+   logoClass: raw.logoClass || "",
+   logoKokurikuler: raw.logoKokurikuler || ""
   };
  } catch {
   return {
@@ -382,7 +405,8 @@ function getSchoolMeta(){
    kepsekName: "WA ODE WAHYUNI, S.Pd",
    kepsekNip: "197601012002122 006",
    logoSchool: "",
-   logoClass: ""
+   logoClass: "",
+   logoKokurikuler: ""
   };
  }
 }
@@ -406,8 +430,10 @@ function applyLogosToDom(){
  const meta = getSchoolMeta();
  bindLogoImg($("hdr-logo-school"), meta.logoSchool, "./SMPN1BB_Logo-removebg-preview.png", DEFAULT_SCHOOL_LOGO_SVG);
  bindLogoImg($("hdr-logo-class"), meta.logoClass, "./logo-910.png", DEFAULT_CLASS_LOGO_SVG);
+ bindLogoImg($("hdr-logo-kokurikuler"), meta.logoKokurikuler, "./logo-kokurikuler.png", DEFAULT_CLASS_LOGO_SVG);
  bindLogoImg($("hero-logo-school"), meta.logoSchool, "./SMPN1BB_Logo-removebg-preview.png", DEFAULT_SCHOOL_LOGO_SVG);
  bindLogoImg($("hero-logo-class"), meta.logoClass, "./logo-910.png", DEFAULT_CLASS_LOGO_SVG);
+ bindLogoImg($("hero-logo-kokurikuler"), meta.logoKokurikuler, "./logo-kokurikuler.png", DEFAULT_CLASS_LOGO_SVG);
 }
 
 /* Mengonversi elemen <img> logo (baik unggahan, file GitHub, maupun SVG) menjadi PNG DataURL untuk PDF */
@@ -766,14 +792,18 @@ function home(){
     <div class="eyebrow">Project Based Learning · Tahun Ajaran 2026/2027</div>
     <h1>Tanaman Hidroponik Sederhana</h1>
    </div>
-   <div class="hero-crests" aria-label="Identitas Sekolah dan Kelas">
+   <div class="hero-crests" aria-label="Identitas Sekolah, Kelas, dan Kokurikuler">
     <div class="hero-crest-item">
      <div class="hero-crest-box"><img id="hero-logo-school" alt="Logo SMP Negeri 1 Baubau"></div>
      <span class="hero-crest-label">SMP Negeri 1 Baubau</span>
     </div>
     <div class="hero-crest-item">
      <div class="hero-crest-box"><img id="hero-logo-class" alt="Logo Kelas 9.10"></div>
-     <span class="hero-crest-label">Kelas 9.10 Kokurikuler</span>
+     <span class="hero-crest-label">Kelas 9.10</span>
+    </div>
+    <div class="hero-crest-item">
+     <div class="hero-crest-box"><img id="hero-logo-kokurikuler" alt="Logo Kokurikuler 9.10"></div>
+     <span class="hero-crest-label">Kokurikuler 9.10</span>
     </div>
    </div>
   </div>
@@ -1462,6 +1492,24 @@ function rekapGuru(){
       </div>
       <input type="hidden" id="meta-logo-class-val" value="${esc(meta.logoClass)}">
      </div>
+
+     <div class="card" style="padding:14px">
+      <strong>3. Logo Kokurikuler 9.10 Hydroponic</strong>
+      <div class="photo-preview-box" style="margin-top:8px">
+       <img id="meta-prev-kokurikuler" src="${esc(meta.logoKokurikuler || "./logo-kokurikuler.png")}" onerror="this.onerror=null;this.src='${DEFAULT_CLASS_LOGO_SVG}'" alt="Preview Logo Kokurikuler">
+       <div>
+        <div class="actions">
+         <label class="small-btn cam" style="cursor:pointer">
+          <i data-lucide="upload" style="width:14px;height:14px"></i> Unggah Logo Kokurikuler
+          <input type="file" accept="image/*" id="upload-logo-kokurikuler" class="hidden">
+         </label>
+         ${meta.logoKokurikuler?`<button type="button" id="reset-logo-kokurikuler" class="small-btn">Reset</button>`:""}
+        </div>
+        <p class="muted" style="margin:6px 0 0">Disarankan format PNG transparan atau JPG.</p>
+       </div>
+      </div>
+      <input type="hidden" id="meta-logo-kokurikuler-val" value="${esc(meta.logoKokurikuler)}">
+     </div>
     </div>
 
     <div class="form-grid">
@@ -1672,14 +1720,18 @@ function exportToPdf(){
  const scopeLabel = rekapGroupFilter === "ALL" ? `Semua Kelompok (${groups.length} Kelompok)` : `Kelompok ${rekapGroupFilter}`;
  const meta = getSchoolMeta();
 
- // Sisipkan Logo SMP Negeri 1 Baubau (Kiri) & Logo Kelas 9.10 (Kanan) pada Kop Surat
+ // Sisipkan Logo SMP Negeri 1 Baubau (Kiri), Logo Kelas 9.10 & Logo Kokurikuler 9.10 (Kanan) pada Kop Surat
  const schoolLogoPng = extractLogoPngForPdf($("hdr-logo-school"), meta.logoSchool);
  const classLogoPng = extractLogoPngForPdf($("hdr-logo-class"), meta.logoClass);
+ const kokuLogoPng = extractLogoPngForPdf($("hdr-logo-kokurikuler"), meta.logoKokurikuler);
  if(schoolLogoPng){
-  try { doc.addImage(schoolLogoPng, "PNG", 15.5, 10, 17.5, 20.7); } catch {}
+  try { doc.addImage(schoolLogoPng, "PNG", 14.5, 10, 17.5, 20.7); } catch {}
  }
  if(classLogoPng){
-  try { doc.addImage(classLogoPng, "PNG", 176, 10.5, 19, 19); } catch {}
+  try { doc.addImage(classLogoPng, "PNG", 160, 11, 17, 17); } catch {}
+ }
+ if(kokuLogoPng){
+  try { doc.addImage(kokuLogoPng, "PNG", 179, 11, 17, 17); } catch {}
  }
 
  // Kop Surat Resmi SMP Negeri 1 Baubau
@@ -2053,8 +2105,24 @@ function bind(){
  };
  if($("reset-logo-class")) $("reset-logo-class").onclick = () => {
   $("meta-logo-class-val").value = "";
-  $("meta-prev-class").src = DEFAULT_CLASS_LOGO_SVG;
+  $("meta-prev-class").src = "./logo-910.png";
   message("Logo kelas direset ke bawaan. Klik Simpan untuk menerapkan.");
+ };
+
+ if($("upload-logo-kokurikuler")) $("upload-logo-kokurikuler").onchange = async (e) => {
+  const f = e.target.files && e.target.files[0];
+  if(!f) return;
+  try {
+   const pngUrl = await compressLogoFile(f);
+   $("meta-logo-kokurikuler-val").value = pngUrl;
+   $("meta-prev-kokurikuler").src = pngUrl;
+   message("Logo Kokurikuler 9.10 siap. Klik Simpan Logo, Identitas Pembina & PDF.");
+  } catch(err){ message(err.message, true); }
+ };
+ if($("reset-logo-kokurikuler")) $("reset-logo-kokurikuler").onclick = () => {
+  $("meta-logo-kokurikuler-val").value = "";
+  $("meta-prev-kokurikuler").src = "./logo-kokurikuler.png";
+  message("Logo kokurikuler direset ke bawaan. Klik Simpan untuk menerapkan.");
  };
 
  if($("save-pdf-meta")) $("save-pdf-meta").onclick = async (e) => {
@@ -2070,7 +2138,8 @@ function bind(){
    kepsekName: val("meta-kepsek-name") || "Kepala SMP Negeri 1 Baubau",
    kepsekNip: val("meta-kepsek-nip") || "........................................",
    logoSchool: $("meta-logo-school-val").value || "",
-   logoClass: $("meta-logo-class-val").value || ""
+   logoClass: $("meta-logo-class-val").value || "",
+   logoKokurikuler: $("meta-logo-kokurikuler-val") ? ($("meta-logo-kokurikuler-val").value || "") : ""
   };
   saveSchoolMeta(nextMeta);
   try {
@@ -2250,11 +2319,45 @@ $("open-group").onclick=()=>openGroupCode(val("group"));
    MODAL PENDAFTARAN NAMA KELOMPOK & IDENTITAS ANGGOTA SISWA
    ========================================================================== */
 let gpMemberDrafts = [];
-const memberRoleOptions = ["Ketua Kelompok","Sekretaris & Jurnal","Logistik & Nutrisi","Dokumentasi","Perawatan & Kebersihan","Anggota"];
+const memberRoleOptions = ["Ketua Kelompok","Wakil Ketua","Sekretaris & Jurnal","Logistik & Nutrisi","Dokumentasi","Perawatan & Kebersihan","Pengamatan & Pengukuran","Presentasi & Laporan","Anggota"];
+const defaultRoleSequence = ["Ketua Kelompok","Sekretaris & Jurnal","Logistik & Nutrisi","Dokumentasi","Perawatan & Kebersihan","Pengamatan & Pengukuran","Presentasi & Laporan","Wakil Ketua"];
+
+function defaultRoleForIndex(idx){
+ return defaultRoleSequence[idx] || "Anggota";
+}
+
+function setGpMemberCount(targetCount){
+ const n = Math.max(1, Math.min(40, Math.floor(Number(targetCount) || 0)));
+ if(!n) return;
+ collectGpMembers();
+ if(n > gpMemberDrafts.length){
+  for(let i = gpMemberDrafts.length; i < n; i++){
+   gpMemberDrafts.push({ name: "", studentId: "", role: defaultRoleForIndex(i) });
+  }
+ } else if(n < gpMemberDrafts.length){
+  const toRemove = gpMemberDrafts.slice(n);
+  const hasFilledData = toRemove.some(m => (m.name || "").trim() !== "" || (m.studentId || "").trim() !== "");
+  if(hasFilledData && !confirm(`Anggota #${n + 1} s.d. #${gpMemberDrafts.length} sudah berisi data. Tetap kurangi jumlah slot menjadi ${n} orang?`)){
+   return;
+  }
+  gpMemberDrafts = gpMemberDrafts.slice(0, n);
+ }
+ renderGpMembers();
+}
 
 function renderGpMembers(){
  const box = $("gp-members-container");
  if(!box) return;
+ const badge = $("gp-member-count-badge");
+ if(badge) badge.textContent = `${gpMemberDrafts.length} Slot Anggota · Bebas Lebih dari 4`;
+ const bottomLbl = $("gp-add-bottom-label");
+ if(bottomLbl) bottomLbl.textContent = `+ Tambah Anggota ke-${gpMemberDrafts.length + 1} (Tidak Dibatasi)`;
+ document.querySelectorAll(".gp-preset-count").forEach(btn => {
+  const isMatch = Number(btn.dataset.count) === gpMemberDrafts.length;
+  btn.style.background = isMatch ? "var(--green)" : "";
+  btn.style.color = isMatch ? "#fff" : "";
+  btn.style.borderColor = isMatch ? "var(--green)" : "";
+ });
  box.innerHTML = gpMemberDrafts.map((m, idx) => `
   <div class="daily-photo" style="padding:11px;margin:8px 0" data-gp-idx="${idx}">
    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
@@ -2274,7 +2377,7 @@ function renderGpMembers(){
    <div class="field" style="margin-bottom:0">
     <label for="gp-m-role-${idx}">Peran / Tugas dalam Kelompok</label>
     <select id="gp-m-role-${idx}">
-     ${memberRoleOptions.map(r => `<option value="${esc(r)}" ${(m.role || (idx === 0 ? "Ketua Kelompok" : "Anggota")) === r ? "selected" : ""}>${esc(r)}</option>`).join("")}
+     ${memberRoleOptions.map(r => `<option value="${esc(r)}" ${(m.role || defaultRoleForIndex(idx)) === r ? "selected" : ""}>${esc(r)}</option>`).join("")}
     </select>
    </div>
   </div>
@@ -2286,6 +2389,7 @@ function renderGpMembers(){
    renderGpMembers();
   };
  });
+ icons();
 }
 
 function collectGpMembers(){
@@ -2336,10 +2440,29 @@ $("new-group-btn").onclick = () => openGroupProfileModal("");
 $("close-gp-modal").onclick = closeGroupProfileModal;
 $("cancel-gp-modal").onclick = closeGroupProfileModal;
 $("group-profile-modal").onclick = e => { if(e.target === $("group-profile-modal")) closeGroupProfileModal(); };
-$("gp-add-member-btn").onclick = () => {
+const addOneGpMember = () => {
  collectGpMembers();
- gpMemberDrafts.push({ name: "", studentId: "", role: "Anggota" });
+ const nextIdx = gpMemberDrafts.length;
+ gpMemberDrafts.push({ name: "", studentId: "", role: defaultRoleForIndex(nextIdx) });
  renderGpMembers();
+ setTimeout(() => {
+  const inp = $("gp-m-name-" + nextIdx);
+  if(inp) inp.focus();
+ }, 30);
+};
+$("gp-add-member-btn").onclick = addOneGpMember;
+$("gp-add-member-bottom-btn").onclick = addOneGpMember;
+document.querySelectorAll(".gp-preset-count").forEach(btn => {
+ btn.onclick = () => setGpMemberCount(Number(btn.dataset.count));
+});
+$("gp-apply-count-btn").onclick = () => {
+ const num = Number($("gp-custom-count").value);
+ if(!num || num < 1){
+  message("Masukkan angka jumlah anggota minimal 1.", true);
+  $("gp-custom-count").focus();
+  return;
+ }
+ setGpMemberCount(num);
 };
 
 $("group-profile-form").onsubmit = async (e) => {

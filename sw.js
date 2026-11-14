@@ -1,10 +1,12 @@
-const CACHE_NAME = 'ruang-tumbuh-910-v1';
+const CACHE_NAME = 'ruang-tumbuh-910-v2';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
+  './logo-910.png',
+  './logo-kokurikuler.png',
   './SMPN1BB_Logo-removebg-preview.png'
 ];
 
